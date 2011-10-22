@@ -1,0 +1,35 @@
+<h1>Listing items</h1>
+
+<table>
+  <tr>
+    <th>Brief</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Kind</th>
+    <th>Parent</th>
+    <th>Vendor</th>
+    <th>Checked</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @items.each do |item| %>
+  <tr>
+    <td><%= item.brief_id %></td>
+    <td><%= item.quantity %></td>
+    <td><%= item.price %></td>
+    <td><%= item.kind %></td>
+    <td><%= item.parent_id %></td>
+    <td><%= item.vendor_id %></td>
+    <td><%= item.checked %></td>
+    <td><%= link_to 'Show', item %></td>
+    <td><%= link_to 'Edit', edit_item_path(item) %></td>
+    <td><%= link_to 'Destroy', item, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Item', new_item_path %>

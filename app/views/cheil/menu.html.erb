@@ -1,0 +1,12 @@
+<p>
+  <%= @cur_user.org.name%>
+  <br/>
+  类型:<%= @cur_user.org.role%>
+  <br/>
+  用户:<%= @cur_user.name%>
+</p>
+
+<%= link_to '项目列表',   cheil_briefs_path   %>
+<br />
+<br />
+<%= button_to '退出', users_logout_path, :method => :delete   %>

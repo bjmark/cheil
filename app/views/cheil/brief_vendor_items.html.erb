@@ -1,0 +1,70 @@
+<h1>给<%=@vendor.name%>指派子项</h1>
+<table>
+  <tr>
+    <th>id</th>
+    <th>名称</th>
+    <th>创建者</th>
+    <th>创建日期</th>
+    <th>RPM</th>
+  </tr>
+  <tr>
+    <td><%= @brief.id  %></td>
+    <td><%= simple_format(@brief.name)  %></td>
+    <td><%= @brief.user.name%></td>
+    <td><%= short_d(@brief.created_at)%></td>
+    <td><%= @brief.org.name%></td>
+  </tr>
+</table>
+<br/>
+<table>
+  <caption>
+    设计项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th></th>
+  </tr>
+  <%@brief.designs.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <%if @vendor_items_ids.include?(e.id)%>
+        <td><%= button_to '取消指派',cheil_brief_vendor_del_item_path(@brief.id,@vendor.id,e.id),:method=>:delete%></td>
+      <%else%>
+        <td><%= button_to '指派',cheil_brief_vendor_add_item_path(@brief.id,@vendor.id,e.id)  %></td>
+      <%end%>
+    </tr>
+  <%end%>
+</table>
+<br/>
+<table>
+  <caption>
+    制作项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th></th>
+  </tr>
+  <%@brief.products.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <%if @vendor_items_ids.include?(e.id)%>
+        <td><%= button_to '取消指派',cheil_brief_vendor_del_item_path(@brief.id,@vendor.id,e.id),:method=>:delete  %></td>
+      <%else%>
+        <td><%= button_to '指派',cheil_brief_vendor_add_item_path(@brief.id,@vendor.id,e.id)  %></td>
+      <%end%>
+    </tr>
+  <%end%>
+</table>
+<p>
+<%=link_to '返回',cheil_show_brief_path(@brief)%>
+</p>

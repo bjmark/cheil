@@ -1,0 +1,21 @@
+<h1>项目列表</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>名称</th>
+    <th>指派日期</th>
+    <th>客户</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @brief_vendors.each do |e| %>
+  <tr>
+    <td><%= e.brief.id %></td>
+    <td><%= simple_format(e.brief.name) %></td>
+    <td><%= short_d(e.created_at) %></td>
+    <td><%= e.brief.user.name %></td>
+    <td><%= e.brief.org.name %></td>
+    <td><%= link_to 'Show', vendor_show_brief_path(e.brief.id) %></td>
+  </tr>
+  <% end %>
+</table>

@@ -1,0 +1,26 @@
+<%= form_for(@brief_product,:url=>@action_to) do |f| %>
+  <% if @brief_product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@brief_product.errors.count, "error") %> prohibited this brief_product from being saved:</h2>
+
+      <ul>
+      <% @brief_product.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title , '名称'%><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :quantity ,'数量'%><br />
+    <%= f.text_field :quantity %>
+  </div>
+  <%= f.hidden_field :brief_id %>
+  <div class="actions">
+    <%= f.submit '保存'%>
+  </div>
+<% end %>

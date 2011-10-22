@@ -6,9 +6,18 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+ <body id="store">
+    <div id="banner">
+      <%= "Cheil项目管理" %>
+    </div>
+    <div id="columns">
+      <div id="side">
+        <%=render :template =>@menu_file if @menu_file%>
+      </div>
+      <div id="main">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
 
-<%= yield %>
-
-</body>
 </html>

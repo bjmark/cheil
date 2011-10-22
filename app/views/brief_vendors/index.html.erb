@@ -1,0 +1,27 @@
+<h1>Listing brief_vendors</h1>
+
+<table>
+  <tr>
+    <th>Brief</th>
+    <th>Org</th>
+    <th>Approved</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @brief_vendors.each do |brief_vendor| %>
+  <tr>
+    <td><%= brief_vendor.brief_id %></td>
+    <td><%= brief_vendor.org_id %></td>
+    <td><%= brief_vendor.approved %></td>
+    <td><%= link_to 'Show', brief_vendor %></td>
+    <td><%= link_to 'Edit', edit_brief_vendor_path(brief_vendor) %></td>
+    <td><%= link_to 'Destroy', brief_vendor, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Brief vendor', new_brief_vendor_path %>

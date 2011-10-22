@@ -1,0 +1,124 @@
+<h1>brief显示</h1>
+<%unless @brief.send_to_cheil?%>
+  <p>
+  <%=button_to '发送给cheil',rpm_send_brief_path(@brief),:confirm => '确定吗？'%></p>
+<%end%>
+<p></p>
+<table>
+  <tr>
+    <th>id</th>
+    <th>名称</th>
+    <th>创建者</th>
+    <th>创建日期</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <td><%= @brief.id  %></td>
+    <td><%= simple_format(@brief.name)  %></td>
+    <td><%= @brief.user.name%></td>
+    <td><%= short_d(@brief.created_at)%></td>
+    <td><%= link_to '编辑', rpm_edit_brief_path(@brief) %></td>
+    <td><%= link_to '删除', rpm_delete_brief_path(@brief), :confirm => '删除项目将删除关联的附件、设计项、制作项等信息,是否确定?', :method => :delete %></td>
+  </tr>
+</table>
+<br/>
+<table>
+  <caption>
+    设计项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%@brief.designs.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td><%= link_to '编辑',rpm_edit_item_path(e)  %></td>
+      <td> <%= link_to '删除', rpm_destroy_item_path(e), :confirm => 'Are you sure?', :method => :delete %> </td>
+    </tr>
+  <%end%>
+</table>
+<p style ="margin:0;">
+<%= link_to '新建', rpm_new_design_path(:brief_id=>@brief.id) %>
+</p>
+<table>
+  <caption>
+    制作项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%@brief.products.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td><%= link_to '编辑',rpm_edit_item_path(e)  %></td>
+      <td> <%= link_to '删除', rpm_destroy_item_path(e), :confirm => 'Are you sure?', :method => :delete %> </td>
+    </tr>
+  <%end%>
+</table>
+<p style ="margin:0;">
+<%= link_to '新建', rpm_new_product_path(:brief_id=>@brief.id) %>
+</p>
+
+<table>
+  <caption>
+    评论
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>作者</th>
+    <th>日期</th>
+    <th>内容</th>
+    <th></th>
+  </tr>
+  <%@brief.comments.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= e.user.name  %></td>
+      <td><%= short_d(e.created_at)  %></td>
+      <td><%= simple_format(e.content)  %></td>
+      <td><%= link_to '删除',rpm_destroy_brief_comment_path(e), :confirm => 'Are you sure?', :method => :delete if @cur_user.id == e.user_id%></td>
+    </tr>
+  <%end%>
+</table>
+<%= form_for(@brief_comment,:url=>rpm_create_brief_comment_path(@brief)) do |f| %>
+  <% if @brief_comment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@brief_comment.errors.count, "error") %> prohibited this brief_comment from being saved:</h2>
+      <ul>
+        <% @brief_comment.errors.full_messages.each do |msg| %>
+          <li>
+          <%= msg %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <br/>
+  <div class="field">
+    <%= f.label :content,'新评论'%>
+    <br />
+    <%= f.text_area :content,:rows=>3,:cols=>60 %>
+  </div>
+  <div class="actions">
+    <%= f.submit '保存'%>
+  </div>
+<% end %>

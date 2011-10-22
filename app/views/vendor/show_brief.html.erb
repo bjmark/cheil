@@ -1,0 +1,67 @@
+<h1>项目显示</h1>
+<table>
+  <tr>
+    <th>id</th>
+    <th>名称</th>
+    <th>客户</th>
+    <th>指派日期</th>
+  </tr>
+  <tr>
+    <td><%= @brief.id  %></td>
+    <td><%= simple_format(@brief.name)  %></td>
+    <td><%= @brief.org.name%></td>
+    <td><%= short_d(@brief_vendor.created_at)%></td>
+  </tr>
+</table>
+<br/>
+<table>
+  <caption>
+    设计项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th>价格</th>
+    <th>合计</th>
+    <th></th>
+  </tr>
+  <%@brief_vendor.designs.each do |e|%>
+    <tr>
+      <td><%= e.parent_item.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.parent_item.name)  %></td>
+      <td><%= e.parent_item.quantity  %></td>
+      <td><%= e.price  %></td>
+      <td></td>
+      <td><%=link_to '报价',vendor_item_edit_price_path(@brief.id,e.id)%></td>
+    </tr>
+  <%end%>
+</table>
+<br/>
+<table>
+  <caption>
+    制作项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th>价格</th>
+    <th>合计</th>
+    <th></th>
+  </tr>
+  <%@brief_vendor.products.each do |e|%>
+    <tr>
+      <td><%= e.parent_item.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.parent_item.name)  %></td>
+      <td><%= e.parent_item.quantity  %></td>
+      <td><%= e.price  %></td>
+      <td></td>
+      <td><%=link_to '报价',vendor_item_edit_price_path(@brief.id,e.id)%></td>
+    </tr>
+  <%end%>
+</table>

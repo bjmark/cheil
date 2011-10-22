@@ -1,0 +1,21 @@
+<h1>brief列表</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>名称</th>
+    <th>创建日期</th>
+    <th>创建者</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @briefs.each do |brief| %>
+  <tr>
+    <td><%= brief.id %></td>
+    <td><%= simple_format(brief.name) %></td>
+    <td><%= short_d(brief.created_at) %></td>
+    <td><%= brief.user.name %></td>
+    <td><%= brief.org.name %></td>
+    <td><%= link_to 'Show', cheil_show_brief_path(brief) %></td>
+  </tr>
+  <% end %>
+</table>

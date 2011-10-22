@@ -1,0 +1,11 @@
+<h1>选择Vendors</h1>
+<%= form_tag(cheil_add_brief_vendor_path(@brief)) do -%>
+<%@vendors.each do |e|%>
+<%= check_box_tag "vendor#{e.id}",e.id%><%= e.name%>
+<br/>
+<%end%>
+<div>
+  <%= submit_tag '保存' %>
+</div>
+<% end -%> 
+<%=link_to '返回',cheil_show_brief_path(@brief)%>

@@ -1,0 +1,118 @@
+<h1>brief显示</h1>
+<table>
+  <tr>
+    <th>id</th>
+    <th>名称</th>
+    <th>创建者</th>
+    <th>创建日期</th>
+    <th>RPM</th>
+  </tr>
+  <tr>
+    <td><%= @brief.id  %></td>
+    <td><%= simple_format(@brief.name)  %></td>
+    <td><%= @brief.user.name%></td>
+    <td><%= short_d(@brief.created_at)%></td>
+    <td><%= @brief.org.name%></td>
+  </tr>
+</table>
+<br/>
+<table>
+  <caption>
+    设计项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+  </tr>
+  <%@brief.designs.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= simple_format(e.quantity)  %></td>
+    </tr>
+  <%end%>
+</table>
+<br/>
+<table>
+  <caption>
+    制作项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+  </tr>
+  <%@brief.products.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= simple_format(e.quantity)  %></td>
+    </tr>
+  <%end%>
+</table>
+<br/>
+<table>
+  <caption>
+    Vendors
+  </caption>
+  <tr>
+    <th>id</th>
+    <th>类型</th>
+    <th>名称</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%@vendors.each do |e|%>
+    <tr>
+      <td><%= e.id  %></td>
+      <td><%= e.role  %></td>
+      <td><%= e.name%></td>
+      <td><%= link_to '方案',cheil_brief_vendor_solution_path(@brief.id,e.id)  %></td>
+      <td><%= link_to '指派',cheil_brief_vendor_items_path(@brief.id,e.id)  %></td>
+      <td><%= link_to '删除', cheil_del_brief_vendor_path(@brief.id,e.id), :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <%end%>
+</table>
+<p style="margin:0;"><%=link_to '选择Vendor',cheil_sel_brief_vendor_path(@brief)%></p>
+<br/>
+<table>
+  <caption>
+    评论
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>作者</th>
+    <th>日期</th>
+    <th>内容</th>
+    <th></th>
+  </tr>
+  <%@brief.comments.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= e.user.name  %></td>
+      <td><%= short_d(e.created_at)  %></td>
+      <td><%= simple_format(e.content)  %></td>
+      <td>
+        <%= link_to '删除',cheil_destroy_brief_comment_path(e), :confirm => 'Are you sure?', :method => :delete if @cur_user.id == e.user_id%></td>
+    </tr>
+  <%end%>
+</table>
+<br/>
+<%= form_for(@brief_comment,:url=>cheil_create_brief_comment_path(@brief)) do |f| %>
+  <div class="field">
+    <%= f.label :content,'新评论'%>
+    <br />
+    <%= f.text_area :content,:rows=>3,:cols=>60 %>
+  </div>
+  <div class="actions">
+    <%= f.submit '保存'%>
+  </div>
+<% end %>

@@ -1,0 +1,29 @@
+<%= form_for(@brief) do |f| %>
+  <% if @brief.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@brief.errors.count, "error") %> prohibited this brief from being saved:</h2>
+
+      <ul>
+      <% @brief.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br />
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :org_id %><br />
+    <%= f.number_field :org_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
