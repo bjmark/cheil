@@ -126,6 +126,24 @@ Cheil::Application.routes.draw do
 
     get 'vendor/briefs/:brief_id/items/:item_id/price/edit' =>:item_edit_price,
       :as=>'vendor_item_edit_price'
+
+    put 'vendor/briefs/:brief_id/items/:item_id/price/update' =>:item_update_price,
+      :as=>'vendor_item_update_price'
+
+    get 'vendor/briefs/:brief_id/items/new/(:kind)' => :item_new,
+      :as=>'vendor_item_new'
+
+    get 'vendor/briefs/:brief_id/items/:item_id/edit' => :item_edit,
+      :as=>'vendor_item_edit'
+
+    put 'vendor/briefs/:brief_id/items/:item_id' => :item_update,
+      :as=>'vendor_item_update'
+
+    delete 'vendor/briefs/:brief_id/items/:item_id' => :item_del,
+      :as=>'vendor_item_del'
+
+    post 'vendor/briefs/:brief_id/items/(:kind)' => :item_create,
+      :as=>'vendor_item_create'
   end
 
   # The priority is based upon order of creation:

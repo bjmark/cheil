@@ -31,14 +31,15 @@
     <tr>
       <td><%= e.parent_item.brief_id  %></td>
       <td><%= e.id  %></td>
-      <td><%= simple_format(e.parent_item.name)  %></td>
-      <td><%= e.parent_item.quantity  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
       <td><%= e.price  %></td>
-      <td></td>
-      <td><%=link_to '报价',vendor_item_edit_price_path(@brief.id,e.id)%></td>
+      <td><%= e.total%></td>
+      <td><%=link_to '报价',vendor_item_edit_price_path(@brief,e)%></td>
     </tr>
   <%end%>
 </table>
+总计:<%=@brief_vendor.design_total%>
 <br/>
 <table>
   <caption>
@@ -57,11 +58,70 @@
     <tr>
       <td><%= e.parent_item.brief_id  %></td>
       <td><%= e.id  %></td>
-      <td><%= simple_format(e.parent_item.name)  %></td>
-      <td><%= e.parent_item.quantity  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
       <td><%= e.price  %></td>
-      <td></td>
+      <td><%= e.total%></td>
       <td><%=link_to '报价',vendor_item_edit_price_path(@brief.id,e.id)%></td>
     </tr>
   <%end%>
 </table>
+总计:<%=@brief_vendor.product_total%><br/>
+<table>
+  <caption>
+    运输项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th>价格</th>
+    <th>合计</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%@brief_vendor.trans_items.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td><%= e.price  %></td>
+      <td><%= e.total%></td>
+      <td><%=link_to '修改',vendor_item_edit_path(@brief,e)%></td>
+      <td><%=link_to '删除',vendor_item_del_path(@brief,e),confirm: 'Are you sure?', method: :delete %></td>
+    </tr>
+  <%end%>
+</table>
+总计:<%=@brief_vendor.trans_total%><br/>
+<%=link_to '新建',vendor_item_new_path(@brief,'trans')%>
+<table>
+  <caption>
+    其他项
+  </caption>
+  <tr>
+    <th>项目id</th>
+    <th>id</th>
+    <th>名称</th>
+    <th>数量</th>
+    <th>价格</th>
+    <th>合计</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%@brief_vendor.others.each do |e|%>
+    <tr>
+      <td><%= e.brief_id  %></td>
+      <td><%= e.id  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td><%= e.price  %></td>
+      <td><%= e.total%></td>
+      <td><%=link_to '修改',vendor_item_edit_path(@brief,e)%></td>
+      <td><%=link_to '删除',vendor_item_del_path(@brief,e),confirm: 'Are you sure?', method: :delete %></td>
+    </tr>
+  <%end%>
+</table>
+总计:<%=@brief_vendor.other_total%><br/>
+<%=link_to '新建',vendor_item_new_path(@brief,'other')%>

@@ -32,13 +32,14 @@
     <tr>
       <td><%= e.parent_item.brief_id  %></td>
       <td><%= e.id  %></td>
-      <td><%= simple_format(e.parent_item.name)  %></td>
-      <td><%= simple_format(e.parent_item.quantity)  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= simple_format(e.quantity)  %></td>
       <td><%= simple_format(e.price)  %></td>
-      <td></td>
+      <td><%= e.total%></td>
     </tr>
   <%end%>
 </table>
+总计:<%=@brief_vendor.design_total%>
 <br/>
 <table>
   <caption>
@@ -56,11 +57,14 @@
     <tr>
       <td><%= e.parent_item.brief_id  %></td>
       <td><%= e.id  %></td>
-      <td><%= simple_format(e.parent_item.name)  %></td>
-      <td><%= simple_format(e.parent_item.quantity)  %></td>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= simple_format(e.quantity)  %></td>
       <td><%= simple_format(e.price)  %></td>
-      <td></td>
+      <td><%= e.total%></td>
     </tr>
   <%end%>
 </table>
+总计:<%=@brief_vendor.product_total%>
+<br/>
+<br/>
 <%=link_to '返回',cheil_show_brief_path(@brief)%>

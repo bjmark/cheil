@@ -1,62 +1,12 @@
-<%= form_for(@item) do |f| %>
- <div class="field">
-    <%= f.label :price %><br />
+<%= form_for(@item,:url=>@action_to) do |f| %>
+  <div>名称:<%=@item.name%></div>
+  <div>数量:<%=@item.quantity%></div>
+  <div class="field">
+    <%= f.label :price,'价格' %><br />
     <%= f.text_field :price %>
   </div>
- <div class="actions">
+  <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
-<table>
-  <caption>
-    设计项
-  </caption>
-  <tr>
-    <th>项目id</th>
-    <th>id</th>
-    <th>名称</th>
-    <th>数量</th>
-    <th>价格</th>
-    <th>合计</th>
-    <th></th>
-  </tr>
-  <%@brief_vendor.designs.each do |e|%>
-    <tr>
-      <td><%= e.parent_item.brief_id  %></td>
-      <td><%= e.id  %></td>
-      <td><%= simple_format(e.parent_item.name)  %></td>
-      <td><%= e.parent_item.quantity  %></td>
-      <td>
-    <%= f.text_field :price %>
-  </td>
-      <td></td>
-      <td><%=link_to '报价',vendor_item_edit_price_path(@brief.id,e.id)%></td>
-    </tr>
-  <%end%>
-</table>
-<br/>
-<table>
-  <caption>
-    制作项
-  </caption>
-  <tr>
-    <th>项目id</th>
-    <th>id</th>
-    <th>名称</th>
-    <th>数量</th>
-    <th>价格</th>
-    <th>合计</th>
-    <th></th>
-  </tr>
-  <%@brief_vendor.products.each do |e|%>
-    <tr>
-      <td><%= e.parent_item.brief_id  %></td>
-      <td><%= e.id  %></td>
-      <td><%= simple_format(e.parent_item.name)  %></td>
-      <td><%= e.parent_item.quantity  %></td>
-      <td><%= e.price  %></td>
-      <td></td>
-      <td><%=link_to '报价',vendor_item_edit_price_path(@brief.id,e.id)%></td>
-    </tr>
-  <%end%>
-</table>
+<p><%=link_to '返回',vendor_show_brief_path(@brief)%></p>
