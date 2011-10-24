@@ -2,14 +2,6 @@
 class AdminUsersController < ApplicationController
   before_filter :admin_authorize,:except=>[:login,:check]
 
-  #GET  /admin_user/login
-  def login
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @admin_user }
-    end
-  end
-
   # POST /admin_users/login
   def check
     if u = AdminUser.check_pass(params[:name],params[:password])
