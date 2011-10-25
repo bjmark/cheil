@@ -1,0 +1,19 @@
+<%unless items.empty?%>
+  <%n=0
+  items.each do |e|%>
+    <tr>
+      <%(n+=1).upto(1)do %>
+        <td colspan="1" rowspan="<%=items.length+1%>"><%=kind_cn%></td>
+      <%end%>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td><%= e.price  %></td>
+      <td><%= e.total%></td>
+      <td><%=link_to '报价',vendor_item_edit_price_path(@brief,e)%></td>
+    </tr>
+  <%end%>
+  <tr>
+    <td colspan="5" rowspan="1">总计:<%=@brief_vendor.send("#{kind}_total")%></td>
+  </tr>
+<%end%>
+

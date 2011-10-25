@@ -25,83 +25,11 @@
       <td>合计</td>
       <td></td>
     </tr>
-    <%n=0
-    @brief_vendor.designs.each do |e|%>
-      <tr>
-        <%(n+=1).upto(1)do %>
-          <td colspan="1" rowspan="<%=@brief_vendor.designs.length+1%>">设计</td>
-        <%end%>
-        <td><%= simple_format(e.name)  %></td>
-        <td><%= e.quantity  %></td>
-        <td><%= e.price  %></td>
-        <td><%= e.total%></td>
-        <td><%=link_to '报价',vendor_item_edit_price_path(@brief,e)%></td>
-      </tr>
-    <%end%>
-    <tr>
-      <td colspan="5" rowspan="1">总计:<%=@brief_vendor.design_total%></td>
-    </tr>
-    <%n=0
-    @brief_vendor.products.each do |e|%>
-      <tr>
-        <%(n+=1).upto(1)do %>
-          <td colspan="1" rowspan="<%=@brief_vendor.products.length+1%>">制作</td>
-        <%end%>
-        <td><%= simple_format(e.name)  %></td>
-        <td><%= e.quantity  %></td>
-        <td><%= e.price  %></td>
-        <td><%= e.total%></td>
-        <td><%=link_to '报价',vendor_item_edit_price_path(@brief,e)%></td>
-      </tr>
-    <%end%>
-    <tr>
-      <td colspan="5" rowspan="1">总计:<%=@brief_vendor.product_total%></td>
-    </tr>
-    <%n=0
-    @brief_vendor.trans_items.each do |e|%>
-      <tr>
-        <%(n+=1).upto(1)do %>
-          <td colspan="1" rowspan="<%=@brief_vendor.trans_items.length+1%>">运输</td>
-        <%end%>
-        <td><%= simple_format(e.name)  %></td>
-        <td><%= e.quantity  %></td>
-        <td><%= e.price  %></td>
-        <td><%= e.total%></td>
-        <td>
-          <%=link_to '修改',vendor_item_edit_path(@brief,e)%>
-          <%=link_to '删除',vendor_item_del_path(@brief,e),confirm: 'Are you sure?', method: :delete %>
-        </td>
-      </tr>
-    <%end%>
-    <tr>
-      <td colspan="5" rowspan="1">
-        总计:<%=@brief_vendor.trans_total%><br/>
-        <%=link_to '新建',vendor_item_new_path(@brief,'trans')%>
-      </td>
-    </tr>
-    <%n=0
-    @brief_vendor.others.each do |e|%>
-      <tr>
-        <%(n+=1).upto(1)do %>
-          <td colspan="1" rowspan="<%=@brief_vendor.others.length+1%>">运输</td>
-        <%end%>
-        <td><%= simple_format(e.name)  %></td>
-        <td><%= e.quantity  %></td>
-        <td><%= e.price  %></td>
-        <td><%= e.total%></td>
-        <td>
-          <%=link_to '修改',vendor_item_edit_path(@brief,e)%>
-          <%=link_to '删除',vendor_item_del_path(@brief,e),confirm: 'Are you sure?', method: :delete %>
-        </td>
-      </tr>
-    <%end%>
-    <tr>
-      <td colspan="5" rowspan="1">
-        总计:<%=@brief_vendor.other_total%><br/>
-        <%=link_to '新建',vendor_item_new_path(@brief,'other')%>
-      </td>
-    </tr>
-    <tr>
+    <%=render 'table1',:items=>@brief_vendor.designs,:kind=>'design',:kind_cn=>'设计'%>
+    <%=render 'table1',:items=>@brief_vendor.products,:kind=>'product',:kind_cn=>'制作'%>
+    <%=render 'table2',:items=>@brief_vendor.trans_items,:kind=>'trans',:kind_cn=>'运输'%>
+    <%=render 'table2',:items=>@brief_vendor.others,:kind=>'other',:kind_cn=>'其他'%>
+        <tr>
       <td colspan="6" rowspan="1">
         (设计＋制作＋运输＋其他)共计:<%=@brief_vendor.design_total + @brief_vendor.product_total + @brief_vendor.trans_total + @brief_vendor.other_total%><br/>
       </td>
