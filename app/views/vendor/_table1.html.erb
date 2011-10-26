@@ -3,7 +3,7 @@
   items.each do |e|%>
     <tr>
       <%(n+=1).upto(1)do %>
-        <td colspan="1" rowspan="<%=items.length+1%>"><%=kind_cn%></td>
+        <td colspan="1" rowspan="<%=items.length+1%>"><%=kind%></td>
       <%end%>
       <td><%= simple_format(e.name)  %></td>
       <td><%= e.quantity  %></td>
@@ -13,7 +13,7 @@
     </tr>
   <%end%>
   <tr>
-    <td colspan="5" rowspan="1">总计:<%=@brief_vendor.send("#{kind}_total")%></td>
+    <td colspan="5" rowspan="1">总计:<%=total%></td>
   </tr>
 <%end%>
 

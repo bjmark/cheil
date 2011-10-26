@@ -1,0 +1,32 @@
+<%
+  #items,kind,kind_cn
+%>
+<%if items.empty?%>
+  <tr>
+    <td><%=kind_cn%></td>
+    <td colspan="3" rowspan="1">
+      <%= link_to '新建', rpm_new_item_path(@brief,kind) %>
+    </td>
+  </tr>
+<%else%>
+  <%n=0
+  items.each do |e|%>
+    <tr>
+      <%(n+=1).upto(1)do %>
+        <td colspan="1" rowspan="<%=items.length+1%>"><%=kind_cn%></td>
+      <%end%>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td>
+        <%= link_to '修改',rpm_edit_item_path(e)  %>
+        <%= link_to '删除', rpm_destroy_item_path(e), :confirm => 'Are you sure?', :method => :delete %> 
+      </td>
+    </tr>
+  <%end%>
+  <tr>
+    <td colspan="3" rowspan="1">
+      <%= link_to '新建', rpm_new_item_path(@brief,kind) %>
+    </td>
+  </tr>
+<%end%>
+

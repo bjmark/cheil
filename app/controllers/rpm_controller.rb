@@ -131,6 +131,9 @@ class RpmController < ApplicationController
     invalid_op unless brief_can_read?(@brief,@cur_user)
     @brief_comment = BriefComment.new
 
+    @brief_designs = @brief.designs
+    @brief_products = @brief.products
+    
     respond_to do |format|
       format.html # show.html.erb
     end
@@ -202,11 +205,11 @@ class RpmController < ApplicationController
     new_item('product')
   end
 
-  def new_item(kind)
+  def new_item
     @brief = Brief.find(params[:brief_id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
     @item = @brief.items.new
-    @item.kind = kind
+    @item.kind = params[:kind]
     @action_to = rpm_create_item_path
 
     respond_to do |format|

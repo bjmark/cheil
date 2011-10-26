@@ -2,7 +2,7 @@ class Brief < ActiveRecord::Base
   belongs_to :org
   belongs_to :user
   has_many :items
-  has_many :comments,:class_name=>'BriefComment',:order=>'id'
+  has_many :comments,:class_name=>'BriefComment',:order=>'id desc'
   has_many :brief_vendors
 
   def designs

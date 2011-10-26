@@ -25,13 +25,13 @@
       <td>合计</td>
       <td></td>
     </tr>
-    <%=render 'table1',:items=>@brief_vendor.designs,:kind=>'design',:kind_cn=>'设计'%>
-    <%=render 'table1',:items=>@brief_vendor.products,:kind=>'product',:kind_cn=>'制作'%>
-    <%=render 'table2',:items=>@brief_vendor.trans_items,:kind=>'trans',:kind_cn=>'运输'%>
-    <%=render 'table2',:items=>@brief_vendor.others,:kind=>'other',:kind_cn=>'其他'%>
-        <tr>
+    <%=render 'table1',:items=>@designs,:total=>@design_total,:kind=>'设计'%>
+    <%=render 'table1',:items=>@products,:total=>@product_total,:kind=>'制作'%>
+    <%=render 'table2',:items=>@trans_items,:total=>@trans_total,:kind=>'trans',:kind_cn=>'运输'%>
+    <%=render 'table2',:items=>@others,:total=>@other_total,:kind=>'other',:kind_cn=>'其他'%>
+    <tr>
       <td colspan="6" rowspan="1">
-        (设计＋制作＋运输＋其他)共计:<%=@brief_vendor.design_total + @brief_vendor.product_total + @brief_vendor.trans_total + @brief_vendor.other_total%><br/>
+        共计:<%=@total%><br/>
       </td>
     </tr>
   </tbody>

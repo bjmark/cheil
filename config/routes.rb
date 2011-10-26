@@ -33,10 +33,10 @@ Cheil::Application.routes.draw do
     get 'rpm/briefs'=>:briefs,:as=>'rpm_briefs'
 
     #new
-    get 'rpm/new_briefs/new'=>:new_brief,:as=>'rpm_new_brief'
+    get 'rpm/briefs/new'=>:new_brief,:as=>'rpm_new_brief'
     
     #create
-    post 'rpm/create_briefs'=>:create_brief,:as=>'rpm_create_brief'
+    post 'rpm/briefs'=>:create_brief,:as=>'rpm_create_brief'
     
     #show
     get 'rpm/briefs/:id'=>:show_brief,:as=>'rpm_show_brief'
@@ -54,6 +54,10 @@ Cheil::Application.routes.draw do
     delete 'rpm/briefs/:id'=>:delete_brief,:as=>'rpm_delete_brief'
 
     #对item的操作
+    
+    #new item
+    get 'rpm/briefs/:brief_id/items/new/:kind'=>:new_item,:as=>'rpm_new_item'
+
     #new design
     get 'rpm/briefs/:brief_id/designs/new'=>:new_design,:as=>'rpm_new_design'
     #new product

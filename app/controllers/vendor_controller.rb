@@ -13,6 +13,20 @@ class VendorController < ApplicationController
     @brief = Brief.find(params[:id])
     @brief_vendor = @brief.brief_vendors.find_by_org_id(@cur_user.org_id)
     invalid_op unless @brief_vendor
+
+    @designs = @brief_vendor.designs
+    @design_total = @brief_vendor.design_total
+
+    @products = @brief_vendor.products
+    @product_total = @brief_vendor.product_total
+
+    @trans_items = @brief_vendor.trans_items
+    @trans_total = @brief_vendor.trans_total
+
+    @others = @brief_vendor.others
+    @other_total = @brief_vendor.other_total
+
+    @total = @design_total + @product_total + @trans_total + @other_total
   end
 
   #get 'vendor/briefs/:brief_id/items/:item_id/price/edit' =>:item_edit,
