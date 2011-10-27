@@ -18,7 +18,7 @@ class AdminUser < ActiveRecord::Base
 
   def AdminUser.check_pass(name,pass)
     return nil unless u = AdminUser.find_by_name(name)
-    if u.hashed_password = AdminUser.encrypt_password(pass, u.salt)
+    if u.hashed_password == AdminUser.encrypt_password(pass, u.salt)
       return u
     end
     return nil

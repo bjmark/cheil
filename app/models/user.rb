@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   def User.check_pass(name,pass)
     return nil unless u = User.find_by_name(name)
-    if u.hashed_password = User.encrypt_password(pass, u.salt)
+    if u.hashed_password == User.encrypt_password(pass, u.salt)
       return u
     end
     return nil

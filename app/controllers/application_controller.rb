@@ -2,59 +2,30 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  def authorize(m_class,type)
+    return false unless session[:user]=~/^#{type}/
+      a=session[:user].split('_')
+    return false if a.length != 2
+    @cur_user = m_class.find_by_id(a[1].to_i)
+  end
+
   def admin_authorize
-    begin
-      break unless session[:user]=~/^admin/
-        a=session[:user].split('_')
-      break if a.length != 2
-      if @cur_user = AdminUser.find_by_id(a[1].to_i)
-        @menu_file = 'admin_users/menu' 
-        return 
-      end
-    end while false
-    redirect_to admin_users_login_url
+    redirect_to admin_users_login_url unless authorize(AdminUser,'admin')
   end
 
   def rpm_authorize
-    begin
-      break unless session[:user]=~/^rpm/
-        a=session[:user].split('_')
-      break if a.length != 2
-      if @cur_user = User.find_by_id(a[1].to_i)
-        @menu_file = 'rpm/menu' 
-        return 
-      end
-    end while false
-    redirect_to users_login_url
+    redirect_to users_login_url unless authorize(User,'rpm')
   end
 
   def cheil_authorize
-    begin
-      break unless session[:user]=~/^cheil/
-        a=session[:user].split('_')
-      break if a.length != 2
-      if @cur_user = User.find_by_id(a[1].to_i)
-        @menu_file = 'cheil/menu' 
-        return 
-      end
-    end while false
-    redirect_to users_login_url
+    redirect_to users_login_url unless authorize(User,'cheil')
   end
 
-   def vendor_authorize
-    begin
-      break unless session[:user]=~/^vendor/
-      a=session[:user].split('_')
-      break if a.length != 2
-      if @cur_user = User.find_by_id(a[1].to_i)
-        @menu_file = 'vendor/menu' 
-        return 
-      end
-    end while false
-    redirect_to users_login_url
+  def vendor_authorize
+    redirect_to users_login_url unless authorize(User,'vendor')
   end
 
-   def invalid_op
-     raise SecurityError
-   end
+  def invalid_op
+    raise SecurityError
+  end
 end
