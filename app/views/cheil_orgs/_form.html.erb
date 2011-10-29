@@ -1,0 +1,17 @@
+<%= form_for(@cheil_org) do |f| %>
+  <% if @cheil_org.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@cheil_org.errors.count, "error") %> prohibited this cheil_org from being saved:</h2>
+
+      <ul>
+      <% @cheil_org.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
