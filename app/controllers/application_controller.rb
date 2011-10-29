@@ -11,18 +11,22 @@ class ApplicationController < ActionController::Base
 
   def admin_authorize
     redirect_to admin_users_login_url unless authorize(AdminUser,'admin')
+    @menu_file = 'admin_users/_menu'
   end
 
   def rpm_authorize
     redirect_to users_login_url unless authorize(User,'rpm')
+    @menu_file = 'rpm/_menu'
   end
 
   def cheil_authorize
     redirect_to users_login_url unless authorize(User,'cheil')
+    @menu_file = 'cheil/_menu'
   end
 
   def vendor_authorize
     redirect_to users_login_url unless authorize(User,'vendor')
+    @menu_file = 'vendor/_menu'
   end
 
   def invalid_op

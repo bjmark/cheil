@@ -8,14 +8,14 @@ class UsersController < ApplicationController
       redirect_to users_login_url
       return
     end
-    case u.org.role
-    when 'rpm' 
+    case u.org
+    when RpmOrg 
       session[:user] = "rpm_#{u.id}"
       redirect_to rpm_briefs_url
-    when 'cheil'
+    when CheilOrg
       session[:user] = "cheil_#{u.id}"
       redirect_to cheil_briefs_url
-    when 'vendor'
+    when VendorOrg
       session[:user] = "vendor_#{u.id}"
       redirect_to vendor_briefs_url
     end
@@ -38,10 +38,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def back_path(org)
+    case org
+    when RpmOrg then rpm_orgs_path
+    when CheilOrg then cheil_orgs_path
+    when VendorOrg then vendor_orgs_path
+    end
+  end
+
   # GET /users/1
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
+    @back_path = back_path(@user.org)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -52,8 +61,9 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.json
   def new
-    @user = User.new
-    @user.org_id = params[:org_id]
+    org = Org.find(params[:org_id])
+    @user = org.users.build
+    @back_path = back_path(org)
 
     respond_to do |format|
       format.html # new.html.erb
@@ -64,6 +74,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
+    @back_path = back_path(@user.org)
   end
 
   # POST /users
@@ -73,7 +84,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to orgs_path, notice: 'User was successfully created.' }
+        format.html { redirect_to back_path(@user.org), notice: 'User was successfully created.' }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -89,7 +100,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to back_path(@user.org), notice: 'User was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -102,10 +113,11 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user = User.find(params[:id])
+    back = back_path(@user.org)
     @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to back }
       format.json { head :ok }
     end
   end

@@ -54,8 +54,10 @@ describe UsersController do
 
   describe "GET new" do
     it "assigns a new user as @user" do
-      get :new
+      rpm = RpmOrg.create(:name=>'rpm')
+      get :new,:org_id=>rpm.id
       assigns(:user).should be_a_new(User)
+      assigns(:user).org_id.should == rpm.id
     end
   end
 
@@ -69,21 +71,25 @@ describe UsersController do
 
   describe "POST create" do
     describe "with valid params" do
+      let(:attrs) { valid_attributes().merge(
+        {:org_id =>RpmOrg.create(:name=>'rpm').id }
+      )}
+
       it "creates a new User" do
         expect {
-          post :create, :user => valid_attributes
+          post :create, :user => attrs
         }.to change(User, :count).by(1)
       end
 
       it "assigns a newly created user as @user" do
-        post :create, :user => valid_attributes
+        post :create, :user => attrs
         assigns(:user).should be_a(User)
         assigns(:user).should be_persisted
       end
 
-      it "redirects to the created user" do
-        post :create, :user => valid_attributes
-        response.should redirect_to(orgs_path)
+      it "redirects to the rpm_orgs_path" do
+        post :create, :user => attrs
+        response.should redirect_to(rpm_orgs_path)
       end
     end
 
@@ -101,13 +107,28 @@ describe UsersController do
         post :create, :user => {}
         response.should render_template("new")
       end
+
+      it "duplicate name" do 
+        User.create(:name=>'dup')
+        post :create, :user =>{:name=>'dup'}
+        assigns(:user).should be_a_new(User)
+      end
+
+      it "blank name" do 
+        post :create, :user =>{:name=>' '}
+        assigns(:user).should be_a_new(User)
+      end
+
     end
   end
 
   describe "PUT update" do
+    let(:attrs) { valid_attributes().merge(
+      {:org_id =>RpmOrg.create(:name=>'rpm').id }
+    )}
     describe "with valid params" do
       it "updates the requested user" do
-        user = User.create! valid_attributes
+        user = User.create! attrs
         # Assuming there are no other users in the database, this
         # specifies that the User created on the previous line
         # receives the :update_attributes message with whatever params are
@@ -117,21 +138,21 @@ describe UsersController do
       end
 
       it "assigns the requested user as @user" do
-        user = User.create! valid_attributes
-        put :update, :id => user.id, :user => valid_attributes
+        user = User.create! attrs
+        put :update, :id => user.id, :user => attrs
         assigns(:user).should eq(user)
       end
 
-      it "redirects to the user" do
-        user = User.create! valid_attributes
+      it "redirects to the rpm_orgs_path" do
+        user = User.create! attrs
         put :update, :id => user.id, :user => valid_attributes
-        response.should redirect_to(user)
+        response.should redirect_to(rpm_orgs_path)
       end
     end
 
     describe "with invalid params" do
       it "assigns the user as @user" do
-        user = User.create! valid_attributes
+        user = User.create! attrs
         # Trigger the behavior that occurs when invalid params are submitted
         User.any_instance.stub(:save).and_return(false)
         put :update, :id => user.id, :user => {}
@@ -139,27 +160,41 @@ describe UsersController do
       end
 
       it "re-renders the 'edit' template" do
-        user = User.create! valid_attributes
+        user = User.create! attrs
         # Trigger the behavior that occurs when invalid params are submitted
         User.any_instance.stub(:save).and_return(false)
         put :update, :id => user.id, :user => {}
         response.should render_template("edit")
       end
+
+      it "blank password" do
+        user = User.create! attrs
+        
+        new_attrs = attrs.clone
+        new_attrs[:password] =''
+
+        put :update, :id => user.id, :user => new_attrs
+        User.check_pass(attrs[:name],attrs[:password]).should be_true
+      end
     end
   end
 
   describe "DELETE destroy" do
+    let(:attrs) { valid_attributes().merge(
+      {:org_id =>RpmOrg.create(:name=>'rpm').id }
+    )}
+
     it "destroys the requested user" do
-      user = User.create! valid_attributes
+      user = User.create! attrs
       expect {
         delete :destroy, :id => user.id
       }.to change(User, :count).by(-1)
     end
 
     it "redirects to the users list" do
-      user = User.create! valid_attributes
+      user = User.create! attrs
       delete :destroy, :id => user.id
-      response.should redirect_to(users_url)
+      response.should redirect_to(rpm_orgs_path)
     end
   end
 

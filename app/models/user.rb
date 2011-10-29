@@ -1,5 +1,9 @@
 class User < ActiveRecord::Base
-  belongs_to :org
+  belongs_to :rpm_org, :foreign_key=>:org_id
+  belongs_to :cheil_org, :foreign_key=>:org_id
+  belongs_to :vendor_org, :foreign_key=>:org_id
+  belongs_to :org, :foreign_key=>:org_id
+
   validates :name, :uniqueness => true
   validates :name, :presence => true
 
@@ -8,6 +12,7 @@ class User < ActiveRecord::Base
   end
 
   def password=(s)
+    return if s.blank?
     self.salt = self.object_id.to_s + rand.to_s
     self.hashed_password = User.encrypt_password(s, self.salt)
   end

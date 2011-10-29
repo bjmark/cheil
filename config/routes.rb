@@ -1,6 +1,12 @@
 # encoding: utf-8
 Cheil::Application.routes.draw do
 
+  resources :vendor_orgs
+
+  resources :cheil_orgs
+
+  resources :rpm_orgs
+
   resources :items
 
   resources :brief_vendors

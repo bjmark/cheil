@@ -12,8 +12,7 @@
     </div>
     <div id="columns">
       <div id="side">
-        <%#render :template =>@menu_file if @menu_file%>
-        <%=render 'menu' if @cur_user%>
+        <%=render :template=>@menu_file if @cur_user%>
       </div>
       <div id="main">
         <%= yield %>

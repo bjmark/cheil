@@ -4,16 +4,6 @@
 </p>
 
 <p>
-  <b>Hashed password:</b>
-  <%= @user.hashed_password %>
-</p>
-
-<p>
-  <b>Salt:</b>
-  <%= @user.salt %>
-</p>
-
-<p>
   <b>Email:</b>
   <%= @user.email %>
 </p>
@@ -25,9 +15,10 @@
 
 <p>
   <b>Org:</b>
-  <%= @user.org_id %>
+  <%= @user.org.name %>
 </p>
 
 
+<%= link_to 'Destroy', @user, confirm: 'Are you sure?', method: :delete %> |
 <%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', orgs_path %>
+<%= link_to 'Back', @back_path %>

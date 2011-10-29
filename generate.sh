@@ -12,4 +12,12 @@
 #rails generate scaffold brief_vendor brief_id:integer org_id:integer approved:string
 #rails generate scaffold item brief_id:integer quantity:string price:string kind:string parent_id:integer vendor_id:integer checked:string
 #rails generate migration add_send_cheil_to_briefs send_to_cheil:string
-rails generate migration create_rpms_cheils
+#rails generate migration create_rpms_cheils
+#rails generate controller rpm_orgs
+#rails generate scaffold rpm_org 
+#rails generate scaffold cheil_org 
+#rails generate scaffold vendor_org 
+
+#rails generate migration add_rpm_org_id_to_orgs rpm_org_id:integer
+rails generate migration rename_role_to_type_in_orgs
+
