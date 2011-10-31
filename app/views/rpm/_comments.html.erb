@@ -1,19 +1,21 @@
-<table>
-  <tr>
-    <th></th>
-    <th>内容</th>
-  </tr>
-  <%@brief.comments.each do |e|%>
+<%unless @brief.comments.empty?%>
+  <table>
     <tr>
-      <td>
-        <%= e.user.name  %><br/>
-        <%= short_d(e.created_at)  %>
-      </td>
-      <td>
-        <%= simple_format(e.content)  %>
-        <%= link_to '删除',rpm_destroy_brief_comment_path(e), :confirm => 'Are you sure?', :method => :delete if @cur_user.id == e.user_id%>
-      </td>
+      <th></th>
+      <th>内容</th>
     </tr>
-  <%end%>
-</table>
+    <%@brief.comments.each do |e|%>
+      <tr>
+        <td>
+          <%= e.user.name  %><br/>
+          <%= short_d(e.created_at)  %>
+        </td>
+        <td>
+          <%= simple_format(e.content)  %>
+          <%= link_to '删除',rpm_destroy_brief_comment_path(e), :confirm => 'Are you sure?', :method => :delete if @cur_user.id == e.user_id%>
+        </td>
+      </tr>
+    <%end%>
+  </table>
+<%end%>
 

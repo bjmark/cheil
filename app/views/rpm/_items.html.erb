@@ -1,4 +1,6 @@
 <%unless @brief.items.empty?%>
+<%= link_to '新建设计项', rpm_new_item_path(@brief,'design') %>
+<%= link_to '新建制作项', rpm_new_item_path(@brief,'product') %>
   <table>
     <tr>
       <th></th>

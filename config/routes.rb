@@ -77,6 +77,7 @@ Cheil::Application.routes.draw do
     delete 'rpm/items/:id' => :destroy_item,:as=>'rpm_destroy_item'
 
     #对brief_comment的操作
+    get 'rpm/briefs/:brief_id/comments/new'=>:new_brief_comment,
     post 'rpm/briefs/:brief_id/comments'=>:create_brief_comment,
       :as=>'rpm_create_brief_comment'
     delete 'rpm/brief/comments/:id' => :destroy_brief_comment,
