@@ -1,21 +1,23 @@
 <h1><%=@cur_user.org.name%> brief列表</h1>
 <table>
   <tr>
-    <th>ID</th>
     <th>名称</th>
+    <th>要求</th>
+    <th>最后期限</th>
     <th>创建日期</th>
     <th>创建者</th>
     <th>已发送?</th>
     <th></th>
   </tr>
   <% @briefs.each do |brief| %>
-  <tr>
-    <td><%= brief.id %></td>
-    <td><%= simple_format(brief.name) %></td>
-    <td><%= short_d(brief.created_at) %></td>
-    <td><%= brief.user.name %></td>
-    <td><%= 'yes' if brief.send_to_cheil =='y' %></td>
-    <td><%= link_to 'Show', rpm_show_brief_path(brief) %></td>
-  </tr>
+    <tr>
+      <td><%= brief.name %></td>
+      <td><%= simple_format(brief.req) %></td>
+      <td><%= brief.deadline %></td>
+      <td><%= short_d(brief.created_at) %></td>
+      <td><%= brief.user.name %></td>
+      <td><%= 'yes' if brief.cheil > 0 %></td>
+      <td><%= link_to 'Show', rpm_show_brief_path(brief) %></td>
+    </tr>
   <% end %>
 </table>

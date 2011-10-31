@@ -80,7 +80,8 @@ class RpmController < ApplicationController
 
   #get 'rpm/briefs'
   def briefs
-    @briefs = Brief.order('id desc').find_all_by_org_id(@cur_user.org_id)
+    @briefs = @cur_user.rpm_org.briefs.paginate(:page => params[:page]).order('id DESC')
+    #@briefs = Brief.order('id desc').find_all_by_org_id(@cur_user.org_id)
   end
 
   #get 'rpm/new_briefs/new'

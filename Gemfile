@@ -36,3 +36,4 @@ group :test, :development do
   gem "rspec-rails", "~> 2.0"
 end
 
+gem "will_paginate", "~> 3.0.2"

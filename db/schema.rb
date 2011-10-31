@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111028125633) do
+ActiveRecord::Schema.define(:version => 20111030094558) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -40,10 +40,12 @@ ActiveRecord::Schema.define(:version => 20111028125633) do
   create_table "briefs", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.integer  "org_id"
+    t.integer  "rpm_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "send_to_cheil", :limit => 1, :default => "n"
+    t.integer  "cheil_id",   :default => 0
+    t.text     "req"
+    t.date     "deadline"
   end
 
   create_table "items", :force => true do |t|
