@@ -64,16 +64,15 @@ Cheil::Application.routes.draw do
     #new item
     get 'rpm/briefs/:brief_id/items/new/:kind'=>:new_item,:as=>'rpm_new_item'
 
-    #new design
-    get 'rpm/briefs/:brief_id/designs/new'=>:new_design,:as=>'rpm_new_design'
-    #new product
-    get 'rpm/briefs/:brief_id/products/new'=>:new_product,:as=>'rpm_new_product'
     #create
     post 'rpm/briefs/:brief_id/items'=>:create_item,:as=>'rpm_create_item'
+
     #edit
     get 'rpm/items/:id/edit'=>:edit_item,:as=>'rpm_edit_item'
+
     #update
     put 'rpm/items/:id'=>:update_item,:as=>'rpm_update_item'
+
     #destroy
     delete 'rpm/items/:id' => :destroy_item,:as=>'rpm_destroy_item'
 

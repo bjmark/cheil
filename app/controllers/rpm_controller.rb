@@ -78,55 +78,42 @@ class RpmController < ApplicationController
   #检查是否login
   before_filter :rpm_authorize
 
-  #get 'rpm/briefs'
+  #get 'rpm/briefs'=>:briefs,:as=>'rpm_briefs'
   def briefs
-    @briefs = @cur_user.rpm_org.briefs.paginate(:page => params[:page]).order('id DESC')
+    @briefs = @cur_user.rpm_org.
+      briefs.paginate(:page => params[:page]).order('id DESC')
     #@briefs = Brief.order('id desc').find_all_by_org_id(@cur_user.org_id)
   end
 
-  #get 'rpm/new_briefs/new'
+  #get 'rpm/briefs/new'=>:new_brief,:as=>'rpm_new_brief'
   def new_brief
-    @brief = FakeBrief.new
+    @brief = Brief.new
+    @action_to = rpm_create_brief_path
   end
 
-  #post 'rpm/create_briefs'
+  #post 'rpm/briefs'=>:create_brief,:as=>'rpm_create_brief'
   def create_brief
-    @brief = FakeBrief.new(params['brief'])
-    if op = [:add_5_design,:add_5_product].find{|e| params[e]}
-      @brief.send(op)
-      respond_to do |format|
-        format.html { render :action=>"new_brief"}
-      end
-      return
-    end
-
-    fake_brief = @brief
-    @brief = Brief.new(fake_brief.get_brief)
-    @brief.name = 'noname' if @brief.name.empty?
+    @brief = Brief.new(params['brief'])
+    @brief.rpm_id = @cur_user.org_id
     @brief.user_id = @cur_user.id
-    @brief.org_id = @cur_user.org_id
-    @brief.save
 
-    cheil = Org.find_by_role('cheil')
-    
-    @brief.brief_vendors << BriefVendor.new(:org_id=>cheil.id)
-
-    @brief.items.create(fake_brief.get_items)
-    respond_to do |format|
-      format.html { redirect_to(rpm_show_brief_url(@brief)) }
+    if @brief.save
+      redirect_to rpm_show_brief_path(@brief)
+    else
+      render action: 'new_brief'
     end
   end
 
   #用户是否有权看brief
   def brief_can_read?(brief,user)
-    brief.org_id == user.org_id
+    brief.rpm_id == user.org_id
   end
   #用户是否有权改brief
   def brief_can_modify?(brief,user)
-    brief.org_id == user.org_id
+    brief.rpm_id == user.org_id
   end
 
-  #get 'rpm/briefs/:id'
+  #get 'rpm/briefs/:id'=>:show_brief,:as=>'rpm_show_brief'
   def show_brief
     @brief = Brief.find(params[:id])
     invalid_op unless brief_can_read?(@brief,@cur_user)
@@ -134,36 +121,31 @@ class RpmController < ApplicationController
 
     @brief_designs = @brief.designs
     @brief_products = @brief.products
-    
-    respond_to do |format|
-      format.html # show.html.erb
-    end
   end
 
-  #post 'rpm/briefs/:id/send'
+  #post 'rpm/briefs/:id/send'=>:send_brief,:as=>'rpm_send_brief'
   def send_brief
     @brief = Brief.find(params[:id])
     invalid_op unless brief_can_read?(@brief,@cur_user)
-    @brief.send_to_cheil = 'y'
-    @brief.save
-    redirect_to(rpm_show_brief_path(@brief)) 
+    @brief.send_to_cheil!
+    redirect_to(rpm_show_brief_path(@brief),:notice=>'成功发送到cheil') 
   end
 
-  #get 'rpm/briefs/:id/edit'
+  #get 'rpm/briefs/:id/edit'=>:edit_brief,:as=>'rpm_edit_brief'
   def edit_brief
     @brief = Brief.find(params[:id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
     @action_to = rpm_update_brief_path
   end
 
-  #put 'rpm/briefs/:id'
+  #put 'rpm/briefs/:id'=>:update_brief,:as=>'rpm_update_brief'
   def update_brief
     @brief = Brief.find(params[:id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
 
     respond_to do |format|
       if @brief.update_attributes(params[:brief])
-        format.html { redirect_to(rpm_show_brief_url(@brief.id)) }
+        format.html { redirect_to(rpm_show_brief_path(@brief)) }
       else
         format.html { render :action => "edit" }
       end
@@ -193,32 +175,19 @@ class RpmController < ApplicationController
   end
 
   def item_can_modify?(item,user)
-    item.brief.org_id == user.org_id
+    item.brief.rpm_id == user.org_id
   end
 
-  #get 'rpm/briefs/:brief_id/designs/new'
-  def new_design
-    new_item('design')
-  end
-
-  #get 'rpm/briefs/:brief_id/products/new'
-  def new_product
-    new_item('product')
-  end
-
+  #get 'rpm/briefs/:brief_id/items/new/:kind'=>:new_item,:as=>'rpm_new_item'
   def new_item
     @brief = Brief.find(params[:brief_id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
     @item = @brief.items.new
     @item.kind = params[:kind]
-    @action_to = rpm_create_item_path
-
-    respond_to do |format|
-      format.html { render :template => 'rpm/new_item'}
-    end
+    @action_to = rpm_create_item_path(@brief)
   end
 
-  #post 'rpm/briefs/:brief_id/items'
+  #post 'rpm/briefs/:brief_id/items'=>:create_item,:as=>'rpm_create_item'
   def create_item
     @brief = Brief.find(params[:brief_id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
@@ -229,15 +198,14 @@ class RpmController < ApplicationController
     end
   end
 
-
-  #get 'rpm/items/:id/edit'
+  #get 'rpm/items/:id/edit'=>:edit_item,:as=>'rpm_edit_item'
   def edit_item
     @item = Item.find(params[:id])
     invalid_op unless item_can_modify?(@item,@cur_user)
     @action_to = rpm_update_item_path(@item) 
   end
 
-  #put 'rpm/items/:id''
+  #put 'rpm/items/:id'=>:update_item,:as=>'rpm_update_item'
   def update_item
     @item = Item.find(params[:id])
     invalid_op unless item_can_modify?(@item,@cur_user)
@@ -249,21 +217,21 @@ class RpmController < ApplicationController
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to(rpm_show_brief_url(:id=>@item.brief_id)) }
+        format.html { redirect_to(rpm_show_brief_url(@item.brief)) }
       else
         format.html { render :action => "edit" }
       end
     end
   end
 
-  #delete 'rpm/items/:id'
+  #delete 'rpm/items/:id' => :destroy_item,:as=>'rpm_destroy_item'
   def destroy_item
     @item = Item.find(params[:id])
     invalid_op unless item_can_modify?(@item,@cur_user)
     @item.destroy
 
     respond_to do |format|
-      format.html { redirect_to(rpm_show_brief_url(:id=>@item.brief_id)) }
+      format.html { redirect_to(rpm_show_brief_url(@item.brief)) }
     end
   end
 

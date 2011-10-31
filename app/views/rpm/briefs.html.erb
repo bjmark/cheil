@@ -16,7 +16,7 @@
       <td><%= brief.deadline %></td>
       <td><%= short_d(brief.created_at) %></td>
       <td><%= brief.user.name %></td>
-      <td><%= 'yes' if brief.cheil > 0 %></td>
+      <td><%= 'yes' if brief.send_to_cheil? %></td>
       <td><%= link_to 'Show', rpm_show_brief_path(brief) %></td>
     </tr>
   <% end %>

@@ -1,64 +1,38 @@
-<h1>brief显示</h1>
-<%unless @brief.send_to_cheil?%>
-  <p>
-  <%=button_to '发送给cheil',rpm_send_brief_path(@brief),:confirm => '确定吗？'%></p>
+<%if notice%>
+  <p id="notice"><%= notice %></p>
 <%end%>
+<h1>brief显示</h1>
 <p>
-名称:<%=@brief.name%><br/>
-<%= @brief.user.name%>
-<%= short_d(@brief.created_at)%><br/>
-<%= link_to '编辑', rpm_edit_brief_path(@brief) %>
-<%= link_to '删除', rpm_delete_brief_path(@brief), :confirm => '将删除关联的所有信息,确定?', :method => :delete %>
+<%= link_to '修改', rpm_edit_brief_path(@brief) %>
+<%= link_to '删除',
+  rpm_delete_brief_path(@brief), 
+  :confirm => '将删除关联的所有信息,确定?', :method => :delete
+%>
+<%= link_to '新建设计项', rpm_new_item_path(@brief,'design') %>
+<%= link_to '新建制作项', rpm_new_item_path(@brief,'product') %>
+<%unless @brief.send_to_cheil?%>
+  <%=link_to '发送给cheil',
+    rpm_send_brief_path(@brief),
+    :confirm => '确定吗？',
+    :method => :post
+  %>
+<%end%>
 </p>
-<table>
-  <tr>
-    <th></th>
-    <th>名称</th>
-    <th>数量</th>
-    <th></th>
-  </tr>
-  <%=render 'table1',:items=>@brief_designs,:kind=>'design',:kind_cn=>'设计'%>
-  <%=render 'table1',:items=>@brief_products,:kind=>'product',:kind_cn=>'制作'%>
-</table>
+<p>
+名称:<%=@brief.name%>
+</p>
+<div>
+<%unless @brief.req.blank?%>
+  要求:<br/>
+  <%=simple_format(@brief.req)%>
+<%end%>
+</div>
+期限:<%=@brief.deadline%>
+</p>
+<p>
+创建者:<%= @brief.user.name%>
+日期:<%= short_d(@brief.created_at)%>
+</p>
+<%=render 'items'%>
 <br/>
-<table>
-  <tr>
-    <th></th>
-    <th>内容</th>
-  </tr>
-  <%@brief.comments.each do |e|%>
-    <tr>
-      <td>
-        <%= e.user.name  %><br/>
-        <%= short_d(e.created_at)  %>
-      </td>
-      <td>
-        <%= simple_format(e.content)  %>
-        <%= link_to '删除',rpm_destroy_brief_comment_path(e), :confirm => 'Are you sure?', :method => :delete if @cur_user.id == e.user_id%>
-      </td>
-    </tr>
-  <%end%>
-</table>
-<%= form_for(@brief_comment,:url=>rpm_create_brief_comment_path(@brief)) do |f| %>
-  <% if @brief_comment.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@brief_comment.errors.count, "error") %> prohibited this brief_comment from being saved:</h2>
-      <ul>
-        <% @brief_comment.errors.full_messages.each do |msg| %>
-          <li>
-          <%= msg %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <br/>
-  <div class="field">
-    <%= f.label :content,'新评论'%>
-    <br />
-    <%= f.text_area :content,:rows=>3,:cols=>60 %>
-  </div>
-  <div class="actions">
-    <%= f.submit '保存'%>
-  </div>
-<% end %>
+

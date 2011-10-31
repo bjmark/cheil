@@ -3,7 +3,12 @@ require 'spec_helper'
 describe Brief do
   #pending "add some examples to (or delete) #{__FILE__}"
   before do
+    rpm_org = RpmOrg.create(:name=>'rpm')
+    rpm_org.cheil_org = CheilOrg.new(:name=>'cheil')
+
     b = Brief.create(:name=>'brief1')
+    rpm_org.briefs << b
+
     b.items.create(:name => 'design1',:kind => 'design')
     b.items.create(:name => 'product1',:kind => 'product')
     b.items.create(:name => 'product2',:kind => 'product')
@@ -36,11 +41,19 @@ describe Brief do
       b.should have(2).comments
     end
 
-    it 'should order by id' do
+    it 'comment should order by id desc' do
       b = Brief.find_by_name('brief1')
       b.comments.create([{:content=>'c1'},{:content=>'c2'}])
       ids = b.comments.collect{|e| e.id }
-      (ids[0] < ids[1]).should be_true 
+      (ids[0] > ids[1]).should be_true 
+    end
+  end
+
+  describe '#send_to_cheil!' do
+    it 'send to cheil' do
+      b = Brief.find_by_name('brief1')
+      b.send_to_cheil!
+      b.rpm_org.cheil_org.id.should == b.cheil_org.id
     end
   end
 end

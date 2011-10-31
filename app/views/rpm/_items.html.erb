@@ -1,0 +1,13 @@
+<%unless @brief.items.empty?%>
+  <table>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+      <th></th>
+    </tr>
+    <%=render 'table1',:items=>@brief_designs,:kind=>'design',:kind_cn=>'设计'%>
+    <%=render 'table1',:items=>@brief_products,:kind=>'product',:kind_cn=>'制作'%>
+  </table>
+<%end%>
+
