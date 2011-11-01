@@ -10,6 +10,7 @@
 %>
 <%= link_to '新建设计项', rpm_new_item_path(@brief,'design') %>
 <%= link_to '新建制作项', rpm_new_item_path(@brief,'product') %>
+<%= link_to '新建评论', rpm_new_brief_comment_path(@brief) %>
 <%unless @brief.send_to_cheil?%>
   <%=link_to '发送给cheil',
     rpm_send_brief_path(@brief),
@@ -35,5 +36,5 @@
 </p>
 <%=render 'items'%>
 <br/>
-<%=render 'comments'%>
+<%=render 'brief_comments'%>
 

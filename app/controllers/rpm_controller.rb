@@ -235,7 +235,17 @@ class RpmController < ApplicationController
     end
   end
 
-  #post 'rpm/briefs/:brief_id/comments'
+  #get 'rpm/briefs/:brief_id/comments/new'=>:new_brief_comment,
+  #  :as=>'rpm_new_brief_comment'
+  def new_brief_comment
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    @brief_comment = BriefComment.new
+    @action_to = rpm_create_brief_comment_path(@brief)
+  end
+
+  #post 'rpm/briefs/:brief_id/comments'=>:create_brief_comment,
+  #  :as=>'rpm_create_brief_comment'
   def create_brief_comment
     @brief = Brief.find(params[:brief_id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
@@ -251,7 +261,8 @@ class RpmController < ApplicationController
     end
   end
 
-  # delete 'rpm/brief/comments/:id'
+  #delete 'rpm/brief/comments/:id' => :destroy_brief_comment,
+  #  :as=>'rpm_destroy_brief_comment'
   def destroy_brief_comment
     @brief_comment = BriefComment.find(params[:id])
     @brief_comment.destroy if @brief_comment.user_id == @cur_user.id

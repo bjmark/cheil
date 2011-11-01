@@ -1,4 +1,4 @@
-<%= form_for(@brief_comment,:url=>rpm_create_brief_comment_path(@brief)) do |f| %>
+<%= form_for(@brief_comment,:url=>@action_to) do |f| %>
   <% if @brief_comment.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@brief_comment.errors.count, "error") %> prohibited this brief_comment from being saved:</h2>
