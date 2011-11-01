@@ -156,15 +156,15 @@ class RpmController < ApplicationController
   def delete_brief
     @brief = Brief.find(params[:id])
     invalid_op unless brief_can_modify?(@brief,@cur_user)
-    
+
     #删除关联的design,product等子项
     Item.delete_all("brief_id = #{@brief.id}")
-    
+
     #删除所有指派给vendor的子项
     vendor_ids = @brief.brief_vendor_ids
     vendor_ids = vendor_ids.join(',')
     Item.delete_all("brief_vendor_id in (#{vendor_ids})")
-    
+
     #删除vendors指派
     BriefVendor.delete_all("brief_id = #{@brief.id}")
 
@@ -209,7 +209,7 @@ class RpmController < ApplicationController
   def update_item
     @item = Item.find(params[:id])
     invalid_op unless item_can_modify?(@item,@cur_user)
-    
+
     field = params[:item]
     @item.name = field[:name]
     @item.quantity = field[:quantity]
@@ -270,6 +270,80 @@ class RpmController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(rpm_show_brief_url(@brief_comment.brief_id)) }
     end
+  end
+
+  #get 'rpm/briefs/:brief_id/attaches/new' => :new_brief_attach,
+  #  :as => 'rpm_new_brief_attach'
+  def new_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    @path = rpm_create_brief_attach_path(@brief)
+    @brief_attach = BriefAttach.new
+  end
+
+  #get 'rpm/briefs/:brief_id/attaches/:attach_id/edit' => :edit_brief_attach,
+  #  :as => 'rpm_edit_brief_attach'
+  def edit_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+
+    @brief_attach = @brief.attaches.find(params[:attach_id])
+    @path = rpm_update_brief_attach_path(@brief,@brief_attach)
+  end
+
+  #post 'rpm/briefs/:brief_id/attaches' => :create_brief_attach,
+  #  :as => 'rpm_create_brief_attach'
+  def create_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+
+    attach = BriefAttach.new(params[:brief_attach])
+    attach.brief_id = @brief.id
+
+    if attach.save
+      redirect_to rpm_show_brief_path(@brief)
+    else
+      render :action => 'new_brief_attach'
+    end
+  end
+
+  #put 'rpm/briefs/:brief_id/attaches/:attach_id' => :update_brief_attach,
+  #  :as => 'rpm_update_brief_attach'
+  def update_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+
+    @brief_attach = @brief.attaches.find(params[:attach_id])
+    if @brief_attach.update_attributes(params[:brief_attach])
+      redirect_to rpm_show_brief_path(@brief)
+    else
+      @path = rpm_update_brief_attach_path(@brief,@brief_attach)
+      render :action => 'edit_brief_attach'
+    end
+  end
+  #delete 'rpm/briefs/:brief_id/attaches/:attach_id' => :destroy_brief_attach,
+  #   :as => 'rpm_destroy_brief_attach'
+  def destroy_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+
+    attach = @brief.attaches.find(params[:attach_id])
+    attach.destroy
+
+    redirect_to rpm_show_brief_path(@brief)
+  end
+
+  #get 'rpm/briefs/:brief_id/attaches/:attach_id/download' => :download_brief_attach,
+  #   :as => 'rpm_download_brief_attach'
+  def download_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless brief_can_modify?(@brief,@cur_user)
+
+    attach = @brief.attaches.find(params[:attach_id])
+
+    send_file attach.attach.path,
+      :filename => attach.attach_file_name,
+      :content_type => attach.attach_content_type
   end
 end
 

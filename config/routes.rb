@@ -79,10 +79,31 @@ Cheil::Application.routes.draw do
     #对brief_comment的操作
     get 'rpm/briefs/:brief_id/comments/new'=>:new_brief_comment,
       :as=>'rpm_new_brief_comment'
+
     post 'rpm/briefs/:brief_id/comments'=>:create_brief_comment,
       :as=>'rpm_create_brief_comment'
+    
     delete 'rpm/brief/comments/:id' => :destroy_brief_comment,
       :as=>'rpm_destroy_brief_comment'
+
+    #attach
+    get 'rpm/briefs/:brief_id/attaches/new' => :new_brief_attach,
+      :as => 'rpm_new_brief_attach'
+    
+    get 'rpm/briefs/:brief_id/attaches/:attach_id/edit' => :edit_brief_attach,
+      :as => 'rpm_edit_brief_attach'
+
+    post 'rpm/briefs/:brief_id/attaches' => :create_brief_attach,
+      :as => 'rpm_create_brief_attach'
+
+    put 'rpm/briefs/:brief_id/attaches/:attach_id' => :update_brief_attach,
+      :as => 'rpm_update_brief_attach'
+
+    delete 'rpm/briefs/:brief_id/attaches/:attach_id' => :destroy_brief_attach,
+      :as => 'rpm_destroy_brief_attach'
+
+    get 'rpm/briefs/:brief_id/attaches/:attach_id/download' => :download_brief_attach,
+      :as => 'rpm_download_brief_attach'
   end
 
   controller :cheil do

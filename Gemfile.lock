@@ -31,6 +31,7 @@ GEM
       multi_json (~> 1.0)
     arel (2.2.1)
     builder (3.0.0)
+    cocaine (0.2.0)
     coffee-rails (3.1.1)
       coffee-script (>= 2.2.0)
       railties (~> 3.1.0)
@@ -55,6 +56,11 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     multi_json (1.0.3)
+    paperclip (2.4.5)
+      activerecord (>= 2.3.0)
+      activesupport (>= 2.3.2)
+      cocaine (>= 0.0.2)
+      mime-types
     polyglot (0.3.2)
     rack (1.3.5)
     rack-cache (1.1)
@@ -128,6 +134,7 @@ DEPENDENCIES
   coffee-rails (~> 3.1.1)
   execjs
   jquery-rails
+  paperclip (~> 2.4)
   rails (= 3.1.1)
   rspec (~> 2.0)
   rspec-rails (~> 2.0)

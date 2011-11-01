@@ -1,0 +1,21 @@
+<%= form_for(@brief_attach,:url=>@path,:html=>{ :multipart => true }) do |f| %>
+  <% if @brief_attach.errors.any? %>
+    <div id="error_explanation">
+      <h2>有<%= @brief_attach.errors.count %>个错误:</h2>
+      <ul>
+        <% @brief_attach.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :attach %><br />
+    <%= f.file_field :attach %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
