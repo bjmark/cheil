@@ -1,0 +1,25 @@
+<%
+  #partial => _brief_items 
+#locals => brief,brief_items,brief_designs,brief_products
+%>
+
+<%unless brief_items.empty?%>
+  <table>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+    </tr>
+    <%=render 'brief_items_tr',
+      :items=>brief_designs,
+      :kind=>'design',
+      :kind_cn=>'设计'
+    %>
+    <%=render 'brief_items_tr',
+      :items=>brief_products,
+      :kind=>'product',
+      :kind_cn=>'制作'
+    %>
+  </table>
+<%end%>
+

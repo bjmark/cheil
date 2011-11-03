@@ -1,0 +1,23 @@
+<%
+  #partial=>_brief_attaches
+#locals => brief_attaches
+%>
+<%unless brief_attaches.empty?%>
+  <table>
+    <tr>
+      <th>文件</th>
+      <th></th>
+    </tr>
+    <%brief_attaches.each do |e|%>
+      <tr>
+        <td>
+          <%= e.attach_file_name  %>
+        </td>
+        <td>
+          <%= link_to '下载',cheil_download_brief_attach_path(brief,e)%>
+        </td>
+      </tr>
+    <%end%>
+  </table>
+<%end%>
+

@@ -1,5 +1,6 @@
 <%
-  #items,kind,kind_cn
+  #partial => _brief_items_tr
+#locals => items,kind,kind_cn
 %>
 <%unless items.empty?%>
   <%n=0
@@ -10,10 +11,6 @@
       <%end%>
       <td><%= simple_format(e.name)  %></td>
       <td><%= e.quantity  %></td>
-      <td>
-        <%= link_to '修改',rpm_edit_item_path(e)  %>
-        <%= link_to '删除', rpm_destroy_item_path(e), :confirm => 'Are you sure?', :method => :delete %> 
-      </td>
     </tr>
   <%end%>
 <%end%>

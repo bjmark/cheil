@@ -81,8 +81,7 @@ class RpmController < ApplicationController
   #get 'rpm/briefs'=>:briefs,:as=>'rpm_briefs'
   def briefs
     @briefs = @cur_user.rpm_org.
-      briefs.paginate(:page => params[:page]).order('id DESC')
-    #@briefs = Brief.order('id desc').find_all_by_org_id(@cur_user.org_id)
+      briefs.paginate(:page => params[:page])
   end
 
   #get 'rpm/briefs/new'=>:new_brief,:as=>'rpm_new_brief'
@@ -106,19 +105,21 @@ class RpmController < ApplicationController
 
   #用户是否有权看brief
   def brief_can_read?(brief,user)
-    brief.rpm_id == user.org_id
-  end
-  #用户是否有权改brief
-  def brief_can_modify?(brief,user)
-    brief.rpm_id == user.org_id
+    return true if brief.rpm_id == user.org_id
+    invalid_op
   end
 
   #get 'rpm/briefs/:id'=>:show_brief,:as=>'rpm_show_brief'
   def show_brief
     @brief = Brief.find(params[:id])
-    invalid_op unless brief_can_read?(@brief,@cur_user)
-    @brief_comment = BriefComment.new
+    
+    brief_can_read?(@brief,@cur_user)
 
+    @brief_creator = @brief.user.name
+
+    @brief_attaches = @brief.attaches
+    
+    @brief_items = @brief.items
     @brief_designs = @brief.designs
     @brief_products = @brief.products
   end
@@ -126,7 +127,7 @@ class RpmController < ApplicationController
   #post 'rpm/briefs/:id/send'=>:send_brief,:as=>'rpm_send_brief'
   def send_brief
     @brief = Brief.find(params[:id])
-    invalid_op unless brief_can_read?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
     @brief.send_to_cheil!
     redirect_to(rpm_show_brief_path(@brief),:notice=>'成功发送到cheil') 
   end
@@ -134,14 +135,14 @@ class RpmController < ApplicationController
   #get 'rpm/briefs/:id/edit'=>:edit_brief,:as=>'rpm_edit_brief'
   def edit_brief
     @brief = Brief.find(params[:id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
     @action_to = rpm_update_brief_path
   end
 
   #put 'rpm/briefs/:id'=>:update_brief,:as=>'rpm_update_brief'
   def update_brief
     @brief = Brief.find(params[:id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     respond_to do |format|
       if @brief.update_attributes(params[:brief])
@@ -155,7 +156,7 @@ class RpmController < ApplicationController
   #delete 'rpm/briefs/:id'
   def delete_brief
     @brief = Brief.find(params[:id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     #删除关联的design,product等子项
     Item.delete_all("brief_id = #{@brief.id}")
@@ -181,7 +182,7 @@ class RpmController < ApplicationController
   #get 'rpm/briefs/:brief_id/items/new/:kind'=>:new_item,:as=>'rpm_new_item'
   def new_item
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
     @item = @brief.items.new
     @item.kind = params[:kind]
     @action_to = rpm_create_item_path(@brief)
@@ -190,7 +191,7 @@ class RpmController < ApplicationController
   #post 'rpm/briefs/:brief_id/items'=>:create_item,:as=>'rpm_create_item'
   def create_item
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
     @brief.items.create(params[:item]) 
 
     respond_to do |format|
@@ -239,16 +240,16 @@ class RpmController < ApplicationController
   #  :as=>'rpm_new_brief_comment'
   def new_brief_comment
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
     @brief_comment = BriefComment.new
-    @action_to = rpm_create_brief_comment_path(@brief)
+    @path = rpm_create_brief_comment_path(@brief)
   end
 
   #post 'rpm/briefs/:brief_id/comments'=>:create_brief_comment,
   #  :as=>'rpm_create_brief_comment'
   def create_brief_comment
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     attrs = Hash.new
     params[:brief_comment].each{|k,v| attrs[k]=v}
@@ -276,7 +277,7 @@ class RpmController < ApplicationController
   #  :as => 'rpm_new_brief_attach'
   def new_brief_attach
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
     @path = rpm_create_brief_attach_path(@brief)
     @brief_attach = BriefAttach.new
   end
@@ -285,7 +286,7 @@ class RpmController < ApplicationController
   #  :as => 'rpm_edit_brief_attach'
   def edit_brief_attach
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     @brief_attach = @brief.attaches.find(params[:attach_id])
     @path = rpm_update_brief_attach_path(@brief,@brief_attach)
@@ -295,7 +296,7 @@ class RpmController < ApplicationController
   #  :as => 'rpm_create_brief_attach'
   def create_brief_attach
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     attach = BriefAttach.new(params[:brief_attach])
     attach.brief_id = @brief.id
@@ -311,7 +312,7 @@ class RpmController < ApplicationController
   #  :as => 'rpm_update_brief_attach'
   def update_brief_attach
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     @brief_attach = @brief.attaches.find(params[:attach_id])
     if @brief_attach.update_attributes(params[:brief_attach])
@@ -325,7 +326,7 @@ class RpmController < ApplicationController
   #   :as => 'rpm_destroy_brief_attach'
   def destroy_brief_attach
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     attach = @brief.attaches.find(params[:attach_id])
     attach.destroy
@@ -337,7 +338,7 @@ class RpmController < ApplicationController
   #   :as => 'rpm_download_brief_attach'
   def download_brief_attach
     @brief = Brief.find(params[:brief_id])
-    invalid_op unless brief_can_modify?(@brief,@cur_user)
+    brief_can_read?(@brief,@cur_user)
 
     attach = @brief.attaches.find(params[:attach_id])
 

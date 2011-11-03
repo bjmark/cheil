@@ -1,20 +1,20 @@
-<%unless @brief.attaches.empty?%>
-  <%= link_to '新建附件', rpm_new_brief_attach_path(@brief) %>
+<%unless brief_attaches.empty?%>
+  <%= link_to '新建附件', rpm_new_brief_attach_path(brief) %>
   <table>
     <tr>
-      <th>文件名</th>
+      <th>文件</th>
       <th></th>
     </tr>
-    <%@brief.attaches.each do |e|%>
+    <%brief_attaches.each do |e|%>
       <tr>
         <td>
           <%= e.attach_file_name  %>
         </td>
         <td>
-          <%= link_to '下载',rpm_download_brief_attach_path(@brief,e)%>
-          <%= link_to '修改',rpm_edit_brief_attach_path(@brief,e)%>
+          <%= link_to '下载',rpm_download_brief_attach_path(brief,e)%>
+          <%= link_to '修改',rpm_edit_brief_attach_path(brief,e)%>
           <%= link_to '删除',
-            rpm_destroy_brief_attach_path(@brief,e), 
+            rpm_destroy_brief_attach_path(brief,e), 
             :confirm => 'Are you sure?', :method => :delete 
           %>
         </td>

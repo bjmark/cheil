@@ -20,24 +20,21 @@
   %>
 <%end%>
 </p>
-<p>
-名称:<%=@brief.name%>
-</p>
-<div>
-<%unless @brief.req.blank?%>
-  要求:<br/>
-  <%=simple_format(@brief.req)%>
-<%end%>
-</div>
-期限:<%=@brief.deadline%>
-</p>
-<p>
-创建者:<%= @brief.user.name%>
-日期:<%= short_d(@brief.created_at)%>
-</p>
-<%=render 'brief_attaches'%>
+<%=render 'brief',
+  :brief => @brief,
+  :brief_creator => @brief_creator
+%>
+<%=render 'brief_attaches',
+  :brief=>@brief,
+  :brief_attaches => @brief_attaches
+%>
 <br/>
-<%=render 'items'%>
+<%=render 'brief_items',
+  :brief => @brief,
+  :brief_items => @brief_items,
+  :brief_designs => @brief_designs,
+  :brief_products => @brief_products
+%>
 <br/>
 <%=render 'brief_comments'%>
 

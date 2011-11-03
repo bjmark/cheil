@@ -1,0 +1,24 @@
+<%= form_for(@brief_comment,:url=>@path) do |f| %>
+  <% if @brief_comment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@brief_comment.errors.count, "error") %> prohibited this brief_comment from being saved:</h2>
+      <ul>
+        <% @brief_comment.errors.full_messages.each do |msg| %>
+          <li>
+          <%= msg %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <br/>
+  <div class="field">
+    <%= f.label :content,'新评论'%>
+    <br />
+    <%= f.text_area :content,:rows=>3,:cols=>60 %>
+  </div>
+  <div class="actions">
+    <%= f.submit '保存'%>
+  </div>
+<% end %>
+

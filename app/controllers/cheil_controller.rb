@@ -1,31 +1,61 @@
 class CheilController < ApplicationController
   before_filter :cheil_authorize
 
-  #get 'cheil/briefs'
+  def brief_can_read?(brief,user)
+    return true if brief.cheil_id == user.org_id
+    invalid_op
+  end
+  
+  #get 'cheil/briefs'=>:briefs,:as=>'cheil_briefs'
   def briefs
-    @briefs = Brief.order('id desc').find_all_by_send_to_cheil('y')
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+    @briefs = @cur_user.cheil_org.
+      briefs.paginate(:page => params[:page])
   end
 
-  #get 'cheil/briefs/:id'
+  #get 'cheil/briefs/:id'=>:show_brief,:as=>'cheil_show_brief'
   def show_brief
     @brief = Brief.find(params[:id])
-    @brief_comment = BriefComment.new
+    @brief_creator = @brief.user.name
+
+    @brief_attaches = @brief.attaches
+
+    @brief_items = @brief.items
+    @brief_designs = @brief.designs
+    @brief_products = @brief.products
 
     org_ids = @brief.brief_vendors.collect{|e| e.org_id}
-    org_ids = org_ids.join(',')
-    @vendors = Org.where("id in (#{org_ids}) AND role = 'vendor'").all
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @brief }
+    if org_ids.empty?
+      @vendors = []
+    else
+      org_ids = org_ids.join(',')
+      @vendors = VendorOrg.where("id in (#{org_ids})").all
     end
   end
 
-  #post 'cheil/briefs/:brief_id/comment'
+  #get 'cheil/briefs/:brief_id/attaches/:attach_id/download' => :download_brief_attach,
+  #  :as => 'cheil_download_brief_attach'
+  def download_brief_attach
+    @brief = Brief.find(params[:brief_id])
+    brief_can_read?(@brief,@cur_user)
+
+    attach = @brief.attaches.find(params[:attach_id])
+
+    send_file attach.attach.path,
+      :filename => attach.attach_file_name,
+      :content_type => attach.attach_content_type
+  end
+
+  #get 'cheil/briefs/:brief_id/comments/new'=>:new_brief_comment,
+  #  :as=>'cheil_new_brief_comment'
+  def new_brief_comment
+    @brief = Brief.find(params[:brief_id])
+    brief_can_read?(@brief,@cur_user)
+    @brief_comment = BriefComment.new
+    @path = cheil_create_brief_comment_path(@brief)
+  end
+
+  #post 'cheil/briefs/:brief_id/comments'=>:create_brief_comment,
+  #  :as=>'cheil_create_brief_comment'
   def create_brief_comment
     @brief = Brief.find(params[:brief_id])
     bc = BriefComment.new(params[:brief_comment]) do |r|
@@ -48,36 +78,37 @@ class CheilController < ApplicationController
     end
   end
 
-  #get 'cheil/briefs/:id/vendors'
+  #get 'cheil/briefs/:id/vendors'=>:sel_brief_vendor,:as=>'cheil_sel_brief_vendor'
   def sel_brief_vendor
     #已被选中的vendors
     @brief = Brief.find(params[:id])
-    bv = BriefVendor.find_all_by_brief_id(params[:id])
+    bv = @brief.brief_vendors
     #所有org去除已被选中的vendor
-    @vendors = Org.find_all_by_role('vendor').reject do |e| 
+    @vendors = VendorOrg.all.reject do |e| 
       bv.find{|t| t.org_id == e.id}
     end
   end
 
-  #post 'cheil/briefs/:brief_id/vendors'
+  #post 'cheil/briefs/:brief_id/vendors'=>:add_brief_vendor,
+  #  :as=>'cheil_add_brief_vendor'
   def add_brief_vendor
     @brief = Brief.find(params[:brief_id])
     vendor_ids = []
     params.each {|k,v| vendor_ids << v if k=~/vendor\d+/}
     vendor_ids.each do |org_id|
-      a = BriefVendor.new
-      a.brief_id = @brief.id
-      a.org_id = org_id
-      a.save
+      @brief.brief_vendors << BriefVendor.new(:org_id=>org_id)
     end
 
     redirect_to(cheil_show_brief_url(@brief)) 
   end
 
   #delete 'cheil/briefs/:brief_id/vendors/:vendor_id' => :del_brief_vendor,
+  #  :as=>'cheil_del_brief_vendor'
   def del_brief_vendor
-    BriefVendor.delete_all(['brief_id=? and org_id=?',
-                           params[:brief_id],params[:vendor_id]])
+    brief = Brief.find(params[:brief_id])
+    brief_can_read?(brief,@cur_user)
+    brief_vendor = brief.brief_vendors.find_by_org_id(params[:vendor_id])
+    brief_vendor.destroy
     redirect_to(cheil_show_brief_url(params[:brief_id])) 
   end
 

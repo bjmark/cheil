@@ -113,12 +113,19 @@ Cheil::Application.routes.draw do
     #显示单个brief
     get 'cheil/briefs/:id'=>:show_brief,:as=>'cheil_show_brief'
 
+    #下载附件
+    get 'cheil/briefs/:brief_id/attaches/:attach_id/download' => :download_brief_attach,
+      :as => 'cheil_download_brief_attach'
+
+    get 'cheil/briefs/:brief_id/comments/new'=>:new_brief_comment,
+      :as=>'cheil_new_brief_comment'
+
     #创建brief评论
-    post 'cheil/briefs/:brief_id/comment'=>:create_brief_comment,
+    post 'cheil/briefs/:brief_id/comments'=>:create_brief_comment,
       :as=>'cheil_create_brief_comment'
 
     #删除一条brief评论
-    delete 'cheil/brief/comment/:id' => :destroy_brief_comment,
+    delete 'cheil/brief/comments/:id' => :destroy_brief_comment,
       :as=>'cheil_destroy_brief_comment'
 
     #给brief选择vendor

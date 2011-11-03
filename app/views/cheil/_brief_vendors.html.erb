@@ -1,0 +1,24 @@
+<%
+  #partial => _brief_vendors
+#locals => brief,vendors
+%>
+<%unless vendors.empty?%>
+  <%=link_to '选择Vendor',cheil_sel_brief_vendor_path(brief)%>
+  <table>
+    <tr>
+      <th>名称</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    <%vendors.each do |e|%>
+      <tr>
+        <td><%= e.name%></td>
+        <td><%= link_to '方案',cheil_brief_vendor_solution_path(brief,e)  %></td>
+        <td><%= link_to '指派',cheil_brief_vendor_items_path(brief,e)  %></td>
+        <td><%= link_to '删除', cheil_del_brief_vendor_path(brief,e), :confirm => 'Are you sure?', :method => :delete %></td>
+      </tr>
+    <%end%>
+  </table>
+<%end%>
+

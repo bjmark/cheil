@@ -1,0 +1,23 @@
+<%
+  #brief,brief_creator
+%>
+<p>
+名称:<%=brief.name%>
+</p>
+
+<div>
+  <%unless brief.req.blank?%>
+    要求:<br/>
+    <%=simple_format(brief.req)%>
+  <%end%>
+</div>
+
+<p>
+期限:<%=brief.deadline%>
+</p>
+
+<p>
+创建者:<%= brief_creator%>
+创建日期:<%= short_d(brief.created_at)%>
+</p>
+
