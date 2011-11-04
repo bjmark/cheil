@@ -1,5 +1,11 @@
 class CheilController < ApplicationController
-  before_filter :cheil_authorize
+  before_filter :cur_user,:authorize
+
+  def authorize
+    unless @cur_user.org.instance_of?(CheilOrg)
+      redirect_to users_login_url
+    end
+  end
 
   def brief_can_read?(brief,user)
     return true if brief.cheil_id == user.org_id

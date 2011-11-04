@@ -1,7 +1,13 @@
 # encoding: utf-8
 class VendorController < ApplicationController
   #检查是否login
-  before_filter :vendor_authorize
+  before_filter :cur_user,:authorize
+
+  def authorize
+    unless @cur_user.org.instance_of?(VendorOrg)
+      redirect_to users_login_url
+    end
+  end
 
   #get 'vendor/briefs'=>:briefs,:as=>'vendor_briefs'
   def briefs

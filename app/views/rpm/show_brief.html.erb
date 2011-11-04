@@ -11,7 +11,10 @@
 <%= link_to '新建附件', rpm_new_brief_attach_path(@brief) %>
 <%= link_to '新建设计项', rpm_new_item_path(@brief,'design') %>
 <%= link_to '新建制作项', rpm_new_item_path(@brief,'product') %>
-<%= link_to '新建评论', rpm_new_brief_comment_path(@brief) %>
+<%= link_to '新建评论', 
+  new_brief_comment_path(@brief,
+  :back=>rpm_show_brief_path(@brief)) 
+%>
 <%unless @brief.send_to_cheil?%>
   <%=link_to '发送给cheil',
     rpm_send_brief_path(@brief),
@@ -36,5 +39,9 @@
   :brief_products => @brief_products
 %>
 <br/>
-<%=render 'brief_comments'%>
+<%=render 'comments/brief_comments',
+  :brief => @brief,
+  :comments => @comments,
+  :back => @back
+%>
 

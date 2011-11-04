@@ -11,11 +11,20 @@ Cheil::Application.routes.draw do
 
   resources :brief_vendors
 
-  resources :brief_comments
-
   resources :briefs
 
   resources :orgs
+
+  controller :comments do
+    get 'briefs/:brief_id/comments/new' => :new_brief_comment,
+      :as => 'new_brief_comment'
+    
+    post 'briefs/:brief_id/comments' => :create_brief_comment,
+      :as => 'create_brief_comment'
+
+    delete 'briefs/:brief_id/comments/:comment_id' => :destroy_brief_comment,
+      :as => 'destroy_brief_comment' 
+  end
 
   controller :users do
     get 'users/login'=>:login,:as=>'users_login'
@@ -75,16 +84,6 @@ Cheil::Application.routes.draw do
 
     #destroy
     delete 'rpm/items/:id' => :destroy_item,:as=>'rpm_destroy_item'
-
-    #对brief_comment的操作
-    get 'rpm/briefs/:brief_id/comments/new'=>:new_brief_comment,
-      :as=>'rpm_new_brief_comment'
-
-    post 'rpm/briefs/:brief_id/comments'=>:create_brief_comment,
-      :as=>'rpm_create_brief_comment'
-    
-    delete 'rpm/brief/comments/:id' => :destroy_brief_comment,
-      :as=>'rpm_destroy_brief_comment'
 
     #attach
     get 'rpm/briefs/:brief_id/attaches/new' => :new_brief_attach,

@@ -76,7 +76,13 @@ end
 #包含rpm的所有操作
 class RpmController < ApplicationController
   #检查是否login
-  before_filter :rpm_authorize
+  before_filter :cur_user,:authorize
+
+  def authorize
+    unless @cur_user.org.instance_of?(RpmOrg)
+      redirect_to users_login_url
+    end
+  end
 
   #get 'rpm/briefs'=>:briefs,:as=>'rpm_briefs'
   def briefs
@@ -122,6 +128,9 @@ class RpmController < ApplicationController
     @brief_items = @brief.items
     @brief_designs = @brief.designs
     @brief_products = @brief.products
+
+    @comments = @brief.comments
+    @back = rpm_show_brief_path(@brief)
   end
 
   #post 'rpm/briefs/:id/send'=>:send_brief,:as=>'rpm_send_brief'
@@ -233,43 +242,6 @@ class RpmController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(rpm_show_brief_url(@item.brief)) }
-    end
-  end
-
-  #get 'rpm/briefs/:brief_id/comments/new'=>:new_brief_comment,
-  #  :as=>'rpm_new_brief_comment'
-  def new_brief_comment
-    @brief = Brief.find(params[:brief_id])
-    brief_can_read?(@brief,@cur_user)
-    @brief_comment = BriefComment.new
-    @path = rpm_create_brief_comment_path(@brief)
-  end
-
-  #post 'rpm/briefs/:brief_id/comments'=>:create_brief_comment,
-  #  :as=>'rpm_create_brief_comment'
-  def create_brief_comment
-    @brief = Brief.find(params[:brief_id])
-    brief_can_read?(@brief,@cur_user)
-
-    attrs = Hash.new
-    params[:brief_comment].each{|k,v| attrs[k]=v}
-    attrs[:user_id] = @cur_user.id
-
-    @brief.comments.create!(attrs)
-
-    respond_to do |format|
-      format.html { redirect_to(rpm_show_brief_url(@brief)) }
-    end
-  end
-
-  #delete 'rpm/brief/comments/:id' => :destroy_brief_comment,
-  #  :as=>'rpm_destroy_brief_comment'
-  def destroy_brief_comment
-    @brief_comment = BriefComment.find(params[:id])
-    @brief_comment.destroy if @brief_comment.user_id == @cur_user.id
-
-    respond_to do |format|
-      format.html { redirect_to(rpm_show_brief_url(@brief_comment.brief_id)) }
     end
   end
 

@@ -21,4 +21,11 @@
 #rails generate migration add_rpm_org_id_to_orgs rpm_org_id:integer
 #rails generate migration rename_role_to_type_in_orgs
 #rails generate migration add_cheil_id_to_briefs cheil_id:integer
-rails g model brief_attach brief_id:integer
+#rails g model brief_attach brief_id:integer
+
+#rails destroy scaffold brief_comment  
+
+#rails g migration drop_brief_comment
+#rails generate scaffold comment content:string type:string fk_id:integer user_id:integer 
+
+rails generate migration change_content_type  

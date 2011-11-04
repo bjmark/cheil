@@ -2,6 +2,23 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  def cur_user
+    begin
+      break unless session[:user]
+      a=session[:user].split('_')
+      break if a.length != 2
+
+      @cur_user = User.find(a[1].to_i)
+      case @cur_user.org
+      when RpmOrg then @menu_file = 'rpm/menu'
+      when CheilOrg then @menu_file = 'cheil/menu'
+      when VendorOrg then @menu_file = 'vendor/menu'
+      end
+      return
+    end while false
+    redirect_to users_login_url
+  end
+
   def authorize(m_class,type)
     return false unless session[:user]=~/^#{type}/
       a=session[:user].split('_')
@@ -12,21 +29,6 @@ class ApplicationController < ActionController::Base
   def admin_authorize
     redirect_to admin_users_login_url unless authorize(AdminUser,'admin')
     @menu_file = 'admin_users/_menu'
-  end
-
-  def rpm_authorize
-    redirect_to users_login_url unless authorize(User,'rpm')
-    @menu_file = 'rpm/_menu'
-  end
-
-  def cheil_authorize
-    redirect_to users_login_url unless authorize(User,'cheil')
-    @menu_file = 'cheil/_menu'
-  end
-
-  def vendor_authorize
-    redirect_to users_login_url unless authorize(User,'vendor')
-    @menu_file = 'vendor/_menu'
   end
 
   def invalid_op

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111101093558) do
+ActiveRecord::Schema.define(:version => 20111103050040) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -27,14 +27,6 @@ ActiveRecord::Schema.define(:version => 20111101093558) do
     t.string   "attach_content_type"
     t.integer  "attach_file_size"
     t.datetime "attach_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "brief_comments", :force => true do |t|
-    t.string   "content"
-    t.integer  "brief_id"
-    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -56,6 +48,15 @@ ActiveRecord::Schema.define(:version => 20111101093558) do
     t.integer  "cheil_id",   :default => 0
     t.text     "req"
     t.date     "deadline"
+  end
+
+  create_table "comments", :force => true do |t|
+    t.string   "type"
+    t.integer  "fk_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "content"
   end
 
   create_table "items", :force => true do |t|
