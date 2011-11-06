@@ -1,0 +1,25 @@
+<%
+  #partial => _brief_items_tr
+#locals => brief,items,kind,kind_cn,back
+%>
+<%unless items.empty?%>
+  <%n=0
+  items.each do |e|%>
+    <tr>
+      <%(n+=1).upto(1)do %>
+        <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+      <%end%>
+      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.quantity  %></td>
+      <td>
+        <%= link_to '修改',edit_brief_item_path(brief,e,:back=>back)  %>
+        <%= link_to '删除',
+          brief_item_path(brief,e,:back=>back), 
+          :confirm => 'Are you sure?', 
+          :method => :delete 
+        %> 
+      </td>
+    </tr>
+  <%end%>
+<%end%>
+

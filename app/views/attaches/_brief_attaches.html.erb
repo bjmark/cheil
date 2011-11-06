@@ -1,0 +1,29 @@
+<%
+  #partial =>  _brief_attaches
+#locals => brief,brief_attaches,back
+%>
+<%unless brief_attaches.empty?%>
+  <%= link_to '新建附件', new_brief_attach_path(brief,:back=>back) %>
+  <table>
+    <tr>
+      <th>文件</th>
+      <th></th>
+    </tr>
+    <%brief_attaches.each do |e|%>
+      <tr>
+        <td>
+          <%= e.attach_file_name  %>
+        </td>
+        <td>
+          <%= link_to '下载',download_brief_attach_path(brief,e)%>
+          <%= link_to '修改',edit_brief_attach_path(brief,e,:back=>back)%>
+          <%= link_to '删除',
+            brief_attach_path(brief,e,:back=>back), 
+            :confirm => 'Are you sure?', :method => :delete 
+          %>
+        </td>
+      </tr>
+    <%end%>
+  </table>
+<%end%>
+

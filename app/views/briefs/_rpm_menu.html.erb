@@ -1,0 +1,18 @@
+<%= link_to '修改', edit_brief_path(@brief) %>
+<%= link_to '删除', destroy_brief_path(@brief), 
+  :confirm => '将删除关联的所有信息,确定?', :method => :delete
+%>
+<%= link_to '新建附件', new_attach_path(@brief) %>
+<%= link_to '新建设计项', new_item_path(@brief,'design') %>
+<%= link_to '新建制作项', new_item_path(@brief,'product') %>
+<%= link_to '新建评论', 
+  new_comment_path(@brief,:back=>show_brief_path(@brief))
+%>
+<%unless @brief.send_to_cheil?%>
+  <%=link_to '发送给cheil',
+    rpm_send_brief_path(@brief),
+    :confirm => '确定吗？',
+    :method => :post
+  %>
+<%end%>
+
