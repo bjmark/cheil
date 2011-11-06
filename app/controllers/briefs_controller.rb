@@ -1,55 +1,64 @@
+#encoding=utf-8
 class BriefsController < ApplicationController
+  before_filter :cur_user , :check_right
+
+  def check_right
+    rpm =[:index,:new,:show,:edit,:create,:update,:destroy,:send]
+    cheil = [:index,:show]
+    vendor = [:index,:show]
+
+    case @cur_user.org
+    when RpmOrg then rpm.include?(params[:action].to_sym)
+    when CheilOrg then cheil.include?(params[:action].to_sym)
+    when VendorOrg then vendor.include?(params[:action].to_sym)
+    else  raise SecurityError
+    end
+  end
   # GET /briefs
   # GET /briefs.json
   def index
-    @briefs = Brief.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @briefs }
-    end
+    @briefs = @cur_user.org.briefs.paginate(:page => params[:page])
   end
 
   # GET /briefs/1
-  # GET /briefs/1.json
   def show
     @brief = Brief.find(params[:id])
+    
+    @brief.check_read_right(@cur_user)
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @brief }
-    end
+    @brief_attaches = @brief.attaches
+    
+    @brief_items = @brief.items
+    @brief_designs = @brief.designs
+    @brief_products = @brief.products
+
+    @comments = @brief.comments
+    @back = brief_path(@brief)
+
   end
 
   # GET /briefs/new
-  # GET /briefs/new.json
   def new
     @brief = Brief.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @brief }
-    end
   end
 
   # GET /briefs/1/edit
   def edit
     @brief = Brief.find(params[:id])
+    @brief.check_edit_right(@cur_user)
+    @back = params[:back]
   end
 
   # POST /briefs
-  # POST /briefs.json
   def create
     @brief = Brief.new(params[:brief])
+    @brief.rpm_id = @cur_user.org_id
+    @brief.user_id = @cur_user.id
 
-    respond_to do |format|
-      if @brief.save
-        format.html { redirect_to @brief, notice: 'Brief was successfully created.' }
-        format.json { render json: @brief, status: :created, location: @brief }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @brief.errors, status: :unprocessable_entity }
-      end
+    if @brief.save
+      redirect_to briefs_path, notice: 'Brief was successfully created.' 
+    else
+      render action: "new" 
     end
   end
 
@@ -57,15 +66,12 @@ class BriefsController < ApplicationController
   # PUT /briefs/1.json
   def update
     @brief = Brief.find(params[:id])
+    @brief.check_edit_right(@cur_user)
 
-    respond_to do |format|
-      if @brief.update_attributes(params[:brief])
-        format.html { redirect_to @brief, notice: 'Brief was successfully updated.' }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @brief.errors, status: :unprocessable_entity }
-      end
+    if @brief.update_attributes(params[:brief])
+      redirect_to @brief, notice: 'Brief was successfully updated.' 
+    else
+      render action: "edit" 
     end
   end
 
@@ -73,11 +79,16 @@ class BriefsController < ApplicationController
   # DELETE /briefs/1.json
   def destroy
     @brief = Brief.find(params[:id])
+    @brief.check_destroy_right(@cur_user)
     @brief.destroy
+    redirect_to briefs_url 
+  end
 
-    respond_to do |format|
-      format.html { redirect_to briefs_url }
-      format.json { head :ok }
-    end
+  #put /briefs/1/send_to_cheil
+  def send_to_cheil
+    @brief = Brief.find(params[:id])
+    @brief.check_edit_right(@cur_user)
+    @brief.send_to_cheil!
+    redirect_to(brief_path(@brief),:notice=>'成功发送到cheil') 
   end
 end

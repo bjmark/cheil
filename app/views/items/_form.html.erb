@@ -1,43 +1,27 @@
-<%= form_for(@item) do |f| %>
+<%= form_for(@item,:url=>@path) do |f| %>
   <% if @item.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
 
       <ul>
-      <% @item.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="field">
-    <%= f.label :brief_id %><br />
-    <%= f.number_field :brief_id %>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
   </div>
   <div class="field">
     <%= f.label :quantity %><br />
     <%= f.text_field :quantity %>
   </div>
   <div class="field">
-    <%= f.label :price %><br />
-    <%= f.text_field :price %>
-  </div>
-  <div class="field">
-    <%= f.label :kind %><br />
-    <%= f.text_field :kind %>
-  </div>
-  <div class="field">
-    <%= f.label :parent_id %><br />
-    <%= f.number_field :parent_id %>
-  </div>
-  <div class="field">
-    <%= f.label :vendor_id %><br />
-    <%= f.number_field :vendor_id %>
-  </div>
-  <div class="field">
-    <%= f.label :checked %><br />
-    <%= f.text_field :checked %>
+    设计项<%= f.radio_button :kind,'design' %><br/>
+    制作项<%= f.radio_button :kind,'product' %>
   </div>
   <div class="actions">
     <%= f.submit %>

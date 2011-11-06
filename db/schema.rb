@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111103050040) do
+ActiveRecord::Schema.define(:version => 20111106102453) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -21,8 +21,10 @@ ActiveRecord::Schema.define(:version => 20111103050040) do
     t.datetime "updated_at"
   end
 
-  create_table "brief_attaches", :force => true do |t|
-    t.integer  "brief_id"
+  create_table "attaches", :force => true do |t|
+    t.string   "type"
+    t.integer  "fk_id"
+    t.integer  "user_id"
     t.string   "attach_file_name"
     t.string   "attach_content_type"
     t.integer  "attach_file_size"
@@ -60,16 +62,17 @@ ActiveRecord::Schema.define(:version => 20111103050040) do
   end
 
   create_table "items", :force => true do |t|
-    t.integer  "brief_id"
     t.string   "name"
     t.string   "quantity"
     t.string   "price"
     t.string   "kind"
-    t.integer  "parent_id",                    :default => 0
-    t.integer  "brief_vendor_id"
-    t.string   "checked",         :limit => 1, :default => "n"
+    t.integer  "parent_id",               :default => 0
+    t.string   "checked",    :limit => 1, :default => "n"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type"
+    t.integer  "fk_id"
+    t.string   "material"
   end
 
   create_table "orgs", :force => true do |t|
@@ -78,6 +81,16 @@ ActiveRecord::Schema.define(:version => 20111103050040) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rpm_org_id"
+  end
+
+  create_table "solutions", :force => true do |t|
+    t.integer  "brief_id"
+    t.integer  "org_id"
+    t.string   "type"
+    t.string   "is_sent"
+    t.datetime "sent_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

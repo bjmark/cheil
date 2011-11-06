@@ -28,5 +28,4 @@ class User < ActiveRecord::Base
     end
     return nil
   end
-
 end

@@ -28,4 +28,11 @@
 #rails g migration drop_brief_comment
 #rails generate scaffold comment content:string type:string fk_id:integer user_id:integer 
 
-rails generate migration change_content_type  
+#rails generate migration change_content_type  
+
+#rails g scaffold attach fk_id:integer type:string user_id:integer
+#rails destroy model brief_attach
+#rails g migration drop_brief_attach
+#rails g model solution brief_id:integer org_id:integer type:string is_sent:string
+
+rails g migration add_and_remove_columns_items

@@ -1,31 +1,39 @@
 # encoding: utf-8
 Cheil::Application.routes.draw do
 
+  resources :attaches
+
   resources :vendor_orgs
 
   resources :cheil_orgs
 
   resources :rpm_orgs
 
-  resources :items
-
   resources :brief_vendors
 
-  resources :briefs
-
-  resources :orgs
-
-  controller :comments do
-    get 'briefs/:brief_id/comments/new' => :new_brief_comment,
-      :as => 'new_brief_comment'
-    
-    post 'briefs/:brief_id/comments' => :create_brief_comment,
-      :as => 'create_brief_comment'
-
-    delete 'briefs/:brief_id/comments/:comment_id' => :destroy_brief_comment,
-      :as => 'destroy_brief_comment' 
+  resources :briefs do
+    member do
+      put :send_to_cheil
+    end
+    resources :comments , :only=>[:new,:create,:destroy]
+    resources :attaches do 
+      member do 
+        get :download
+      end
+    end
+    resources :items 
   end
 
+  resources :orgs
+=begin
+  controller :items do 
+    get 'briefs/:brief_id/items/new/:kind'=>:new,:as=>'new_item'
+    post 'briefs/:brief_id/items'=>:create,:as=>'create_item'
+    get 'items/:id/edit'=>:edit,:as=>'edit_item'
+    put 'items/:id'=>:update,:as=>'update_item'
+    delete 'items/:id' => :destroy,:as=>'destroy_item'
+  end
+=end
   controller :users do
     get 'users/login'=>:login,:as=>'users_login'
     post 'users/login'=>:check,:as=>'users_check'
@@ -68,24 +76,7 @@ Cheil::Application.routes.draw do
     #delete
     delete 'rpm/briefs/:id'=>:delete_brief,:as=>'rpm_delete_brief'
 
-    #对item的操作
-    
-    #new item
-    get 'rpm/briefs/:brief_id/items/new/:kind'=>:new_item,:as=>'rpm_new_item'
-
-    #create
-    post 'rpm/briefs/:brief_id/items'=>:create_item,:as=>'rpm_create_item'
-
-    #edit
-    get 'rpm/items/:id/edit'=>:edit_item,:as=>'rpm_edit_item'
-
-    #update
-    put 'rpm/items/:id'=>:update_item,:as=>'rpm_update_item'
-
-    #destroy
-    delete 'rpm/items/:id' => :destroy_item,:as=>'rpm_destroy_item'
-
-    #attach
+        #attach
     get 'rpm/briefs/:brief_id/attaches/new' => :new_brief_attach,
       :as => 'rpm_new_brief_attach'
     

@@ -133,57 +133,6 @@ class RpmController < ApplicationController
     @back = rpm_show_brief_path(@brief)
   end
 
-  #post 'rpm/briefs/:id/send'=>:send_brief,:as=>'rpm_send_brief'
-  def send_brief
-    @brief = Brief.find(params[:id])
-    brief_can_read?(@brief,@cur_user)
-    @brief.send_to_cheil!
-    redirect_to(rpm_show_brief_path(@brief),:notice=>'成功发送到cheil') 
-  end
-
-  #get 'rpm/briefs/:id/edit'=>:edit_brief,:as=>'rpm_edit_brief'
-  def edit_brief
-    @brief = Brief.find(params[:id])
-    brief_can_read?(@brief,@cur_user)
-    @action_to = rpm_update_brief_path
-  end
-
-  #put 'rpm/briefs/:id'=>:update_brief,:as=>'rpm_update_brief'
-  def update_brief
-    @brief = Brief.find(params[:id])
-    brief_can_read?(@brief,@cur_user)
-
-    respond_to do |format|
-      if @brief.update_attributes(params[:brief])
-        format.html { redirect_to(rpm_show_brief_path(@brief)) }
-      else
-        format.html { render :action => "edit" }
-      end
-    end
-  end
-
-  #delete 'rpm/briefs/:id'
-  def delete_brief
-    @brief = Brief.find(params[:id])
-    brief_can_read?(@brief,@cur_user)
-
-    #删除关联的design,product等子项
-    Item.delete_all("brief_id = #{@brief.id}")
-
-    #删除所有指派给vendor的子项
-    vendor_ids = @brief.brief_vendor_ids
-    vendor_ids = vendor_ids.join(',')
-    Item.delete_all("brief_vendor_id in (#{vendor_ids})")
-
-    #删除vendors指派
-    BriefVendor.delete_all("brief_id = #{@brief.id}")
-
-    @brief.destroy
-    respond_to do |format|
-      format.html { redirect_to(rpm_briefs_path) }
-    end
-  end
-
   def item_can_modify?(item,user)
     item.brief.rpm_id == user.org_id
   end
@@ -243,15 +192,6 @@ class RpmController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(rpm_show_brief_url(@item.brief)) }
     end
-  end
-
-  #get 'rpm/briefs/:brief_id/attaches/new' => :new_brief_attach,
-  #  :as => 'rpm_new_brief_attach'
-  def new_brief_attach
-    @brief = Brief.find(params[:brief_id])
-    brief_can_read?(@brief,@cur_user)
-    @path = rpm_create_brief_attach_path(@brief)
-    @brief_attach = BriefAttach.new
   end
 
   #get 'rpm/briefs/:brief_id/attaches/:attach_id/edit' => :edit_brief_attach,

@@ -1,20 +1,44 @@
-<p id="notice"><%= notice %></p>
-
+<%if notice%>
+  <p id="notice"><%= notice %></p>
+<%end%>
+<h1>brief显示</h1>
 <p>
-  <b>Name:</b>
-  <%= @brief.name %>
+<%= link_to '修改', edit_brief_path(@brief,:back=>@back) %>
+<%= link_to '删除',
+  brief_path(@brief), 
+  :confirm => '将删除关联的所有信息,确定?', :method => :delete
+%>
+<%= link_to '新建附件', new_brief_attach_path(@brief,:back=>@back) %>
+<%= link_to '新建设计项', new_brief_item_path(@brief,:kind=>'design',:back=>@back) %>
+<%= link_to '新建制作项', new_brief_item_path(@brief,:kind=>'product',:back=>@back) %>
+<%= link_to '新建评论', 
+  new_brief_comment_path(@brief,:back=>brief_path(@brief))%>
+<%unless @brief.send_to_cheil?%>
+  <%=link_to '发送给cheil',
+    send_to_cheil_brief_path(@brief),
+    :confirm => '确定吗？',
+    :method => :put
+  %>
+<%end%>
 </p>
+<%=render 'show',:brief => @brief%>
+<%=render 'attaches/brief_attaches',
+  :brief=>@brief,
+  :brief_attaches => @brief_attaches,
+  :back => @back
+%>
+<br/>
+<%=render 'items/brief_items',
+  :brief => @brief,
+  :brief_items => @brief_items,
+  :brief_designs => @brief_designs,
+  :brief_products => @brief_products,
+  :back => @back
+%>
+<br/>
+<%=render 'comments/brief_comments',
+  :brief => @brief,
+  :comments => @comments,
+  :back => @back
+%>
 
-<p>
-  <b>User:</b>
-  <%= @brief.user_id %>
-</p>
-
-<p>
-  <b>Org:</b>
-  <%= @brief.org_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_brief_path(@brief) %> |
-<%= link_to 'Back', briefs_path %>

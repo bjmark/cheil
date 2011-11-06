@@ -1,3 +1,3 @@
-class BriefAttach < ActiveRecord::Base
-  has_attached_file :attach,:path => ":rails_root/attach_files/:id/:filename" 
+class BriefAttach < Attach
+  belongs_to :brief,:foreign_key => 'fk_id'
 end

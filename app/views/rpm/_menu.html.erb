@@ -5,9 +5,9 @@
   <br/>
   用户:<%= @cur_user.name%>
 </p>
-<%= link_to '新建brief',   rpm_new_brief_path   %>
+<%= link_to '新建brief',   new_brief_path   %>
 <br/>
-<%= link_to 'brief列表',   rpm_briefs_path   %>
+<%= link_to 'brief列表',   briefs_path   %>
 <br />
 <br />
 <%= button_to '退出', users_logout_path, :method => :delete   %>

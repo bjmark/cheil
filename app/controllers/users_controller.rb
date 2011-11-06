@@ -8,17 +8,17 @@ class UsersController < ApplicationController
       redirect_to users_login_url
       return
     end
+
     case u.org
     when RpmOrg 
       session[:user] = "rpm_#{u.id}"
-      redirect_to rpm_briefs_url
     when CheilOrg
       session[:user] = "cheil_#{u.id}"
-      redirect_to cheil_briefs_url
     when VendorOrg
       session[:user] = "vendor_#{u.id}"
-      redirect_to vendor_briefs_url
     end
+    
+    redirect_to briefs_path
   end
 
   #DELETE /user/logout

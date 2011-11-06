@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
-  # GET /items
-  # GET /items.json
+  before_filter :cur_user 
+
   def index
     @items = Item.all
 
@@ -21,63 +21,67 @@ class ItemsController < ApplicationController
     end
   end
 
-  # GET /items/new
-  # GET /items/new.json
+  #get 'briefs/:brief_id/items/new/:kind'=>:new,:as=>'new_brief_item'
   def new
-    @item = Item.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @item }
+    if params[:brief_id]
+      @brief = Brief.find(params[:brief_id])
+      @brief.check_edit_right(@cur_user)
+      @item = @brief.items.new(:kind=>params[:kind])
+      @back = params[:back]
+      @path = brief_items_path(@brief,:back=>@back)
     end
   end
 
-  # GET /items/1/edit
+  #get 'briefs/:brief_id/item/1/edit/'=>:edit,:as=>'edit_brief_item'
   def edit
-    @item = Item.find(params[:id])
+    if params[:brief_id]
+      @brief = Brief.find(params[:brief_id])
+      @brief.check_edit_right(@cur_user)
+      @item = @brief.items.find(params[:id])
+      @back = params[:back]
+      @path = brief_item_path(@brief,@item,:back=>@back)
+    end
   end
 
-  # POST /items
-  # POST /items.json
+  #post 'briefs/:brief_id/items'=>:create,:as=>'brief_items'
   def create
-    @item = Item.new(params[:item])
-
-    respond_to do |format|
+    if params[:brief_id]
+      @brief = Brief.find(params[:brief_id])
+      @brief.check_edit_right(@cur_user)
+      @item = @brief.items.new(params[:brief_item])
+      @back = params[:back]
       if @item.save
-        format.html { redirect_to @item, notice: 'Item was successfully created.' }
-        format.json { render json: @item, status: :created, location: @item }
+        redirect_to params[:back], notice: 'Item was successfully created.' 
       else
-        format.html { render action: "new" }
-        format.json { render json: @item.errors, status: :unprocessable_entity }
+        @path = brief_items_path(@brief,:back=>@back)
+        render action: "new" 
       end
     end
   end
 
-  # PUT /items/1
-  # PUT /items/1.json
+  #put 'briefs/:brief_id/item/1'=>:update,:as=>'brief_item'
   def update
-    @item = Item.find(params[:id])
+    if params[:brief_id]
+      @brief = Brief.find(params[:brief_id])
+      @brief.check_edit_right(@cur_user)
+      @item = @brief.items.find(params[:id])
 
-    respond_to do |format|
-      if @item.update_attributes(params[:item])
-        format.html { redirect_to @item, notice: 'Item was successfully updated.' }
-        format.json { head :ok }
+      if @item.update_attributes(params[:brief_item])
+        redirect_to params[:back], notice: 'Item was successfully updated.' 
       else
-        format.html { render action: "edit" }
-        format.json { render json: @item.errors, status: :unprocessable_entity }
+        render action: "edit" 
       end
     end
   end
 
-  # DELETE /items/1
-  # DELETE /items/1.json
+  #delete 'briefs/:brief_id/item/1'=>:destroy,:as=>'brief_item'
   def destroy
-    @item = Item.find(params[:id])
-    @item.destroy
-
-    respond_to do |format|
-      format.html { redirect_to items_url }
-      format.json { head :ok }
+    if params[:brief_id]
+      @brief = Brief.find(params[:brief_id])
+      @brief.check_edit_right(@cur_user)
+      @item = @brief.items.find(params[:id])
+      @item.destroy
+      redirect_to params[:back]
     end
   end
 end

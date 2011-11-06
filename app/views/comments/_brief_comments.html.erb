@@ -20,7 +20,7 @@
         <td>
           <%= simple_format(e.content)  %>
           <%= link_to '删除',
-            destroy_brief_comment_path(brief,e,:back=>back), 
+            brief_comment_path(brief,e,:back=>back), 
             :confirm => 'Are you sure?', 
             :method => :delete if @cur_user.id == e.user_id
           %>

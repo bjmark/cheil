@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
       when CheilOrg then @menu_file = 'cheil/menu'
       when VendorOrg then @menu_file = 'vendor/menu'
       end
+
       return
     end while false
     redirect_to users_login_url
