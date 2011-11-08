@@ -1,4 +1,4 @@
-<%= form_for(@item,:url=>@path) do |f| %>
+<%= form_for(@item,:url=>@path,:html=>{:class=>'form'}) do |f| %>
   <% if @item.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
@@ -11,19 +11,26 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+  <div class="group">
+    <%= f.label :name,'名称',:class=>'label' %>
+    <%= f.text_field :name,:class=>'text_field' %>
   </div>
-  <div class="field">
-    <%= f.label :quantity %><br />
-    <%= f.text_field :quantity %>
+  <div class="group">
+    <%= f.label :quantity,'数量',:class=>'label' %>
+    <%= f.text_field :quantity,:class=>'text_field' %>
   </div>
-  <div class="field">
-    设计项<%= f.radio_button :kind,'design' %><br/>
-    制作项<%= f.radio_button :kind,'product' %>
+  <div class="group">
+    <div>
+      <%= f.radio_button :kind,'design',:class=>'checkbox' %>
+      <%=f.label :kind,'设计项',:class=>'radio'%>
+    </div>
+    <div>
+      <%= f.radio_button :kind,'product',:class=>'checkbox' %>
+      <%=f.label :kind,'制作项',:class=>'radio'%>
+    </div>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class="group">
+    <%= f.submit '提交' %>
+    <%= link_to '返回',@back%>
   </div>
 <% end %>

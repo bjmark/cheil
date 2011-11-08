@@ -10,9 +10,9 @@ class ApplicationController < ActionController::Base
 
       @cur_user = User.find(a[1].to_i)
       case @cur_user.org
-      when RpmOrg then @menu_file = 'rpm/menu'
-      when CheilOrg then @menu_file = 'cheil/menu'
-      when VendorOrg then @menu_file = 'vendor/menu'
+      when RpmOrg then @menu_file = 'share/rpm_menu'
+      when CheilOrg then @menu_file = 'share/cheil_menu'
+      when VendorOrg then @menu_file = 'share/vendor_menu'
       end
 
       return

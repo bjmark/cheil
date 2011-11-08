@@ -1,23 +1,54 @@
+<%
+  content_for :cur_user do
+    render 'share/cur_user' if @cur_user
+  end
+  content_for :sidebar do
+    render @menu_file if @cur_user
+  end
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cheil</title>
-  <%= stylesheet_link_tag    "application" %>
+  <title>Cheil App</title>
+  <%= stylesheet_link_tag 'web_app_theme' %>
   <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
+  <%= csrf_meta_tag %>
 </head>
- <body id="store">
-    <div id="banner">
-      <%= "Cheil项目管理" %>
-    </div>
-    <div id="columns">
-      <div id="side">
-        <%=render @menu_file if @cur_user%>
+<body>
+  <div id="container">
+    <div id="header">
+      <h1><a href="/">Cheil App</a></h1>
+      <div id="user-navigation">
+        <ul class="wat-cf">
+          <li><a href="#"><%= t("web-app-theme.profile", :default => "Profile") %></a></li>
+          <li><a href="#"><%= t("web-app-theme.settings", :default => "Settings") %></a></li>
+          <li>
+          <%= link_to '退出', logout_path, :method => :delete,:class=>'logout'   %>
+          </li>
+
+        </ul>
+      </div>
+      <div id="main-navigation">
+        <ul class="wat-cf"></ul>
+      </div>
+    </div>    
+    <div id="wrapper" class="wat-cf">
+      <div class="flash">
+        <% flash.each do |type, message| -%>
+          <div class="message <%= type %>">
+            <p><%= message %></p>
+          </div>
+        <% end -%>
       </div>
       <div id="main">
         <%= yield %>
       </div>
-    </div>
-  </body>
-
+      <div id="sidebar">
+        <%= yield :sidebar %>
+        <%= yield :cur_user %>
+      </div>
+    </div>    
+  </div>
+</body>
 </html>

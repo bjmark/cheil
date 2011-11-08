@@ -1,0 +1,12 @@
+<%
+  #partial=>_content
+#locals=>brief
+%>
+<div class="req">
+  <%=simple_format(brief.req)%>
+</div>
+<span>创建者:<%=brief.user.name%></span><br/>
+<span>创建时间:<%=short_d(brief.created_at)%></span><br/>
+<span>更新时间:<%=short_d(brief.updated_at)%></span><br/>
+<span>期限:<%=brief.deadline%></span>
+

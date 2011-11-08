@@ -1,3 +1,4 @@
+#encoding=utf-8
 class ItemsController < ApplicationController
   before_filter :cur_user 
 
@@ -30,6 +31,11 @@ class ItemsController < ApplicationController
       @back = params[:back]
       @path = brief_items_path(@brief,:back=>@back)
     end
+    case @item.kind
+    when 'design' then @title = '新建设计项'
+    when 'product' then @title = '新建制作项'
+    end
+    render 'share/new_edit'
   end
 
   #get 'briefs/:brief_id/item/1/edit/'=>:edit,:as=>'edit_brief_item'

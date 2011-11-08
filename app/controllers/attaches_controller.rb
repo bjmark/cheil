@@ -1,3 +1,4 @@
+#encoding=utf-8
 class AttachesController < ApplicationController
   before_filter :cur_user , :check_right
 
@@ -8,27 +9,6 @@ class AttachesController < ApplicationController
     else  raise SecurityError
     end
 =end
-  end
-
-  # GET /attaches
-  # GET /attaches.json
-  def index
-    @attaches = Attach.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @attaches }
-    end
-  end
-
-  # GET /attaches/1
-  # GET /attaches/1.json
-  def show
-    @attach = Attach.find(params[:id])
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @attach }
-    end
   end
 
   #get 'briefs/:brief_id/attaches/download' => :download,
@@ -55,6 +35,8 @@ class AttachesController < ApplicationController
       @path = brief_attaches_path(@brief,:back=>@back)
       @attach = BriefAttach.new
     end
+    @title = '新附件'
+    render 'share/new_edit'
   end
 
   #get 'briefs/:brief_id/attaches/:id/edit' => :edit,
@@ -67,6 +49,8 @@ class AttachesController < ApplicationController
       @back = params[:back]
       @path = brief_attach_path(@brief,@attach,:back=>@back)
     end
+    @title = '更新附件'
+    render 'share/new_edit'
   end
 
   #post 'briefs/:brief_id/attaches' => :create,

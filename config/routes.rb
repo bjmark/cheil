@@ -16,7 +16,7 @@ Cheil::Application.routes.draw do
       put :send_to_cheil
     end
     resources :comments , :only=>[:new,:create,:destroy]
-    resources :attaches do 
+    resources :attaches,:except=>[:show,:index] do  
       member do 
         get :download
       end
@@ -25,19 +25,10 @@ Cheil::Application.routes.draw do
   end
 
   resources :orgs
-=begin
-  controller :items do 
-    get 'briefs/:brief_id/items/new/:kind'=>:new,:as=>'new_item'
-    post 'briefs/:brief_id/items'=>:create,:as=>'create_item'
-    get 'items/:id/edit'=>:edit,:as=>'edit_item'
-    put 'items/:id'=>:update,:as=>'update_item'
-    delete 'items/:id' => :destroy,:as=>'destroy_item'
-  end
-=end
   controller :users do
-    get 'users/login'=>:login,:as=>'users_login'
-    post 'users/login'=>:check,:as=>'users_check'
-    delete 'users/logout'=>:logout,:as=>'users_logout'
+    get 'users/login'=>:login,:as=>'login'
+    post 'users/login'=>:check
+    delete 'users/logout'=>:logout,:as=>'logout'
   end
 
   resources :users
@@ -49,52 +40,6 @@ Cheil::Application.routes.draw do
   end
 
   resources :admin_users
-
-  controller :rpm do
-    #对brief的操作
-    #index
-    get 'rpm/briefs'=>:briefs,:as=>'rpm_briefs'
-
-    #new
-    get 'rpm/briefs/new'=>:new_brief,:as=>'rpm_new_brief'
-    
-    #create
-    post 'rpm/briefs'=>:create_brief,:as=>'rpm_create_brief'
-    
-    #show
-    get 'rpm/briefs/:id'=>:show_brief,:as=>'rpm_show_brief'
-    
-    #send
-    post 'rpm/briefs/:id/send'=>:send_brief,:as=>'rpm_send_brief'
-    
-    #edit
-    get 'rpm/briefs/:id/edit'=>:edit_brief,:as=>'rpm_edit_brief'
-    
-    #update
-    put 'rpm/briefs/:id'=>:update_brief,:as=>'rpm_update_brief'
-    
-    #delete
-    delete 'rpm/briefs/:id'=>:delete_brief,:as=>'rpm_delete_brief'
-
-        #attach
-    get 'rpm/briefs/:brief_id/attaches/new' => :new_brief_attach,
-      :as => 'rpm_new_brief_attach'
-    
-    get 'rpm/briefs/:brief_id/attaches/:attach_id/edit' => :edit_brief_attach,
-      :as => 'rpm_edit_brief_attach'
-
-    post 'rpm/briefs/:brief_id/attaches' => :create_brief_attach,
-      :as => 'rpm_create_brief_attach'
-
-    put 'rpm/briefs/:brief_id/attaches/:attach_id' => :update_brief_attach,
-      :as => 'rpm_update_brief_attach'
-
-    delete 'rpm/briefs/:brief_id/attaches/:attach_id' => :destroy_brief_attach,
-      :as => 'rpm_destroy_brief_attach'
-
-    get 'rpm/briefs/:brief_id/attaches/:attach_id/download' => :download_brief_attach,
-      :as => 'rpm_download_brief_attach'
-  end
 
   controller :cheil do
     #brief列表

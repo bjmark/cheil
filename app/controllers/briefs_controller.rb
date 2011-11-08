@@ -14,32 +14,33 @@ class BriefsController < ApplicationController
     else  raise SecurityError
     end
   end
+
   # GET /briefs
-  # GET /briefs.json
   def index
     @briefs = @cur_user.org.briefs.paginate(:page => params[:page])
   end
 
   # GET /briefs/1
   def show
-    @brief = Brief.find(params[:id])
-    
-    @brief.check_read_right(@cur_user)
-
-    @brief_attaches = @brief.attaches
-    
-    @brief_items = @brief.items
-    @brief_designs = @brief.designs
-    @brief_products = @brief.products
-
-    @comments = @brief.comments
-    @back = brief_path(@brief)
-
+    case @cur_user.org
+    when RpmOrg
+      @brief = Brief.find(params[:id])
+      @brief.check_read_right(@cur_user)
+      @brief_attaches = @brief.attaches
+      @brief_items = @brief.items
+      @brief_designs = @brief.designs
+      @brief_products = @brief.products
+      @comments = @brief.comments
+      @back = brief_path(@brief)
+      render 'briefs/rpm/show2'
+    end
   end
 
   # GET /briefs/new
   def new
     @brief = Brief.new
+    @title = '新建 brief'
+    render 'share/new_edit'
   end
 
   # GET /briefs/1/edit
@@ -47,6 +48,8 @@ class BriefsController < ApplicationController
     @brief = Brief.find(params[:id])
     @brief.check_edit_right(@cur_user)
     @back = params[:back]
+    @title = '修改 brief'
+    render 'share/new_edit'
   end
 
   # POST /briefs
@@ -58,7 +61,7 @@ class BriefsController < ApplicationController
     if @brief.save
       redirect_to briefs_path, notice: 'Brief was successfully created.' 
     else
-      render action: "new" 
+      render action: "new_edit" 
     end
   end
 

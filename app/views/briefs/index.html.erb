@@ -1,4 +1,37 @@
-<h1><%=@cur_user.org.name%> brief列表</h1>
-<% @briefs.each do |brief| %>
-  <%=render 'show',:brief=>brief%>
-<%end%>
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="active first">
+      <%=link_to '全部',briefs_path(@brief) %>
+      </li>
+      <li><%= link_to '未发送', '/' %></li>
+      <li><%= link_to '检索', '/' %></li>
+    </ul>
+  </div>
+  <div class="content">
+    <div class="inner">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>id</th>
+            <th>名称</th>
+            <th>期限</th>
+            <th>创建时间</th>
+            <th>更新时间</th>
+          </tr>
+          <%n=1
+            @briefs.each do |brief| -%>
+            <tr class="<%=['odd','even'][(n+=1)%2]%>">
+              <td><%=brief.id%></td>
+              <td><%=link_to brief.name,brief_path(brief)%></td>
+              <td><%=brief.deadline%></td>
+              <td><%=short_d(brief.created_at)%></td>
+              <td><%=short_d(brief.updated_at)%></td>
+            </tr>
+          <%end -%>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

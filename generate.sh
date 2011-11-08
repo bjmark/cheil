@@ -35,4 +35,10 @@
 #rails g migration drop_brief_attach
 #rails g model solution brief_id:integer org_id:integer type:string is_sent:string
 
-rails g migration add_and_remove_columns_items
+#rails g migration add_and_remove_columns_items
+
+#rails destroy controller rpm
+
+#rails g web_app_theme:theme --theme="blue"
+rails g web_app_theme:theme sign --layout-type=sign
+

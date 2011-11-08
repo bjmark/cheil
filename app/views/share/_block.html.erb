@@ -1,0 +1,20 @@
+<%
+  #partial=>_block
+#locals=>nav,title,content
+%>
+<div class="block">
+  <%if nav%>
+    <div class="secondary-navigation">
+      <ul class="wat-cf">
+        <%=render nav[:partial],nav[:locals]%>
+      </ul>
+    </div>
+  <%end%>
+  <div class="content">
+    <h2 class="title"><%=title%></h2>
+    <div class="inner">
+      <%=render content[:partial],content[:locals]%>
+    </div>
+  </div>
+</div>
+

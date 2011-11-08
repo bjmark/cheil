@@ -2,6 +2,9 @@
 class UsersController < ApplicationController
   before_filter :admin_authorize,:except=>[:login,:check,:logout]
 
+  def login
+    render 'login',:layout=>'sign'
+  end
   # POST /users/login
   def check
     unless u = User.check_pass(params[:name],params[:password])
