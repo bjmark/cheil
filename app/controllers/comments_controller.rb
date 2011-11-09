@@ -1,3 +1,4 @@
+#encoding=utf-8
 class CommentsController < ApplicationController
   before_filter :cur_user , :check_right
 
@@ -18,6 +19,8 @@ class CommentsController < ApplicationController
       @back=params[:back]
       @path = brief_comments_path(@brief,:back=>@back)
     end
+    @title = '新建评论'
+    render 'share/new_edit'
   end
 
   #post 'briefs/:brief_id/comments' => :create,

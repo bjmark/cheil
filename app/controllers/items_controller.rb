@@ -47,6 +47,11 @@ class ItemsController < ApplicationController
       @back = params[:back]
       @path = brief_item_path(@brief,@item,:back=>@back)
     end
+    case @item.kind
+    when 'design' then @title = '修改设计项'
+    when 'product' then @title = '修改制作项'
+    end
+    render 'share/new_edit'
   end
 
   #post 'briefs/:brief_id/items'=>:create,:as=>'brief_items'

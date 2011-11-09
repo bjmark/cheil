@@ -5,13 +5,13 @@
 <%unless items.empty?%>
   <%n=0
   items.each do |e|%>
-    <tr>
-      <%(n+=1).upto(1)do %>
+    <tr class="<%=['odd','even'][(n+=1)%2]%>">
+      <%n.upto(1)do %>
         <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
       <%end%>
-      <td><%= simple_format(e.name)  %></td>
+      <td><%= e.name  %></td>
       <td><%= e.quantity  %></td>
-      <td>
+      <td class="last">
         <%= link_to '修改',edit_brief_item_path(brief,e,:back=>back)  %>
         <%= link_to '删除',
           brief_item_path(brief,e,:back=>back), 

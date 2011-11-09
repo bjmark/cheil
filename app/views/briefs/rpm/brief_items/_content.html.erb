@@ -1,0 +1,29 @@
+<%
+  #partial=>_content
+#locals=>brief,back
+%>
+<table class="table brief_items">
+  <tbody>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+      <th></th>
+    </tr>
+    <%=render 'briefs/rpm/brief_items/items_tr',
+      :brief=>brief,
+      :back=>back,
+      :items=>brief.designs,
+      :kind=>'design',
+      :kind_cn=>'设计'
+    %>
+    <%=render 'briefs/rpm/brief_items/items_tr',
+      :brief=>brief,
+      :back=>back,
+      :items=>brief.products,
+      :kind=>'product',
+      :kind_cn=>'制作'
+    %>
+  </tbody>
+</table>
+

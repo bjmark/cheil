@@ -1,21 +1,24 @@
-<div class="block">
-  <%=render 'briefs/rpm/menu',:brief=>@brief,:back=>@back%>
-  <div class="content">
-    <h2 class="title"><%=@brief.name%></h2>
-    <div class="inner">
-      <div class="req">
-        <%=simple_format(@brief.req)%>
-      </div>
-      <span>创建者:<%=@brief.user.name%></span><br/>
-      <span>创建时间:<%=short_d(@brief.created_at)%></span><br/>
-      <span>更新时间:<%=short_d(@brief.updated_at)%></span><br/>
-      <span>期限:<%=@brief.deadline%></span>
-    </div>
-  </div>
-</div>
-<%=render 'attaches/brief_attaches',
+<%
+ # @brief
+ # @back
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/rpm/nav',
+    :locals=>{:brief=>@brief,:back=>@back}},
+  :title=>@brief.name,
+  :content=>{:partial=>'briefs/content',
+    :locals=>{:brief=>@brief}}%>
+
+<%=render 'briefs/rpm/brief_attaches/show',
   :brief=>@brief,
-  :brief_attaches => @brief_attaches,
+  :back => @back
+%>
+<%=render 'briefs/rpm/brief_items/show',
+  :brief => @brief,
+  :back => @back
+%>
+<%=render 'share/brief_comments/show',
+  :brief => @brief,
   :back => @back
 %>
 

@@ -1,0 +1,10 @@
+<%
+  # partail=>briefs/cheil/brief_attaches/_show
+# locals => brief,back
+%>
+<%=render 'share/block',
+  :nav=>nil,
+  :title=>'子项',
+  :content=>{:partial=>'briefs/cheil/brief_items/content',
+    :locals=>{:brief=>brief,:back=>back}} unless brief.items.empty?%>
+

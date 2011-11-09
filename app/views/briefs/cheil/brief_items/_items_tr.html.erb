@@ -1,0 +1,17 @@
+<%
+  #partial => _brief_items_tr
+#locals => brief,items,kind,kind_cn,back
+%>
+<%unless items.empty?%>
+  <%n=0
+  items.each do |e|%>
+    <tr class="<%=['odd','even'][(n+=1)%2]%>">
+      <%n.upto(1)do %>
+        <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+      <%end%>
+      <td><%= e.name  %></td>
+      <td><%= e.quantity  %></td>
+    </tr>
+  <%end%>
+<%end%>
+

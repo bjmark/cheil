@@ -1,0 +1,12 @@
+<%= form_tag(@path,:class=>'form') do -%>
+  <div class="group">
+    <%@vendors.each do |e|%>
+      <%= check_box_tag "vendor#{e.id}",e.id,:class='checkbox'%>
+      <%= label_tag "vendor#{e.id}",e.name,:class=>'label' %>
+    <%end%>
+  </div>
+  <div class="group">
+    <%= submit_tag '保存' %>
+    <%= link_to '返回',@back%>
+  </div>
+<% end -%> 

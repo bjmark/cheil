@@ -40,5 +40,6 @@
 #rails destroy controller rpm
 
 #rails g web_app_theme:theme --theme="blue"
-rails g web_app_theme:theme sign --layout-type=sign
+#rails g web_app_theme:theme sign --layout-type=sign
+rails g controller solutions
 

@@ -1,0 +1,11 @@
+<%
+  # partail=>briefs/rpm/brief_attaches/_show
+# locals => brief,back
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/rpm/brief_attaches/nav',
+    :locals=>{:brief=>brief,:back=>back}},
+  :title=>'附件',
+  :content=>{:partial=>'briefs/rpm/brief_attaches/content',
+    :locals=>{:brief=>brief,:back=>back}}%>
+

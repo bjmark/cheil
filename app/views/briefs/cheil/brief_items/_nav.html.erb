@@ -1,0 +1,13 @@
+<%
+  #partial => briefs/rpm/brief_items/_nav
+#locals => brief,back
+%>
+<li>
+<%= link_to '新建设计项', new_brief_item_path(brief,:kind=>'design',:back=>back) %>
+</li>
+<li>
+<%= link_to '新建制作项', new_brief_item_path(brief,:kind=>'product',:back=>back) %>
+</li>
+
+
+

@@ -22,17 +22,14 @@ class BriefsController < ApplicationController
 
   # GET /briefs/1
   def show
+    @brief = Brief.find(params[:id])
+    @brief.check_read_right(@cur_user)
+    @back = brief_path(@brief)
     case @cur_user.org
     when RpmOrg
-      @brief = Brief.find(params[:id])
-      @brief.check_read_right(@cur_user)
-      @brief_attaches = @brief.attaches
-      @brief_items = @brief.items
-      @brief_designs = @brief.designs
-      @brief_products = @brief.products
-      @comments = @brief.comments
-      @back = brief_path(@brief)
-      render 'briefs/rpm/show2'
+      render 'briefs/rpm/show'
+    when CheilOrg
+      render 'briefs/cheil/show'
     end
   end
 

@@ -22,6 +22,11 @@ Cheil::Application.routes.draw do
       end
     end
     resources :items 
+    resources :solutions,:only=>[:create,:destroy] do 
+      collection do
+        get :sel_vendor
+      end
+    end
   end
 
   resources :orgs

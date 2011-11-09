@@ -1,0 +1,24 @@
+<%
+  # @brief
+# @back
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief,:back=>@back}},
+  :title=>@brief.name,
+  :content=>{:partial=>'briefs/content',:locals=>{:brief=>@brief}}
+%>
+
+<%=render 'briefs/cheil/brief_attaches/show',
+  :brief=>@brief,
+  :back => @back
+%>
+
+<%=render 'briefs/cheil/brief_items/show',
+  :brief => @brief,
+  :back => @back
+%>
+
+<%=render 'share/brief_comments/show',
+  :brief => @brief,
+  :back => @back
+%>
