@@ -4,8 +4,8 @@
 %>
 <%=render 'share/block',
   :nav=>{:partial=>'briefs/rpm/brief_attaches/nav',
-    :locals=>{:brief=>brief,:back=>back}},
+    :locals=>{:brief=>brief}},
   :title=>'附件',
   :content=>{:partial=>'briefs/rpm/brief_attaches/content',
-    :locals=>{:brief=>brief,:back=>back}}%>
+    :locals=>{:brief=>brief}} unless brief.attaches.empty?%>
 

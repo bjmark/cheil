@@ -8,6 +8,11 @@
   :content=>{:partial=>'briefs/content',:locals=>{:brief=>@brief}}
 %>
 
+<%=render 'briefs/cheil/brief_solutions/show',
+  :brief => @brief,
+  :back => @back
+%>
+
 <%=render 'briefs/cheil/brief_attaches/show',
   :brief=>@brief,
   :back => @back

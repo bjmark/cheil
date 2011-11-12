@@ -2,13 +2,16 @@
 class ItemsController < ApplicationController
   before_filter :cur_user 
 
-  def index
-    @items = Item.all
+  #get solutions/solution_id/items/change  
+  def change_solution_items
+    @solution = Solution.find(params[:solution_id])
+    assigned_items = @solution.items.reject{|e| !(e.parent_id >0) }
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @items }
-    end
+    @assigned_item_ids = assigned_items.collect{|e| e.parent_id }
+
+    @brief = @solution.brief
+    @back = change_solution_items_path(params[:solution_id])
+    render 'items/change_solution_items/show'
   end
 
   # GET /items/1
@@ -28,8 +31,7 @@ class ItemsController < ApplicationController
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @item = @brief.items.new(:kind=>params[:kind])
-      @back = params[:back]
-      @path = brief_items_path(@brief,:back=>@back)
+      @path = brief_items_path(@brief,:dest=>bread_pre)
     end
     case @item.kind
     when 'design' then @title = '新建设计项'
@@ -44,8 +46,7 @@ class ItemsController < ApplicationController
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @item = @brief.items.find(params[:id])
-      @back = params[:back]
-      @path = brief_item_path(@brief,@item,:back=>@back)
+      @path = brief_item_path(@brief,@item,:dest=>bread_pre)
     end
     case @item.kind
     when 'design' then @title = '修改设计项'
@@ -55,18 +56,29 @@ class ItemsController < ApplicationController
   end
 
   #post 'briefs/:brief_id/items'=>:create,:as=>'brief_items'
+  #post 'solutions/:solution_id/items/:id' => :create,
+  #    :as=>'solution_item'
   def create
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @item = @brief.items.new(params[:brief_item])
-      @back = params[:back]
       if @item.save
-        redirect_to params[:back], notice: 'Item was successfully created.' 
+        redirect_to params[:dest], notice: 'Item was successfully created.' 
       else
-        @path = brief_items_path(@brief,:back=>@back)
+        bread_pop!
+        @path = brief_items_path(@brief,:back=>bread_pre)
         render action: "new" 
       end
+    end
+    if params[:solution_id]
+      solution = Solution.find(params[:solution_id])
+      brief = solution.brief
+      item = brief.items.find(params[:id])
+      unless solution.items.find_by_parent_id(params[:id])
+        solution.items << SolutionItem.new(:parent_id=>item.id)
+      end
+      redirect_to bread_pre
     end
   end
 
@@ -78,7 +90,7 @@ class ItemsController < ApplicationController
       @item = @brief.items.find(params[:id])
 
       if @item.update_attributes(params[:brief_item])
-        redirect_to params[:back], notice: 'Item was successfully updated.' 
+        redirect_to params[:dest], notice: 'Item was successfully updated.' 
       else
         render action: "edit" 
       end
@@ -86,12 +98,22 @@ class ItemsController < ApplicationController
   end
 
   #delete 'briefs/:brief_id/item/1'=>:destroy,:as=>'brief_item'
+  #delete 'solutions/:solution_id/items/:id' => :destroy,
+  #    :as=>'solution_item'
   def destroy
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @item = @brief.items.find(params[:id])
       @item.destroy
+      redirect_to bread_pre
+    end
+    if params[:solution_id]
+      solution = Solution.find(params[:solution_id])
+      brief = solution.brief
+      item = brief.items.find(params[:id])
+      solution_item = solution.items.find_by_parent_id(params[:id])
+      solution_item.destroy
       redirect_to params[:back]
     end
   end

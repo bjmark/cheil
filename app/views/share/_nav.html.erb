@@ -1,0 +1,9 @@
+<div class="block">
+  <h3>导航</h3>
+  <ul class="navigation">
+    <%@cur_user.nav_links.each do |e|%>
+      <li><%= link_to e[0],e[1] %></li>
+    <%end%>
+  </ul>
+</div>
+

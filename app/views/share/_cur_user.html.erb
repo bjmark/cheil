@@ -3,11 +3,13 @@
     <p>
     用户: <%= @cur_user.name%>
     </p>
-    <p>
-    组织：<%= @cur_user.org.name %>
-    </p>
-    <p>
-    类型: <%= @org_type%>
-    </p>
+    <%if @cur_user.org%>
+      <p>
+      组织：<%= @cur_user.org.name %>
+      </p>
+      <p>
+      类型: <%= @cur_user.org.class.type_name%>
+      </p>
+    <%end%>
   </div>
 </div>

@@ -12,9 +12,9 @@
       <td><%= e.name  %></td>
       <td><%= e.quantity  %></td>
       <td class="last">
-        <%= link_to '修改',edit_brief_item_path(brief,e,:back=>back)  %>
+        <%= link_to '修改',edit_brief_item_path(brief,e)  %>
         <%= link_to '删除',
-          brief_item_path(brief,e,:back=>back), 
+          brief_item_path(brief,e), 
           :confirm => 'Are you sure?', 
           :method => :delete 
         %> 

@@ -1,12 +1,3 @@
-<%
-  content_for :cur_user do
-    render 'share/cur_user' if @cur_user
-  end
-  content_for :sidebar do
-    render @menu_file if @cur_user
-  end
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +15,7 @@
           <li><a href="#"><%= t("web-app-theme.profile", :default => "Profile") %></a></li>
           <li><a href="#"><%= t("web-app-theme.settings", :default => "Settings") %></a></li>
           <li>
-          <%= link_to '退出', logout_path, :method => :delete,:class=>'logout'   %>
+          <%= link_to '退出', session_path, :method => :delete,:class=>'logout'   %>
           </li>
 
         </ul>
@@ -45,8 +36,11 @@
         <%= yield %>
       </div>
       <div id="sidebar">
-        <%= yield :sidebar %>
-        <%= yield :cur_user %>
+        <% #yield :sidebar %>
+        <% #yield :cur_user %>
+        <% @sidebar.each do |e|%>
+          <%=render e%>
+        <%end%>
       </div>
     </div>    
   </div>

@@ -3,33 +3,47 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   def cur_user
-    begin
-      break unless session[:user]
-      a=session[:user].split('_')
-      break if a.length != 2
+    (redirect_to new_session_path and return) unless session[:user_id]
+    @cur_user = User.find(session[:user_id])
+    bread_push!(request.fullpath)
+    @sidebar = ['share/nav','share/cur_user']
+  end
 
-      @cur_user = User.find(a[1].to_i)
-      case @cur_user.org
-      when RpmOrg then @menu_file,@org_type = 'share/rpm_menu','RPM'
-      when CheilOrg then @menu_file,@org_type = 'share/cheil_menu','Cheil'
-      when VendorOrg then @menu_file,@org_type = 'share/vendor_menu','Vendor'
+  def bread
+    (session[:bread] or '').split(':')
+  end
+
+  def bread= (a)
+    session[:bread] = a.join(':')
+  end
+
+  def bread_push!(path)
+    a = []
+    b = bread
+    b.each do |e|
+      if e.split('?')[0] == path.split('?')[0]
+        break
+      else
+        a << e
       end
+    end
 
-      return
-    end while false
-    redirect_to users_login_url
+    a.push(path)
+    self.bread = a
   end
 
-  def authorize(m_class,type)
-    return false unless session[:user]=~/^#{type}/
-      a=session[:user].split('_')
-    return false if a.length != 2
-    @cur_user = m_class.find_by_id(a[1].to_i)
+  def bread_pop!
+    a = bread
+    a.pop
+    self.bread = a
   end
 
-  def admin_authorize
-    redirect_to admin_users_login_url unless authorize(AdminUser,'admin')
-    @menu_file = 'admin_users/_menu'
+  def bread_last
+    bread.last
+  end
+
+  def bread_pre
+    bread[bread.length-2]
   end
 
   def invalid_op

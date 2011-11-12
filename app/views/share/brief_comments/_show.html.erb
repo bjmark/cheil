@@ -4,10 +4,10 @@
 %>
 <%=render 'share/block',
   :nav=>{:partial=>'share/brief_comments/nav',
-    :locals=>{:brief=>brief,:back=>back}},
+    :locals=>{:brief=>brief}},
   :title=>'评论',
   :content=>{:partial=>'share/brief_comments/content',
-    :locals=>{:brief=>brief,:comments=>brief.comments,
-      :back=>back}} unless brief.comments.empty?
+    :locals=>{:brief=>brief,:comments=>brief.comments}
+} unless brief.comments.empty?
 %>
 

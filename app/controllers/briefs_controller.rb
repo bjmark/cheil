@@ -44,7 +44,6 @@ class BriefsController < ApplicationController
   def edit
     @brief = Brief.find(params[:id])
     @brief.check_edit_right(@cur_user)
-    @back = params[:back]
     @title = '修改 brief'
     render 'share/new_edit'
   end
@@ -81,7 +80,7 @@ class BriefsController < ApplicationController
     @brief = Brief.find(params[:id])
     @brief.check_destroy_right(@cur_user)
     @brief.destroy
-    redirect_to briefs_url 
+    redirect_to briefs_url,notice: 'Brief was successfully deleted.' 
   end
 
   #put /briefs/1/send_to_cheil

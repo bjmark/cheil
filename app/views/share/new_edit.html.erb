@@ -1,8 +1,15 @@
 <div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li>
+      <%= link_to '返回', controller.bread_pre %>
+      </li>
+    </ul>
+  </div>
   <div class="content">
     <div class="inner">
       <h1><%=@title%></h1>
-      <%= render 'form' %>
+      <%= render (@form or 'form')  %>
     </div>
   </div>
 </div>

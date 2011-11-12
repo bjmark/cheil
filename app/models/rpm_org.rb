@@ -1,3 +1,4 @@
+#encoding=utf-8
 class RpmOrg < Org
   OP = {
     :brief=>[:index,:new,:create,:edit,:update,:destroy]
@@ -16,5 +17,20 @@ class RpmOrg < Org
       return true
     end while false
     raise SecurityError
+  end
+
+  def self.nav_partial
+    'share/rpm_menu'
+  end
+
+  def self.type_name
+    'RPM'
+  end
+
+  def nav_links
+    [
+      ['新建 brief', '/briefs/new'],
+      ['项目列表', '/briefs']
+    ]
   end
 end

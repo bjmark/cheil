@@ -1,3 +1,4 @@
+#encoding=utf-8
 class CheilOrg < Org
   validates :name, :uniqueness => true
   validates :name , :presence => true
@@ -5,4 +6,16 @@ class CheilOrg < Org
   has_many :users , :foreign_key => :org_id
   has_many :brief_vendors , :foreign_key => :org_id
   has_many :briefs , :foreign_key => :cheil_id , :order => 'id DESC'
+
+  def self.nav_partial
+    'share/cheil_menu'
+  end
+
+  def self.type_name
+    'Cheil'
+  end
+
+  def nav_links
+    [['项目列表', '/briefs']]
+  end
 end

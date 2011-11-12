@@ -16,8 +16,7 @@ class CommentsController < ApplicationController
       @brief = Brief.find(params[:brief_id])
       @brief.check_comment_right(@cur_user)
       @comment = Comment.new
-      @back=params[:back]
-      @path = brief_comments_path(@brief,:back=>@back)
+      @path = brief_comments_path(@brief,:dest=>bread_pre)
     end
     @title = '新建评论'
     render 'share/new_edit'
@@ -34,7 +33,7 @@ class CommentsController < ApplicationController
       comment.user_id = @cur_user.id
       brief.comments << comment
     end
-    redirect_to params[:back]
+    redirect_to params[:dest],notice: 'comment was successfully created.' 
   end
 
   #delete 'briefs/:brief_id/comments/:comment_id' => :destroy,
@@ -46,6 +45,6 @@ class CommentsController < ApplicationController
       comment.check_destroy_right(@cur_user)
       comment.destroy
     end
-    redirect_to params[:back] 
+    redirect_to bread_pre,notice: 'comment was successfully deleted.' 
   end
 end

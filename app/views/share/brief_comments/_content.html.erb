@@ -4,7 +4,7 @@
     <span class="author"><%=e.user.name%></span>
     <span class="date"><%=short_d(e.created_at)%></span>
     <%= link_to '删除',
-      brief_comment_path(brief,e,:back=>back), 
+      brief_comment_path(brief,e), 
       :confirm => 'Are you sure?', 
       :method => :delete if @cur_user.id == e.user_id
     %>

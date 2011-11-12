@@ -6,10 +6,10 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-AdminUser.create(:name=>'mark',:password=>'123')
+AdminUser.create(:name=>'admin',:password=>'123')
 
-rpm1 = RpmOrg.create(:name=>'rpm_dep1')
-rpm2 = RpmOrg.create(:name=>'rpm_dep2')
+rpm1 = RpmOrg.create(:name=>'rpm1')
+rpm2 = RpmOrg.create(:name=>'rpm2')
 
 rpm1.users << User.new(:name=>'rpm_u1',:password=>'123')
 rpm2.users << User.new(:name=>'rpm_u2',:password=>'123')

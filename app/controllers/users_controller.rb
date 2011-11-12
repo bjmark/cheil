@@ -2,34 +2,6 @@
 class UsersController < ApplicationController
   before_filter :admin_authorize,:except=>[:login,:check,:logout]
 
-  def login
-    render 'login',:layout=>'sign'
-  end
-  # POST /users/login
-  def check
-    unless u = User.check_pass(params[:name],params[:password])
-      redirect_to users_login_url
-      return
-    end
-
-    case u.org
-    when RpmOrg 
-      session[:user] = "rpm_#{u.id}"
-    when CheilOrg
-      session[:user] = "cheil_#{u.id}"
-    when VendorOrg
-      session[:user] = "vendor_#{u.id}"
-    end
-    
-    redirect_to briefs_path
-  end
-
-  #DELETE /user/logout
-  def logout
-    session[:user]=nil
-    redirect_to users_login_path
-  end
-
   # GET /users
   # GET /users.json
   def index

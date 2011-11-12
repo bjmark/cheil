@@ -1,0 +1,16 @@
+<%
+  # @assigned_item_ids 
+# @brief 
+# @solution
+# @back
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'items/change_solution_items/nav',
+    :locals=>{:brief=>@brief}},
+  :title=>'指派子项',
+  :content=>{:partial=>'items/change_solution_items/content',
+    :locals=>{:brief=>@brief,
+      :solution=>@solution,
+      :assigned_item_ids=>@assigned_item_ids,
+      :back=>@back}} unless @brief.items.empty?%>
+

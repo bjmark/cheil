@@ -3,8 +3,7 @@
  # @back
 %>
 <%=render 'share/block',
-  :nav=>{:partial=>'briefs/rpm/nav',
-    :locals=>{:brief=>@brief,:back=>@back}},
+  :nav=>{:partial=>'briefs/rpm/nav',:locals=>{:brief=>@brief}},
   :title=>@brief.name,
   :content=>{:partial=>'briefs/content',
     :locals=>{:brief=>@brief}}%>

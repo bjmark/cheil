@@ -1,0 +1,11 @@
+<%
+  # partail=>briefs/cheil/brief_attaches/_show
+# locals => brief,back
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/cheil/brief_solutions/nav',
+    :locals=>{:brief=>brief,:back=>back}},
+  :title=>'已选定的vendors',
+  :content=>{:partial=>'briefs/cheil/brief_solutions/content',
+    :locals=>{:brief=>brief,:back=>back}} unless brief.items.empty?%>
+

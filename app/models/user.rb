@@ -28,4 +28,12 @@ class User < ActiveRecord::Base
     end
     return nil
   end
+
+  def nav_links
+    org.nav_links
+  end
+
+  def home
+    '/briefs'
+  end
 end

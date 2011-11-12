@@ -5,6 +5,8 @@ class SolutionsController < ApplicationController
   def check_right
   end
 
+  def show
+  end
   #get 'briefs/brief_id/solutions/sel_vendor' => :sel_vendor
   # :as=>sel_vendor_brief_solutions
   def sel_vendor
@@ -16,7 +18,6 @@ class SolutionsController < ApplicationController
       bv.find{|t| t.org_id == e.id}
     end
 
-    @back=params[:back]
     @path = brief_solutions_path(@brief,:back=>@back)
 
     @title = '选择Vendor'
@@ -24,8 +25,21 @@ class SolutionsController < ApplicationController
   end
 
   def create
+    @brief = Brief.find(params[:brief_id])
+    vendor_ids = []
+    params.each {|k,v| vendor_ids << v if k=~/vendor\d+/}
+    vendor_ids.each do |org_id|
+      @brief.vendor_solutions << VendorSolution.new(:org_id=>org_id)
+    end
+
+    redirect_to params[:back]
   end
 
   def destroy
+    brief = Brief.find(params[:brief_id])
+    s = brief.vendor_solutions.find(params[:id])
+    s.destroy
+
+    redirect_to params[:back]
   end
 end

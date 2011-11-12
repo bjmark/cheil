@@ -17,10 +17,10 @@
         <td class="last">
           <%= link_to '下载',download_brief_attach_path(brief,e)%>
           |
-          <%= link_to '更新',edit_brief_attach_path(brief,e,:back=>back)%>
+          <%= link_to '更新',edit_brief_attach_path(brief,e)%>
           |
           <%=  link_to '删除',
-          brief_attach_path(brief,e,:back=>back), 
+          brief_attach_path(brief,e), 
           :confirm => 'Are you sure?', :method => :delete %>
         </td>
       </tr>

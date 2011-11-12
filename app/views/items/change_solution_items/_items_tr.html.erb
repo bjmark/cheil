@@ -1,0 +1,25 @@
+<%
+  #partial => _brief_items_tr
+#locals => brief,items,kind,kind_cn,back,assigned_item_ids
+%>
+<%unless items.empty?%>
+  <%n=0
+  items.each do |e|%>
+    <tr class="<%=['odd','even'][(n+=1)%2]%>">
+      <%n.upto(1)do %>
+        <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+      <%end%>
+      <td><%= e.name  %></td>
+      <td><%= e.quantity  %></td>
+      <td class="last">
+        <%if assigned_item_ids.include?(e.id)%>
+          <%= button_to '取消指派',
+            solution_item_path(solution,e,:back=>back),:method=>:delete%>
+          <%else%>
+            <%= button_to '指派',solution_item_path(solution,e,:back=>back)%>
+        <%end%>
+      </td>
+    </tr>
+  <%end%>
+<%end%>
+

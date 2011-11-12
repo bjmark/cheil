@@ -1,6 +1,7 @@
 # encoding: utf-8
 Cheil::Application.routes.draw do
 
+  resource :session , :only=>[:new,:create,:destroy]
   resources :attaches
 
   resources :vendor_orgs
@@ -21,30 +22,26 @@ Cheil::Application.routes.draw do
         get :download
       end
     end
+
     resources :items 
-    resources :solutions,:only=>[:create,:destroy] do 
+    resources :solutions,:only=>[:show,:create,:destroy] do 
       collection do
         get :sel_vendor
       end
     end
   end
 
-  resources :orgs
-  controller :users do
-    get 'users/login'=>:login,:as=>'login'
-    post 'users/login'=>:check
-    delete 'users/logout'=>:logout,:as=>'logout'
+  controller :items do 
+    get 'solutions/:solution_id/items/change' => :change_solution_items,
+      :as=>'change_solution_items'
+    post 'solutions/:solution_id/items/:id' => :create,
+      :as=>'solution_item'
+    delete 'solutions/:solution_id/items/:id' => :destroy,
   end
+
+  resources :orgs
 
   resources :users
-
-  controller :admin_users do
-    get 'admin_users/login'=>:login,:as=>'admin_users_login'
-    post 'admin_users/login'=>:check,:as=>'admin_users_check'
-    delete 'admin_users/logout'=>:logout,:as=>'admin_users_logout'
-  end
-
-  resources :admin_users
 
   controller :cheil do
     #brief列表

@@ -3,7 +3,10 @@
 #locals => brief,back
 %>
 <li>
-<%= link_to '修改', edit_brief_path(brief,:back=>back) %>
+<%= link_to '返回', controller.bread_pre %>
+</li>
+<li>
+<%= link_to '修改', edit_brief_path(brief) %>
 </li>
 <li>
 <%= link_to '删除',
@@ -12,17 +15,17 @@
 %>
 </li>
 <li>
-<%= link_to '新建附件', new_brief_attach_path(brief,:back=>back) %>
+<%= link_to '新建附件', new_brief_attach_path(brief) %>
 </li>
 <li>
-<%= link_to '新建设计项', new_brief_item_path(brief,:kind=>'design',:back=>back) %>
+<%= link_to '新建设计项', new_brief_item_path(brief,:kind=>'design') %>
 </li>
 <li>
-<%= link_to '新建制作项', new_brief_item_path(brief,:kind=>'product',:back=>back) %>
+<%= link_to '新建制作项', new_brief_item_path(brief,:kind=>'product') %>
 </li>
 <li>
 <%= link_to '新建评论', 
-  new_brief_comment_path(brief,:back=>brief_path(brief))
+  new_brief_comment_path(brief)
 %>
 </li>
 <%unless brief.send_to_cheil?%>

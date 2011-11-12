@@ -1,6 +1,7 @@
+#encoding=utf-8
 require 'digest/sha2'
 
-class AdminUser < ActiveRecord::Base
+class AdminUser < User
   validates :name, :uniqueness => true
 
   def password
@@ -22,6 +23,19 @@ class AdminUser < ActiveRecord::Base
       return u
     end
     return nil
+  end
+
+  def nav_links
+    [
+      ['管理员帐号','/users/admin'],
+      ['RPM' , '/rpm_orgs'],
+      ['Cheil' , '/cheil_orgs'],
+      ['Vendor', '/vendor_orgs_path']
+    ]
+  end
+
+  def home
+    '/admins'
   end
 end
 

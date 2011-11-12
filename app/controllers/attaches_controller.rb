@@ -14,6 +14,7 @@ class AttachesController < ApplicationController
   #get 'briefs/:brief_id/attaches/download' => :download,
   #  :as => 'download_brief_attach'
   def download
+    bread_pop!
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
       @brief.check_read_right(@cur_user)
@@ -31,8 +32,7 @@ class AttachesController < ApplicationController
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
-      @back = params[:back]
-      @path = brief_attaches_path(@brief,:back=>@back)
+      @path = brief_attaches_path(@brief,:dest=>bread_pre)
       @attach = BriefAttach.new
     end
     @title = '新附件'
@@ -46,8 +46,7 @@ class AttachesController < ApplicationController
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @attach = @brief.attaches.find(params[:id])
-      @back = params[:back]
-      @path = brief_attach_path(@brief,@attach,:back=>@back)
+      @path = brief_attach_path(@brief,@attach,:dest=>bread_pre)
     end
     @title = '更新附件'
     render 'share/new_edit'
@@ -60,10 +59,9 @@ class AttachesController < ApplicationController
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @attach = @brief.attaches.new(params[:brief_attach])
-      @back = params[:back]
 
       if @attach.save
-        redirect_to @back
+        redirect_to params[:dest]
       else
         @path = brief_attaches_path(@brief,:back=>@back)
         render :action => 'new'
@@ -78,10 +76,9 @@ class AttachesController < ApplicationController
       @brief = Brief.find(params[:brief_id])
       @brief.check_edit_right(@cur_user)
       @attach = @brief.attaches.find(params[:id])
-      @back = params[:back]
 
       if @attach.update_attributes(params[:brief_attach])
-        redirect_to @back
+        redirect_to params[:dest]
       else
         render action: "edit" 
       end
@@ -97,7 +94,7 @@ class AttachesController < ApplicationController
       @attach = @brief.attaches.find(params[:id])
       @attach.destroy
 
-      redirect_to params[:back]
+      redirect_to bread_pre
     end
   end
 end
