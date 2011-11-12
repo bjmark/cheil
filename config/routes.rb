@@ -42,6 +42,8 @@ Cheil::Application.routes.draw do
   resources :orgs
 
   resources :users
+  resources :admin_users
+
 
   controller :cheil do
     #brief列表

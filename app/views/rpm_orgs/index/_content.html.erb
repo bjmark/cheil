@@ -1,0 +1,32 @@
+<%
+  #partial=>_content
+#locals=>brief,back
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>Name</th>
+      <th>Cheil</th>
+      <th>Users</th>
+      <th></th>
+    </tr>
+
+    <% @rpm_orgs.each do |r| %>
+      <tr>
+        <td><%= r.name %></td>
+        <td><%= r.cheil_org.name %></td>
+        <td> <% r.users.each  do |e| %>
+            <%= link_to e.name,user_path(e) %>
+          <%end%> </td>
+        <td class="last">
+          <%= link_to 'Edit', edit_rpm_org_path(r) %>
+          |
+          <%= link_to 'Destroy', r, confirm: 'Are you sure?', method: :delete %>
+          |
+          <%= link_to 'Create user', new_user_path(:org_id=>r.id) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

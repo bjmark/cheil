@@ -1,15 +1,17 @@
 class CheilOrgsController < ApplicationController
-  before_filter :admin_authorize
+  before_filter :cur_user , :check_right
+
+  def check_right
+    case @cur_user
+    when AdminUser then return
+    else  raise SecurityError
+    end
+  end
 
   # GET /cheil_orgs
-  # GET /cheil_orgs.json
   def index
     @cheil_orgs = CheilOrg.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @cheil_orgs }
-    end
+    render 'cheil_orgs/index/show'
   end
 
   # GET /cheil_orgs/1

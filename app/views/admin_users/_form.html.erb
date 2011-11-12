@@ -4,9 +4,9 @@
       <h2><%= pluralize(@admin_user.errors.count, "error") %> prohibited this admin_user from being saved:</h2>
 
       <ul>
-      <% @admin_user.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @admin_user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -19,7 +19,18 @@
     <%= f.label :password %><br />
     <%= f.password_field :password %>
   </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :phone %><br />
+    <%= f.text_field :phone %>
+  </div>
+
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit '提交'%>
   </div>
 <% end %>
+
+

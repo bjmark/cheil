@@ -1,0 +1,28 @@
+<%
+  #partial=>_content
+#locals=>brief,back
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>名称</th>
+      <th></th>
+    </tr>
+    <%n=1
+    admin_users.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e.name  %>
+        </td>
+        <td class="last">
+          <%= link_to 'Show', e %>
+          |
+          <%= link_to 'Edit', edit_admin_user_path(e) %>
+          |
+          <%= link_to 'Destroy', e, confirm: 'Are you sure?', method: :delete %>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+

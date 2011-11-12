@@ -18,6 +18,9 @@ class ApplicationController < ActionController::Base
   end
 
   def bread_push!(path)
+    start_paths = ['admin_users','rpm_orgs','cheil_orgs','vendor_orgs']
+    (self.bread = [path]) and return if start_paths.include?(path)
+
     a = []
     b = bread
     b.each do |e|

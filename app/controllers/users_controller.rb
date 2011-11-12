@@ -1,6 +1,13 @@
 # encoding: utf-8
 class UsersController < ApplicationController
-  before_filter :admin_authorize,:except=>[:login,:check,:logout]
+  before_filter :cur_user , :check_right
+
+  def check_right
+    case @cur_user
+    when AdminUser then return
+    else  raise SecurityError
+    end
+  end
 
   # GET /users
   # GET /users.json
@@ -13,87 +20,56 @@ class UsersController < ApplicationController
     end
   end
 
-  def back_path(org)
-    case org
-    when RpmOrg then rpm_orgs_path
-    when CheilOrg then cheil_orgs_path
-    when VendorOrg then vendor_orgs_path
-    end
-  end
-
   # GET /users/1
-  # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    @back_path = back_path(@user.org)
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @user }
-    end
+    render 'users/show/show'
   end
 
   # GET /users/new
-  # GET /users/new.json
   def new
     org = Org.find(params[:org_id])
     @user = org.users.build
-    @back_path = back_path(org)
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user }
-    end
+    @title = '新建用户'
+    render 'share/new_edit'
   end
 
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-    @back_path = back_path(@user.org)
+    @title = '修改用户'
+    render 'share/new_edit'
   end
 
   # POST /users
-  # POST /users.json
   def create
     @user = User.new(params[:user])
 
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to back_path(@user.org), notice: 'User was successfully created.' }
-        format.json { render json: @user, status: :created, location: @user }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    bread_pop!
+    if @user.save
+      redirect_to bread_pre , notice: 'User was successfully created.' 
+    else
+      render 'share/new_edit'
     end
   end
 
   # PUT /users/1
-  # PUT /users/1.json
   def update
     @user = User.find(params[:id])
 
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { redirect_to back_path(@user.org), notice: 'User was successfully updated.' }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    if @user.update_attributes(params[:user])
+      redirect_to @user, notice: 'User was successfully updated.' 
+    else
+      render 'share/new_edit'
     end
   end
 
   # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     @user = User.find(params[:id])
-    back = back_path(@user.org)
     @user.destroy
 
-    respond_to do |format|
-      format.html { redirect_to back }
-      format.json { head :ok }
-    end
+    redirect_to bread_pre 
   end
 end

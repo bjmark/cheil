@@ -1,0 +1,10 @@
+<%
+  # vendor_orgs/index/show
+# @vendor_orgs
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'vendor_orgs/index/nav'},
+  :title=>'Vendor列表',
+  :content=>{:partial=>'vendor_orgs/index/content',
+    :locals=>{:vendor_orgs=>@vendor_orgs}} unless @vendor_orgs.empty?%>
+

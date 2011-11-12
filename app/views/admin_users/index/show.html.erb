@@ -1,0 +1,10 @@
+<%
+  # partail=>admin_users/index/show
+# @admin_users
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'admin_users/index/nav'},
+  :title=>'管理员列表',
+  :content=>{:partial=>'admin_users/index/content',
+    :locals=>{:admin_users=>@admin_users}} unless @admin_users.empty?%>
+

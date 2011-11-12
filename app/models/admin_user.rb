@@ -27,15 +27,15 @@ class AdminUser < User
 
   def nav_links
     [
-      ['管理员帐号','/users/admin'],
-      ['RPM' , '/rpm_orgs'],
-      ['Cheil' , '/cheil_orgs'],
-      ['Vendor', '/vendor_orgs_path']
+      ['管理员列表','/admin_users'],
+      ['RPM列表' , '/rpm_orgs'],
+      ['Cheil列表' , '/cheil_orgs'],
+      ['Vendor列表', '/vendor_orgs']
     ]
   end
 
   def home
-    '/admins'
+    '/admin_users'
   end
 end
 

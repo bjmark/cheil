@@ -1,0 +1,16 @@
+<%
+  #partial => users/index/_nav
+#locals=>user
+%>
+<li>
+<%= link_to '返回', controller.bread_pre %>
+</li>
+<li>
+<%= link_to '修改', edit_user_path(user) %>
+</li>
+<li>
+<%= link_to '删除', user,:method=>'delete',:confirm=>'确定吗？' %>
+</li>
+
+
+

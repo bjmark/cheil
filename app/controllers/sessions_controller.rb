@@ -1,3 +1,4 @@
+#encoding=utf-8
 class SessionsController < ApplicationController
   def new
     render 'new',:layout=>'sign'
@@ -5,7 +6,8 @@ class SessionsController < ApplicationController
 
   def create
     unless u = User.check_pass(params[:name],params[:password])
-      render :action=>'new' and return
+      redirect_to new_session_path, notice: '用户名或密码错误.'
+      return
     end
     
     session[:user_id] = u.id
