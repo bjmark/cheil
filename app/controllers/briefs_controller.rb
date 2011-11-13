@@ -17,7 +17,9 @@ class BriefsController < ApplicationController
 
   # GET /briefs
   def index
-    @briefs = @cur_user.org.briefs.paginate(:page => params[:page])
+    #@briefs = @cur_user.org.briefs.paginate(:page => params[:page])
+    @briefs = @cur_user.org.briefs
+
   end
 
   # GET /briefs/1
@@ -29,6 +31,8 @@ class BriefsController < ApplicationController
       render 'briefs/rpm/show'
     when CheilOrg
       render 'briefs/cheil/show'
+    when VendorOrg
+      render 'briefs/vendor/show'
     end
   end
 

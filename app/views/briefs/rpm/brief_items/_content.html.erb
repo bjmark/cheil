@@ -12,14 +12,12 @@
     </tr>
     <%=render 'briefs/rpm/brief_items/items_tr',
       :brief=>brief,
-      :back=>back,
       :items=>brief.designs,
       :kind=>'design',
       :kind_cn=>'设计'
     %>
     <%=render 'briefs/rpm/brief_items/items_tr',
       :brief=>brief,
-      :back=>back,
       :items=>brief.products,
       :kind=>'product',
       :kind_cn=>'制作'

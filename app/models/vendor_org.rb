@@ -1,8 +1,5 @@
 #encoding=utf-8
 class VendorOrg < Org 
-  has_many :users , :foreign_key => :org_id
-  has_many :brief_vendors , :foreign_key => :org_id
-
   def self.nav_partial
     'share/vendor_menu'
   end
@@ -13,5 +10,10 @@ class VendorOrg < Org
 
   def nav_links
     [['项目列表', '/briefs']]
+  end
+
+  def briefs
+    brief_ids = solutions.collect{|e| e.brief_id}
+    Brief.find(brief_ids)
   end
 end

@@ -43,5 +43,6 @@
 #rails g web_app_theme:theme sign --layout-type=sign
 #rails g controller solutions
 #rails g migration add_type_to_users 
-rails g controller sessions new create destroy
+#rails g controller sessions new create destroy
+rails g web_app_theme:theme --theme=blue --no-layout
 

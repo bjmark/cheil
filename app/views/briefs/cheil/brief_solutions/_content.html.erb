@@ -14,7 +14,7 @@
       brief.vendor_solutions.each do |e|%>
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>
-            <%= e.vendor_org.name %>
+            <%= e.org.name %>
             (<%= "#{e.items.length}/#{brief_items_size}"%>)
           </td>
           <td class="last">

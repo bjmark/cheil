@@ -42,7 +42,7 @@ class Brief < ActiveRecord::Base
     case user.org
     when RpmOrg then return if rpm_org == user.org
     when CheilOrg then return if cheil_org == user.org
-    when VendorOrg then return if brief_vendors.find_by_org_id(user.org_id) 
+    when VendorOrg then return if vendor_solutions.find_by_org_id(user.org_id) 
     end
 
     raise SecurityError

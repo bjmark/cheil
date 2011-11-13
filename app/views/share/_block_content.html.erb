@@ -1,0 +1,11 @@
+<%
+  #partial=>share/block_content
+#locals=>title,partial,locals
+%>
+<div class="content">
+  <h2 class="title"><%=title%></h2>
+  <div class="inner">
+    <%=render partial,locals%>
+  </div>
+</div>
+
