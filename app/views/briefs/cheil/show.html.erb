@@ -1,29 +1,24 @@
 <%
   # @brief
-# @back
 %>
 <%=render 'share/block',
-  :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief,:back=>@back}},
+  :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
   :title=>@brief.name,
   :content=>{:partial=>'briefs/content',:locals=>{:brief=>@brief}}
 %>
 
 <%=render 'briefs/cheil/brief_solutions/show',
-  :brief => @brief,
-  :back => @back
+  :brief => @brief unless @brief.vendor_solutions.empty?
 %>
 
 <%=render 'briefs/cheil/brief_attaches/show',
-  :brief=>@brief,
-  :back => @back
+  :brief=>@brief unless @brief.attaches.empty?
 %>
 
 <%=render 'briefs/cheil/brief_items/show',
-  :brief => @brief,
-  :back => @back
+  :brief => @brief unless @brief.items.empty?
 %>
 
 <%=render 'share/brief_comments/show',
-  :brief => @brief,
-  :back => @back
+  :brief => @brief unless @brief.comments.empty?
 %>

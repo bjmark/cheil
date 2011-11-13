@@ -18,7 +18,7 @@ class SolutionsController < ApplicationController
       bv.find{|t| t.org_id == e.id}
     end
 
-    @path = brief_solutions_path(@brief,:back=>@back)
+    @path = brief_solutions_path(@brief)
 
     @title = '选择Vendor'
     render 'share/new_edit'
@@ -32,7 +32,8 @@ class SolutionsController < ApplicationController
       @brief.vendor_solutions << VendorSolution.new(:org_id=>org_id)
     end
 
-    redirect_to params[:back]
+    bread_pop!
+    redirect_to bread_pre 
   end
 
   def destroy
@@ -40,6 +41,6 @@ class SolutionsController < ApplicationController
     s = brief.vendor_solutions.find(params[:id])
     s.destroy
 
-    redirect_to params[:back]
+    redirect_to bread_pre
   end
 end

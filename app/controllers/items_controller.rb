@@ -10,7 +10,6 @@ class ItemsController < ApplicationController
     @assigned_item_ids = assigned_items.collect{|e| e.parent_id }
 
     @brief = @solution.brief
-    @back = change_solution_items_path(params[:solution_id])
     render 'items/change_solution_items/show'
   end
 
@@ -114,7 +113,7 @@ class ItemsController < ApplicationController
       item = brief.items.find(params[:id])
       solution_item = solution.items.find_by_parent_id(params[:id])
       solution_item.destroy
-      redirect_to params[:back]
+      redirect_to bread_pre
     end
   end
 end

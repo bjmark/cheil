@@ -24,7 +24,6 @@ class BriefsController < ApplicationController
   def show
     @brief = Brief.find(params[:id])
     @brief.check_read_right(@cur_user)
-    @back = brief_path(@brief)
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'

@@ -1,6 +1,6 @@
 <%
   #partial=>_content
-#locals=>brief,back
+#locals=>brief
 %>
 <table class="table brief_items">
   <tbody>
@@ -11,14 +11,12 @@
     </tr>
     <%=render 'briefs/cheil/brief_items/items_tr',
       :brief=>brief,
-      :back=>back,
       :items=>brief.designs,
       :kind=>'design',
       :kind_cn=>'设计'
     %>
     <%=render 'briefs/cheil/brief_items/items_tr',
       :brief=>brief,
-      :back=>back,
       :items=>brief.products,
       :kind=>'product',
       :kind_cn=>'制作'
