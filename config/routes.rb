@@ -2,7 +2,12 @@
 Cheil::Application.routes.draw do
 
   resource :session , :only=>[:new,:create,:destroy]
-  resources :attaches
+  
+  resources :attaches do
+    member do 
+      get :download
+    end
+  end
 
   resources :vendor_orgs
 
@@ -24,9 +29,19 @@ Cheil::Application.routes.draw do
     end
 
     resources :items 
-    resources :solutions,:only=>[:show,:create,:destroy] do 
+
+    resources :solutions,:only=>[:index,:show,:create,:destroy] do 
       collection do
         get :sel_vendor
+      end
+    end
+  end
+
+  resource :solutions do
+    resources :comments , :only=>[:new,:create,:destroy]
+    resources :attaches,:except=>[:show,:index] do  
+      member do 
+        get :download
       end
     end
   end

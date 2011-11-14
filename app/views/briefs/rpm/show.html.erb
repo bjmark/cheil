@@ -1,91 +1,32 @@
 <%
+  #briefs/rpm/show
  # @brief
 %>
-<%
-=begin
-  render 'share/block',
-  :nav=>{:partial=>'briefs/rpm/nav',:locals=>{:brief=>@brief}},
-  :title=>@brief.name,
-  :content=>{:partial=>'briefs/content',
-    :locals=>{:brief=>@brief}}
-=end  
+<%=render 'share/block',
+    :nav=>{:partial=>'briefs/rpm/nav',:locals=>{:brief=>@brief}},
+    :contents=>[
+      {:partial=>'briefs/rpm/links',:locals=>{:brief=>@brief}},
+      {:title=>@brief.name,:partial=>'briefs/content',
+        :locals=>{:brief=>@brief}}]
+%>
+<%=render 'share/block',
+  :title=>'附件',
+  :content=>{:partial=>'share/attaches/index',
+    :locals=>{:attaches=>@brief.attaches,
+      :new_path=>new_attach_path(:brief_id=>@brief.id)}
+} unless @brief.attaches.empty?%>
+
+<%=render 'share/block',
+  :title=>'子项',
+  :content=>{:partial=>'briefs/rpm/brief_items/content',
+    :locals=>{:brief=>@brief}} unless @brief.items.empty?%>
+
+<%=render 'share/block',
+  :title=>'评论',
+  :content=>{:partial=>'share/brief_comments/content',
+    :locals=>{:brief=>@brief,:comments=>@brief.comments}
+} unless @brief.comments.empty?
 %>
 
-<%
-=begin
-  render 'briefs/rpm/brief_attaches/show',
-  :brief=>@brief,
-  :back => @back
-=end
-%>
-<%
-=begin
-render 'briefs/rpm/brief_items/show',
-  :brief => @brief,
-  :back => @back
-=end
-%>
-<%
-=begin
-  render 'share/brief_comments/show',
-  :brief => @brief,
-  :back => @back
-=end
-%>
 
-<div class="block">
-  <%=render 'share/block_nav',
-    :partial=>'briefs/rpm/nav',:locals=>{:brief=>@brief}
-  %>
-  <div class="content">
-    <div class="inner">
-      <br/>
-      <%= link_to '修改', edit_brief_path(@brief) %>
-      |
-      <%= link_to '删除',
-      brief_path(@brief), 
-      :confirm => '将删除关联的所有信息,确定?', :method => :delete%>
-      |
-      <%= link_to '新建附件', new_brief_attach_path(@brief) %>
-      |
-      <%= link_to '新建设计项', new_brief_item_path(@brief,:kind=>'design') %>
-      |
-      <%= link_to '新建制作项', new_brief_item_path(@brief,:kind=>'product') %>
-      |
-      <%= link_to '新建评论', 
-      new_brief_comment_path(@brief)%>
-
-      <%unless @brief.send_to_cheil?%>
-        |
-        <%=link_to '发送给cheil',
-          send_to_cheil_brief_path(@brief),
-          :confirm => '确定吗？',
-          :method => :put
-        %>
-      <%end%>
-
-    </div>
-  </div>
-
-  <%=render 'share/block_content',
-    :title=>@brief.name,
-    :partial=>'briefs/content',:locals=>{:brief=>@brief}
-  %>
-
-  <%=render 'share/block_content',
-    :title=>'附件',
-    :partial=>'briefs/rpm/brief_attaches/content',:locals=>{:brief=>@brief} unless @brief.attaches.empty?
-  %>
-
-  <%=render 'share/block_content',
-    :title=>'子项',
-    :partial=>'briefs/rpm/brief_items/content',:locals=>{:brief=>@brief} unless @brief.items.empty?
-  %>
-
-  <%=render 'share/block_content',
-    :title=>'评论',
-    :partial=>'share/brief_comments/content',
-    :locals=>{:brief=>@brief,:comments=>@brief.comments} unless @brief.comments.empty?
-  %>
-</div>
 

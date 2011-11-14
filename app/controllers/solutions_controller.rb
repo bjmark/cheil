@@ -5,8 +5,28 @@ class SolutionsController < ApplicationController
   def check_right
   end
 
-  def show
+  #get 'briefs/brief_id/solutions'
+  def index
+    @brief = Brief.find(params[:brief_id])
+    render 'briefs/cheil/brief_solutions/index'
   end
+
+  #get 'briefs/brief_id/solutions/id'
+  def show
+    @brief = Brief.find(params[:brief_id])
+    @solution = Brief.solutions.find(params[:id])
+
+    case @cur_user.org
+    when RpmOrg
+      render 'briefs/rpm/show'
+    when CheilOrg
+      render 'briefs/cheil/show'
+    when VendorOrg
+      render 'solutions/vendor/show'
+    end
+
+  end
+
   #get 'briefs/brief_id/solutions/sel_vendor' => :sel_vendor
   # :as=>sel_vendor_brief_solutions
   def sel_vendor
@@ -32,8 +52,7 @@ class SolutionsController < ApplicationController
       @brief.vendor_solutions << VendorSolution.new(:org_id=>org_id)
     end
 
-    bread_pop!
-    redirect_to bread_pre 
+    redirect_to brief_solutions_path(@brief) 
   end
 
   def destroy
@@ -41,6 +60,6 @@ class SolutionsController < ApplicationController
     s = brief.vendor_solutions.find(params[:id])
     s.destroy
 
-    redirect_to bread_pre
+    redirect_to brief_solutions_path(brief) 
   end
 end

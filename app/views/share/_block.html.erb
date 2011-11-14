@@ -1,20 +1,36 @@
 <%
   #partial=>_block
-#locals=>nav,title,content
+#locals=>nav,title,content,contents
+#example call 
+
+#render 'block',:nav=>{:partial=>'file',:locals=>{}},
+#:title=>'',:content=>{:partial=>'file',locals={}}
+
+#render 'block',:nav=>{:partial=>'file',:locals=>{}},
+#:contents=>[{:title=>'',:partial=>'file',locals={}}]
 %>
 <div class="block">
-  <%if nav%>
+  <%if local_assigns.has_key? :nav%>
     <div class="secondary-navigation">
       <ul class="wat-cf">
         <%=render nav[:partial],nav[:locals]%>
       </ul>
     </div>
   <%end%>
-  <div class="content">
-    <h2 class="title"><%=title%></h2>
-    <div class="inner">
-      <%=render content[:partial],content[:locals]%>
-    </div>
+  <%
+    if local_assigns.has_key? :content
+      contents = [{:title=>title,:partial=>content[:partial],
+        :locals=>content[:locals]}]
+    end
+    contents.each do |e|%>
+      <div class="content">
+        <%if e[:title]%>
+          <h2 class="title"><%=e[:title]%></h2>
+        <%end%>
+        <div class="inner">
+          <%=render e[:partial],e[:locals]%>
+        </div>
+      </div>
+    <%end%>
   </div>
-</div>
 

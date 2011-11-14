@@ -1,13 +1,13 @@
 <%
+  #items/change_solution_items
   # @assigned_item_ids 
 # @brief 
 # @solution
-# @back
 %>
 <%=render 'share/block',
   :nav=>{:partial=>'items/change_solution_items/nav',
     :locals=>{:brief=>@brief}},
-  :title=>'指派子项',
+    :title=>"指派子项(#{@solution.org.name})",
   :content=>{:partial=>'items/change_solution_items/content',
     :locals=>{:brief=>@brief,
       :solution=>@solution,

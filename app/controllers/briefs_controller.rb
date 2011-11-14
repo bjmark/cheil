@@ -32,6 +32,7 @@ class BriefsController < ApplicationController
     when CheilOrg
       render 'briefs/cheil/show'
     when VendorOrg
+      @solution = @cur_user.org.solutions.find_by_brief_id(@brief.id)
       render 'briefs/vendor/show'
     end
   end

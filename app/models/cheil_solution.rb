@@ -1,3 +1,5 @@
 class CheilSolution < Solution
-  belongs_to :brief
+  def check_read_right(user)
+
+  end
 end

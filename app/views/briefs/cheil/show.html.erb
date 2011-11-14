@@ -1,24 +1,41 @@
 <%
+  # briefs/cheil/show
   # @brief
 %>
-<%=render 'share/block',
+<%
+=begin
+  render 'share/block',
   :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
   :title=>@brief.name,
   :content=>{:partial=>'briefs/content',:locals=>{:brief=>@brief}}
+=end
+%>
+<%=render 'share/block',
+    :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
+    :contents=>[
+      {:partial=>'briefs/cheil/links',:locals=>{:brief=>@brief}},
+      {:title=>@brief.name,:partial=>'briefs/content',
+        :locals=>{:brief=>@brief}}]
 %>
 
-<%=render 'briefs/cheil/brief_solutions/show',
-  :brief => @brief unless @brief.vendor_solutions.empty?
+<%=render 'share/block',
+  :title=>'附件',
+  :content=>{:partial=>'briefs/cheil/brief_attaches/content',
+    :locals=>{:brief=>@brief}} unless @brief.attaches.empty?%>
+
+<%=render 'share/block',
+  :title=>'子项',
+  :content=>{:partial=>'briefs/cheil/brief_items/content',
+    :locals=>{:brief=>@brief}} unless @brief.items.empty?%>
+
+<%=render 'share/block',
+  :title=>'评论',
+  :content=>{:partial=>'share/brief_comments/content',
+    :locals=>{:brief=>@brief,:comments=>@brief.comments}
+} unless @brief.comments.empty?
 %>
 
-<%=render 'briefs/cheil/brief_attaches/show',
-  :brief=>@brief unless @brief.attaches.empty?
-%>
-
-<%=render 'briefs/cheil/brief_items/show',
-  :brief => @brief unless @brief.items.empty?
-%>
-
-<%=render 'share/brief_comments/show',
-  :brief => @brief unless @brief.comments.empty?
+<%
+  #render 'briefs/cheil/brief_solutions/show',
+  #:brief => @brief unless @brief.vendor_solutions.empty?
 %>

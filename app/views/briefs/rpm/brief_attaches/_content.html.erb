@@ -1,6 +1,6 @@
 <%
   #partial=>_content
-#locals=>brief,back
+#locals=>brief or solution
 %>
 <table class="table brief_attaches">
   <tbody>
@@ -27,4 +27,4 @@
     <%end%>
   </tbody>
 </table>
-
+<%= link_to '新建附件', new_brief_attach_path(brief) %>

@@ -2,14 +2,14 @@
   #partial => briefs/cheil/_nav
 #locals => brief
 %>
-<li>
+<li class="first">
 <%=link_to '返回',briefs_path%>
 </li>
-<li>
-<%=link_to '选择Vendor',sel_vendor_brief_solutions_path(brief)%>
+<li <%=raw 'class="active"' if brief_path(brief) == request.fullpath%>>
+<%=link_to '需求',brief_path(brief)%>
 </li>
-<li>
-<%= link_to '新建评论', new_brief_comment_path(brief)%>
+<li <%=raw 'class="active"' if brief_solutions_path(brief) == request.fullpath%>>
+<%=link_to '已选Vendor',brief_solutions_path(brief)%>
 </li>
 
 
