@@ -1,0 +1,20 @@
+<%
+  #solutions/vendor/show 
+# @brief,@solution
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/vendor/nav',:locals=>{:brief=>@brief,:solution=>@solution}},
+  :contents=>[
+      {:partial=>'solutions/vendor/links',:locals=>{:brief=>@brief}},
+      {:title=>@brief.name,:partial=>'briefs/content',
+        :locals=>{:brief=>@brief}}]
+
+%>
+<%=render 'share/block',
+    :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
+    :contents=>[
+      {:partial=>'briefs/cheil/links',:locals=>{:brief=>@brief}},
+      {:title=>@brief.name,:partial=>'briefs/content',
+        :locals=>{:brief=>@brief}}]
+%>
+
