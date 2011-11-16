@@ -9,8 +9,15 @@ class CommentsController < ApplicationController
     end
   end
 
-  #get 'briefs/brief_id/comments/new' => :new,
-  #  :as => 'new_brief_comment'
+  def owner_path(comment)
+    case comment
+    when BriefComment 
+      brief_path(comment.fk_id)
+    when SolutionComment
+      solution_path(comment.fk_id)
+    end
+  end
+
   def new
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
@@ -36,15 +43,12 @@ class CommentsController < ApplicationController
     redirect_to params[:dest],notice: 'comment was successfully created.' 
   end
 
-  #delete 'briefs/:brief_id/comments/:comment_id' => :destroy,
-  #  :as => 'brief_comment' 
   def destroy
-    if params[:brief_id]
-      brief = Brief.find(params[:brief_id])
-      comment = brief.comments.find(params[:id])
-      comment.check_destroy_right(@cur_user)
-      comment.destroy
-    end
-    redirect_to bread_pre,notice: 'comment was successfully deleted.' 
+    comment = Comment.find(params[:id])
+    comment.check_destroy_right(@cur_user)
+    comment.destroy
+
+    redirect_to owner_path(comment)
   end
+
 end

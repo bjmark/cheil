@@ -9,21 +9,11 @@
       {:title=>@brief.name,:partial=>'briefs/content',
         :locals=>{:brief=>@brief}}]
 %>
-<%=render 'share/block',
-  :title=>'附件',
-  :content=>{:partial=>'share/attaches/index',
-    :locals=>{:attaches=>@brief.attaches,
-      :new_path=>new_attach_path(:brief_id=>@brief.id)}
-} unless @brief.attaches.empty?%>
-
-<%=render 'share/block',
-  :title=>'子项',
-  :content=>{:partial=>'briefs/rpm/brief_items/content',
-    :locals=>{:brief=>@brief}} unless @brief.items.empty?%>
-
+<%=attaches(@brief)%>
+<%=brief_items(@brief)%>
 <%=render 'share/block',
   :title=>'评论',
-  :content=>{:partial=>'share/brief_comments/content',
+  :content=>{:partial=>'share/comments/index',
     :locals=>{:brief=>@brief,:comments=>@brief.comments}
 } unless @brief.comments.empty?
 %>

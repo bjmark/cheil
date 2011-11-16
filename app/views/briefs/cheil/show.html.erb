@@ -2,14 +2,6 @@
   # briefs/cheil/show
   # @brief
 %>
-<%
-=begin
-  render 'share/block',
-  :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
-  :title=>@brief.name,
-  :content=>{:partial=>'briefs/content',:locals=>{:brief=>@brief}}
-=end
-%>
 <%=render 'share/block',
     :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
     :contents=>[
@@ -17,17 +9,8 @@
       {:title=>@brief.name,:partial=>'briefs/content',
         :locals=>{:brief=>@brief}}]
 %>
-
-<%=render 'share/block',
-  :title=>'附件',
-  :content=>{:partial=>'briefs/cheil/brief_attaches/content',
-    :locals=>{:brief=>@brief}} unless @brief.attaches.empty?%>
-
-<%=render 'share/block',
-  :title=>'子项',
-  :content=>{:partial=>'briefs/cheil/brief_items/content',
-    :locals=>{:brief=>@brief}} unless @brief.items.empty?%>
-
+<%=attaches(@brief)%>
+<%=brief_items(@brief)%>
 <%=render 'share/block',
   :title=>'评论',
   :content=>{:partial=>'share/brief_comments/content',

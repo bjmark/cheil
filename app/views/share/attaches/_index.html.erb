@@ -1,6 +1,6 @@
 <%
   #share/attaches/_index
-#locals=>attaches,new_path
+#locals=>owner
 %>
 <table class="table brief_attaches">
   <tbody>
@@ -9,21 +9,16 @@
       <th></th>
     </tr>
     <%n=1
-    attaches.each do |e|%>
+    owner.attaches.each do |e|%>
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
         <td>
           <%= e.attach_file_name  %>
         </td>
         <td class="last">
-          <%= link_to '下载',download_attach_path(e)%>
-          |
-          <%= link_to '更新',edit_attach_path(e)%>
-          |
-          <%=  link_to '删除',attach_path(e), 
-          :confirm => 'Are you sure?', :method => :delete %>
+          <%=raw attach_links(owner,e,@cur_user) %>
         </td>
       </tr>
     <%end%>
   </tbody>
 </table>
-<%= link_to '新建附件',new_path %>
+<%= new_attach_link(owner,@cur_user) %>

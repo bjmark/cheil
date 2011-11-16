@@ -22,38 +22,46 @@ class AttachesController < ApplicationController
       :content_type => attach.attach_content_type
   end
 
-  #get 'briefs/:brief_id/attaches/new' => :new,
-  #  :as => 'new_brief_attach'
+  def owner_path(attach)
+    case attach
+    when BriefAttach 
+      brief_path(attach.fk_id)
+    when SolutionAttach
+      solution_path(attach.fk_id)
+    end
+  end
+
   def new
     if params[:brief_id]
-      @brief = Brief.find(params[:brief_id])
-      @brief.check_edit_right(@cur_user)
-      @path = brief_attaches_path(@brief,:dest=>bread_pre)
+      brief = Brief.find(params[:brief_id])
+      brief.check_edit_right(@cur_user)
       @attach = BriefAttach.new
+      @path = attaches_path(:brief_id=>brief.id)
+      @back = brief_path(brief)
     end
-    @title = '新附件'
-    render 'share/new_edit'
   end
 
   def edit
     @attach = Attach.find(params[:id])
     @attach.check_update_right(@cur_user)
+    @path = attach_path(@attach)
+    @back = owner_path(@attach)
   end
 
-  #post 'briefs/:brief_id/attaches' => :create,
-  #  :as => 'brief_attachs'
   def create
     if params[:brief_id]
-      @brief = Brief.find(params[:brief_id])
-      @brief.check_edit_right(@cur_user)
-      @attach = @brief.attaches.new(params[:brief_attach])
+      brief = Brief.find(params[:brief_id])
+      brief.check_edit_right(@cur_user)
+      @attach = brief.attaches.new(params[:brief_attach])
+      @path = attaches_path(:brief_id=>brief.id)
+    end
 
-      if @attach.save
-        redirect_to params[:dest]
-      else
-        @path = brief_attaches_path(@brief,:back=>@back)
-        render :action => 'new'
-      end
+    @back = owner_path(@attach)
+
+    if @attach.save
+      redirect_to @back 
+    else
+      render :action => 'new'
     end
   end
 
@@ -64,14 +72,14 @@ class AttachesController < ApplicationController
     case @attach
     when BriefAttach 
       attr = params[:brief_attach]
-      path = brief_path(@attach.fk_id)
     when SolutionAttach
       attr = params[:solution_attach]
-      path = solution_path(@attach.fk_id)
     end
 
+    @back = owner_path(@attach)
+
     if @attach.update_attributes(attr)
-      redirect_to path
+      redirect_to @back
     else
       render action: "edit" 
     end
@@ -80,15 +88,8 @@ class AttachesController < ApplicationController
   def destroy
     attach = Attach.find(params[:id])
     attach.check_update_right(@cur_user)
-
-    case @attach
-    when BriefAttach 
-      path = brief_path(@attach.fk_id)
-    when SolutionAttach
-      path = solution_path(@attach.fk_id)
-    end
-
     attach.destroy
-    redirect_to path
+
+    redirect_to owner_path(attach)
   end
 end

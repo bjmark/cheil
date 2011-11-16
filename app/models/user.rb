@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-  belongs_to :rpm_org, :foreign_key=>:org_id
-  belongs_to :cheil_org, :foreign_key=>:org_id
-  belongs_to :vendor_org, :foreign_key=>:org_id
-  belongs_to :org, :foreign_key=>:org_id
+  #belongs_to :rpm_org, :foreign_key=>:org_id
+  #belongs_to :cheil_org, :foreign_key=>:org_id
+  #belongs_to :vendor_org, :foreign_key=>:org_id
+  belongs_to :org
 
   validates :name, :uniqueness => true
   validates :name, :presence => true

@@ -9,27 +9,20 @@ Cheil::Application.routes.draw do
     end
   end
 
+  resources :items 
+  resources :comments , :only=>[:new,:create,:destroy]
+
   resources :vendor_orgs
 
   resources :cheil_orgs
 
   resources :rpm_orgs
 
-  resources :brief_vendors
-
   resources :briefs do
     member do
       put :send_to_cheil
     end
     resources :comments , :only=>[:new,:create,:destroy]
-    resources :attaches,:except=>[:show,:index] do  
-      member do 
-        get :download
-      end
-    end
-
-    resources :items 
-
     resources :solutions,:only=>[:index,:show,:create,:destroy] do 
       collection do
         get :sel_vendor
@@ -39,11 +32,6 @@ Cheil::Application.routes.draw do
 
   resource :solutions do
     resources :comments , :only=>[:new,:create,:destroy]
-    resources :attaches,:except=>[:show,:index] do  
-      member do 
-        get :download
-      end
-    end
   end
 
   controller :items do 

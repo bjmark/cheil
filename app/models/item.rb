@@ -37,4 +37,7 @@ class Item < ActiveRecord::Base
 
     return a1
   end
+    
+  def check_edit_right(a_user)
+  end
 end
