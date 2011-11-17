@@ -4,13 +4,19 @@ class Solution < ActiveRecord::Base
   has_many :items,:class_name=>'SolutionItem',:foreign_key=>'fk_id'
   has_many :attaches,:class_name=>'SolutionAttach',:foreign_key => 'fk_id'
 
-  def check_read_right(user)
-    return true if owner?(user)
+  def check_read_right(a_user)
+    return true if can_read_by?(a_user)
+    raise SecurityError
+  end
+
+  def check_edit_right(a_user)
+    return true if can_edit_by?(a_user)
     raise SecurityError
   end
 
   def can_read_by?(a_user)
     return true if can_edit_by?(a_user)
+    return true if assigned_by?(a_user)
   end
 
   def can_edit_by?(a_user)
@@ -18,7 +24,7 @@ class Solution < ActiveRecord::Base
   end
 
   def owned_by?(a_user)
-    org_id == user.org_id
+    org_id == a_user.org_id
   end
 
   def assigned_by?(a_user)
@@ -33,12 +39,29 @@ class Solution < ActiveRecord::Base
     @items_from_brief = Item.where(:id=>ids)
   end
 
-  def designs
+  def designs_from_brief
     items_from_brief.find_all{|e| e.kind == 'design'}
   end
 
-  def products
+  def products_from_brief
     items_from_brief.find_all{|e| e.kind == 'product'}
   end
 
+  def designs
+    ids = designs_from_brief.collect{|e| e.id}
+    items.where(:parent_id=>ids)
+  end
+
+  def products
+    ids = products_from_brief.collect{|e| e.id}
+    items.where(:parent_id=>ids)
+  end
+
+  def trans
+    items.find_all_by_kind('tran')
+  end
+
+  def others
+    items.find_all_by_kind('other')
+  end
 end

@@ -1,0 +1,41 @@
+<%
+  #solutions/vendor/items/_index
+#locals=>solution
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+      <th>说明</th>
+      <th>单价</th>
+      <th>合计</th>
+      <th></th>
+    </tr>
+    <%=render 'solutions/vendor/items/kind',
+      :solution=>solution,
+      :items=>solution.designs,
+      :kind_cn=>'设计' unless solution.designs.empty?
+    %>
+    <%=render 'solutions/vendor/items/kind',
+      :solution=>solution,
+      :items=>solution.products,
+      :kind_cn=>'制作' unless solution.products.empty?
+    %>
+    <%=render 'solutions/vendor/items/kind',
+      :solution=>solution,
+      :items=>solution.trans,
+      :kind_cn=>'运输' unless solution.trans.empty?
+    %>
+    <%=render 'solutions/vendor/items/kind',
+      :solution=>solution,
+      :items=>solution.others,
+      :kind_cn=>'其他' unless solution.others.empty?
+    %>
+  </tbody>
+</table>
+<%= link_to '新建运输项', new_item_path(:solution_id=>solution.id,:kind=>'tran') %>
+|
+<%= link_to '新建其他项', new_item_path(:solution_id=>solution.id,:kind=>'other') %>
+

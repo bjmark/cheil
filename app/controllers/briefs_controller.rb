@@ -34,8 +34,8 @@ class BriefsController < ApplicationController
     when VendorOrg
       #@solution = @cur_user.org.solutions.find_by_brief_id(@brief.id)
       @solution = @brief.solutions.find_by_org_id(@cur_user.org_id)
-      @brief.designs = @solution.designs
-      @brief.products = @solution.products
+      @brief.designs = @solution.designs_from_brief
+      @brief.products = @solution.products_from_brief
       render 'briefs/vendor/show'
     end
   end

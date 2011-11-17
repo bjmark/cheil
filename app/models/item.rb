@@ -6,25 +6,7 @@ class Item < ActiveRecord::Base
   #it has a parent if parent_id > 0
   #it has no parent if parent_id ==0
 
-  def has_parent?
-    parent_id > 0
-  end
-
-  def name
-    return parent_item.name if has_parent?
-    read_attribute(:name)
-  end
-
-  def quantity
-    return parent_item.quantity if has_parent?
-    read_attribute(:quantity)
-  end
-
-  def kind
-    return parent_item.kind if has_parent?
-    read_attribute(:kind)
-  end
-
+  
   def total
     a1 = quantity.to_f * price.to_f
     a2 = a1.to_i

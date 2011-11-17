@@ -2,6 +2,9 @@
 class ItemsController < ApplicationController
   before_filter :cur_user 
 
+  def price
+  end
+
   def index
     if params[:solution_id]
       @solution = Solution.find(params[:solution_id])

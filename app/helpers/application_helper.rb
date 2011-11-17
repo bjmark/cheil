@@ -27,7 +27,7 @@ module ApplicationHelper
     if owner.can_edit_by?(user)
       var = case 
             when owner.instance_of?(Brief) then {:brief_id=>owner.id}
-            when owner.instance_of?(Solution) then {:solution_id=>owner.id}
+            when owner.kind_of?(Solution) then {:solution_id=>owner.id}
             end
       link_to '新建附件', new_attach_path(var)
     end
@@ -45,7 +45,7 @@ module ApplicationHelper
     if owner.can_commented_by?(user)
       var = case 
             when owner.instance_of?(Brief) then {:brief_id=>owner.id}
-            when owner.instance_of?(Solution) then {:solution_id=>owner.id}
+            when owner.kind_of?(Solution) then {:solution_id=>owner.id}
             end
       link_to '新建评论', new_comment_path(var)
     end

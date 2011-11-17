@@ -3,18 +3,17 @@
 # @brief,@solution
 %>
 <%=render 'share/block',
-  :nav=>{:partial=>'briefs/vendor/nav',:locals=>{:brief=>@brief,:solution=>@solution}},
-  :contents=>[
-      {:partial=>'solutions/vendor/links',:locals=>{:brief=>@brief}},
-      {:title=>@brief.name,:partial=>'briefs/content',
-        :locals=>{:brief=>@brief}}]
-
+  :nav=>{:partial=>'briefs/vendor/nav',
+    :locals=>{:brief=>@solution.brief,:solution=>@solution}},
+    :contents=>[{:partial=>'solutions/vendor/links',:locals=>{:solution=>@solution}}
+]
 %>
+<%=attaches(@solution)%>
 <%=render 'share/block',
-    :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
-    :contents=>[
-      {:partial=>'briefs/cheil/links',:locals=>{:brief=>@brief}},
-      {:title=>@brief.name,:partial=>'briefs/content',
-        :locals=>{:brief=>@brief}}]
-%>
+  :title=>'子项',
+  :content=>{:partial=>'solutions/vendor/items/index',
+    :locals=>{:solution=>@solution}
+} unless @solution.items.empty?%>
+
+
 

@@ -11,11 +11,8 @@ class SolutionsController < ApplicationController
     end
   end
 
-  #get 'briefs/brief_id/solutions/id'
   def show
-    @brief = Brief.find(params[:brief_id])
-    @solution = Brief.solutions.find(params[:id])
-
+    @solution = Solution.find(params[:id])
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'

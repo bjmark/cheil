@@ -12,8 +12,6 @@ class AttachesController < ApplicationController
   end
 
   def download
-    bread_pop!
-
     attach = Attach.find(params[:id])
     attach.check_read_right(@cur_user)
 
@@ -32,12 +30,19 @@ class AttachesController < ApplicationController
   end
 
   def new
-    if params[:brief_id]
+    case 
+    when params[:brief_id]
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user)
       @attach = BriefAttach.new
       @path = attaches_path(:brief_id=>brief.id)
       @back = brief_path(brief)
+    when params[:solution_id]
+      solution = Solution.find(params[:solution_id])
+      solution.check_edit_right(@cur_user)
+      @attach = SolutionAttach.new
+      @path = attaches_path(:solution_id=>solution.id)
+      @back = solution_path(solution)
     end
   end
 
@@ -49,11 +54,17 @@ class AttachesController < ApplicationController
   end
 
   def create
-    if params[:brief_id]
+    case
+    when params[:brief_id]
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user)
       @attach = brief.attaches.new(params[:brief_attach])
       @path = attaches_path(:brief_id=>brief.id)
+    when params[:solution_id]
+      solution = Solution.find(params[:solution_id])
+      solution.check_edit_right(@cur_user)
+      @attach = solution.attaches.new(params[:solution_attach])
+      @path = attaches_path(:solution_id=>solution.id)
     end
 
     @back = owner_path(@attach)
