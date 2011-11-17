@@ -24,4 +24,21 @@ class Solution < ActiveRecord::Base
   def assigned_by?(a_user)
     brief.received_by?(a_user.org)
   end
+
+  def items_from_brief(reload = false)
+    @items_from_brief = nil if reload
+    @items_from_brief and return @items_from_brief 
+
+    ids = items.find_all{|e| e.parent_id > 0}.collect{|e| e.parent_id}
+    @items_from_brief = Item.where(:id=>ids)
+  end
+
+  def designs
+    items_from_brief.find_all{|e| e.kind == 'design'}
+  end
+
+  def products
+    items_from_brief.find_all{|e| e.kind == 'product'}
+  end
+
 end

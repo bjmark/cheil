@@ -6,18 +6,12 @@
     :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
     :contents=>[
       {:partial=>'briefs/cheil/links',:locals=>{:brief=>@brief}},
-      {:title=>@brief.name,:partial=>'briefs/content',
+      {:title=>@brief.name,:partial=>'show',
         :locals=>{:brief=>@brief}}]
 %>
 <%=attaches(@brief)%>
 <%=brief_items(@brief)%>
-<%=render 'share/block',
-  :title=>'评论',
-  :content=>{:partial=>'share/brief_comments/content',
-    :locals=>{:brief=>@brief,:comments=>@brief.comments}
-} unless @brief.comments.empty?
-%>
-
+<%=comments(@brief)%>
 <%
   #render 'briefs/cheil/brief_solutions/show',
   #:brief => @brief unless @brief.vendor_solutions.empty?

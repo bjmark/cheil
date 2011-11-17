@@ -33,4 +33,22 @@ module ApplicationHelper
     end
   end
 
+  def comments(owner)
+    render 'share/block',
+      :title=>'评论',
+      :content=>{:partial=>'share/comments/index',
+        :locals=>{:owner=>owner}
+    } unless owner.comments.empty?
+  end
+
+  def new_comment_link(owner,user)
+    if owner.can_commented_by?(user)
+      var = case 
+            when owner.instance_of?(Brief) then {:brief_id=>owner.id}
+            when owner.instance_of?(Solution) then {:solution_id=>owner.id}
+            end
+      link_to '新建评论', new_comment_path(var)
+    end
+  end
+
 end

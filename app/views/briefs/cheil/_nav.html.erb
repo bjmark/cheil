@@ -8,8 +8,8 @@
 <li <%=raw 'class="active"' if brief_path(brief) == request.fullpath%>>
 <%=link_to '需求',brief_path(brief)%>
 </li>
-<li <%=raw 'class="active"' if brief_solutions_path(brief) == request.fullpath%>>
-<%=link_to '已选Vendor',brief_solutions_path(brief)%>
+<li <%=raw 'class="active"' if solutions_path == request.fullpath.split('?').first%>>
+<%=link_to '已选Vendor',solutions_path(:brief_id=>brief.id)%>
 </li>
 
 

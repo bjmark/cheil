@@ -2,16 +2,6 @@
   # partail=>briefs/cheil/brief_attaches/_show
 # locals => brief,back
 %>
-<%
-=begin
-  render 'share/block',
-  :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
-  :title=>'已选定的vendors',
-  :content=>{:partial=>'briefs/cheil/brief_solutions/content',
-    :locals=>{:brief=>@brief}} 
-=end
-  %>
-
 <%=render 'share/block',
     :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
     :contents=>[

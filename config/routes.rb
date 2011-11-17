@@ -11,6 +11,7 @@ Cheil::Application.routes.draw do
 
   resources :items 
   resources :comments , :only=>[:new,:create,:destroy]
+  resources :solutions
 
   resources :vendor_orgs
 
@@ -22,7 +23,6 @@ Cheil::Application.routes.draw do
     member do
       put :send_to_cheil
     end
-    resources :comments , :only=>[:new,:create,:destroy]
     resources :solutions,:only=>[:index,:show,:create,:destroy] do 
       collection do
         get :sel_vendor
@@ -30,13 +30,8 @@ Cheil::Application.routes.draw do
     end
   end
 
-  resource :solutions do
-    resources :comments , :only=>[:new,:create,:destroy]
-  end
 
   controller :items do 
-    get 'solutions/:solution_id/items/change' => :change_solution_items,
-      :as=>'change_solution_items'
     post 'solutions/:solution_id/items/:id' => :create,
       :as=>'solution_item'
     delete 'solutions/:solution_id/items/:id' => :destroy,

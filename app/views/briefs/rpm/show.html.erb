@@ -6,17 +6,13 @@
     :nav=>{:partial=>'briefs/rpm/nav',:locals=>{:brief=>@brief}},
     :contents=>[
       {:partial=>'briefs/rpm/links',:locals=>{:brief=>@brief}},
-      {:title=>@brief.name,:partial=>'briefs/content',
+      {:title=>@brief.name,:partial=>'show',
         :locals=>{:brief=>@brief}}]
 %>
 <%=attaches(@brief)%>
 <%=brief_items(@brief)%>
-<%=render 'share/block',
-  :title=>'评论',
-  :content=>{:partial=>'share/comments/index',
-    :locals=>{:brief=>@brief,:comments=>@brief.comments}
-} unless @brief.comments.empty?
-%>
+<%=comments(@brief)%>
+
 
 
 

@@ -1,9 +1,9 @@
 <%
   #share/comments/_index
-#owner,comments
+#owner
 %>
 <ul class="list">
-  <%comments.each do |e|%>
+  <%owner.comments.each do |e|%>
     <li>
     <span class="author"><%=e.user.name%></span>
     <span class="date"><%=short_d(e.created_at)%></span>
@@ -18,4 +18,4 @@
     </li>
   <%end%>
 </ul>
-<%= link_to '新建评论', new_comment_path(:brief_id=>brief.id) %>
+<%= new_comment_link(owner,@cur_user) %>

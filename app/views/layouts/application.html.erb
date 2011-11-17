@@ -26,7 +26,7 @@
     </div>    
     <div id="wrapper" class="wat-cf">
       <div class="flash">
-        <% flash.each do |type, message| -%>
+        <% flash.reject{|k,v| k==:dest}.each do |type, message| -%>
           <div class="message <%= type %>">
             <p><%= message %></p>
           </div>

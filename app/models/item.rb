@@ -1,8 +1,5 @@
 #encoding:utf-8
 class Item < ActiveRecord::Base
-  belongs_to :parent_item,:class_name=>'Item',:foreign_key=>'parent_id'
-  has_many :child_items,:class_name=>'Item',:foreign_key=>'parent_id'
-
   #item分两种情况
   #1.belongs to brief
   #2.belongs to brief_vendor,in this case,name,quantity,kind must take from his parent if it has a parent.
@@ -40,4 +37,9 @@ class Item < ActiveRecord::Base
     
   def check_edit_right(a_user)
   end
+
+  def belongs_to?(a_solution)
+    a_solution.items.find{|e| e.id == id or e.parent_id == id}
+  end
+
 end

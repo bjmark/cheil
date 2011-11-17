@@ -1,0 +1,32 @@
+<%
+  #partial=>briefs/cheil/brief_solution/_content
+#locals=>brief
+%>
+<table class="table brief_attaches">
+  <tbody>
+    <tr>
+      <th>名称</th>
+      <th></th>
+    </tr>
+    <%
+      brief_items_size = brief.items.length
+      n=1
+      brief.vendor_solutions.each do |e|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= e.org.name %>
+            (<%= "#{e.items.length}/#{brief_items_size}"%>)
+          </td>
+          <td class="last">
+            <%= link_to '方案',brief_solution_path(brief,e)  %>
+            |
+            <%=link_to '指派的子项',items_path(:solution_id=>e.id)  %>
+            |
+            <%= link_to '删除', solution_path(e),
+            :confirm => 'Are you sure?', :method => :delete %>
+          </td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+

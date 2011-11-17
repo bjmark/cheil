@@ -5,7 +5,7 @@
 <%=render 'share/block',
   :nav=>{:partial=>'briefs/vendor/nav',:locals=>{:brief=>@brief,:solution=>@solution}},
   :title=>@brief.name,
-  :content=>{:partial=>'briefs/content',:locals=>{:brief=>@brief}}
+  :content=>{:partial=>'show',:locals=>{:brief=>@brief}}
 %>
 <%=attaches(@brief)%>
 <%=brief_items(@brief)%>

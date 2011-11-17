@@ -10,6 +10,7 @@ items.each do |e|%>
     <%end%>
     <td><%= e.name  %></td>
     <td><%= e.quantity  %></td>
+    <td><%= e.note  %></td>
     <td class="last">
       <%if brief.can_edit_by?(@cur_user)%>
         <%= link_to '修改',edit_item_path(e)  %>

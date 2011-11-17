@@ -20,27 +20,30 @@ class CommentsController < ApplicationController
 
   def new
     if params[:brief_id]
-      @brief = Brief.find(params[:brief_id])
-      @brief.check_comment_right(@cur_user)
-      @comment = Comment.new
-      @path = brief_comments_path(@brief,:dest=>bread_pre)
+      brief = Brief.find(params[:brief_id])
+      brief.check_comment_right(@cur_user)
+      @comment = BriefComment.new
+      @path = comments_path(:brief_id=>brief.id)
+      @back = brief_path(brief)
     end
-    @title = '新建评论'
-    render 'share/new_edit'
   end
 
-  #post 'briefs/:brief_id/comments' => :create,
-  #  :as => 'brief_comments'
   def create
     if params[:brief_id]
       brief = Brief.find(params[:brief_id])
       brief.check_comment_right(@cur_user)
-
-      comment = BriefComment.new(params[:comment])
-      comment.user_id = @cur_user.id
-      brief.comments << comment
+      @comment = brief.comments.new(params[:brief_comment])
+      @comment.user_id = @cur_user.id
+      @path = comments_path(:brief_id=>brief.id)
     end
-    redirect_to params[:dest],notice: 'comment was successfully created.' 
+
+    @back = owner_path(@comment)
+
+    if @comment.save
+      redirect_to @back 
+    else
+      render :action => 'new'
+    end
   end
 
   def destroy

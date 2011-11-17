@@ -2,15 +2,13 @@
 class ItemsController < ApplicationController
   before_filter :cur_user 
 
-  #get solutions/solution_id/items/change  
-  def change_solution_items
-    @solution = Solution.find(params[:solution_id])
-    assigned_items = @solution.items.reject{|e| !(e.parent_id >0) }
-
-    @assigned_item_ids = assigned_items.collect{|e| e.parent_id }
-
-    @brief = @solution.brief
-    render 'items/change_solution_items/show'
+  def index
+    if params[:solution_id]
+      @solution = Solution.find(params[:solution_id])
+      @brief = @solution.brief
+      flash[:dest] = items_path(:solution_id=>@solution.id)
+      render 'items/index1/index'
+    end
   end
 
   def owner_path(item)
@@ -57,13 +55,18 @@ class ItemsController < ApplicationController
       brief.check_edit_right(@cur_user)
       @item = brief.items.new(params[:brief_item])
       @path = items_path(:brief_id=>brief.id)
+      @back = owner_path(@item)
+      if @item.save
+        redirect_to @back, notice: 'Item was successfully created.'  and return
+      else
+        render action: "new"  and return
+      end
     end
 
-    @back = owner_path(@item)
-    if @item.save
-      redirect_to @back, notice: 'Item was successfully created.' 
-    else
-      render action: "new" 
+    if params[:solution_id] and params[:item_id]
+      item = Item.find(params[:item_id])
+      item.add_to_solution(params[:solution_id])
+      redirect_to flash[:dest]
     end
   end
 
@@ -89,10 +92,16 @@ class ItemsController < ApplicationController
   end
 
   def destroy
+    if params[:solution_id]
+      item = Item.find(params[:id])
+      item.del_from_solution(params[:solution_id])
+      redirect_to flash[:dest] and return
+    end
+
     item = Item.find(params[:id])
     item.check_edit_right(@cur_user)
     item.destroy
-
+    flash[:dest] and redirect_to flash[:dest] and return
     redirect_to owner_path(item)
   end
 

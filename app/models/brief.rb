@@ -14,12 +14,22 @@ class Brief < ActiveRecord::Base
 
   validates :name, :presence => true
 
-  def designs
-    items.find_all_by_kind('design')
+  def designs(reload=false)
+    @designs = nil if reload
+    @designs or (@designs = items.find_all_by_kind('design'))
   end
 
-  def products
-    items.find_all_by_kind('product')
+  def designs=(d)
+    @designs = d
+  end
+
+  def products(reload=false)
+    @products = nil if reload
+    @products or (@products = items.find_all_by_kind('product'))
+  end
+
+  def products=(p)
+    @products = p
   end
 
   def send_to_cheil?

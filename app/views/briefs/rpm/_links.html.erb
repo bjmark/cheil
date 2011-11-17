@@ -19,7 +19,7 @@
   new_item_path(:brief_id=>brief.id,:kind=>'product') %>
 |
 <%= link_to '新建评论', 
-  new_comment_path
+  new_comment_path(:brief_id=>brief.id)
 %>
 
 <%unless brief.send_to_cheil?%>

@@ -3,14 +3,31 @@ class VendorOrgsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
+=begin
     case @cur_user
     when AdminUser then return
     else  raise SecurityError
     end
+=end
   end
 
   # GET /vendor_orgs
   def index
+    if params[:brief_id]
+      #已被选中的vendors
+      @brief = Brief.find(params[:brief_id])
+      bv = @brief.vendor_solutions
+      #所有org去除已被选中的vendor
+      @vendors = VendorOrg.all.reject do |e| 
+        bv.find{|t| t.org_id == e.id}
+      end
+
+      @path = solutions_path(:brief_id=>@brief.id)
+      @back = solutions_path(:brief_id=>@brief.id)
+
+      render 'vendor_orgs/sel/index' and return 
+    end
+
     @vendor_orgs = VendorOrg.all
     render 'vendor_orgs/index/show'
   end
