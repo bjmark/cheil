@@ -1,0 +1,11 @@
+<%
+  #partial => briefs/cheil/_nav
+#locals => brief,solution
+%>
+<li>
+<%=link_to '返回',solutions_path(:brief_id=>brief)%>
+</li>
+<li class="active">
+<%=link_to '方案',solution_path(solution)%>
+</li>
+

@@ -18,7 +18,7 @@
             (<%= "#{e.items.length}/#{brief_items_size}"%>)
           </td>
           <td class="last">
-            <%= link_to '方案',brief_solution_path(brief,e)  %>
+            <%= link_to '方案',solution_path(e)  %>
             |
             <%=link_to '指派的子项',items_path(:solution_id=>e.id)  %>
             |

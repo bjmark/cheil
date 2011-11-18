@@ -1,0 +1,23 @@
+<%
+  #solutions/cheil/vendor_solution/show 
+# @brief,@solution
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'solutions/cheil/vendor_solution/nav',
+    :locals=>{:brief=>@solution.brief,:solution=>@solution}},
+    :contents=>[{:partial=>'solutions/cheil/vendor_solution/links',
+      :locals=>{:solution=>@solution}}
+]
+%>
+<%=attaches(@solution)%>
+
+<%=render 'share/block',
+  :title=>'子项',
+  :content=>{:partial=>'solutions/cheil/vendor_solution/items/index',
+    :locals=>{:solution=>@solution,:total=>@total}
+} unless @solution.items.empty?
+%>
+
+<%=comments(@solution)%>
+
+

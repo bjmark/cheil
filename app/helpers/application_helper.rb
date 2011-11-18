@@ -20,6 +20,14 @@ module ApplicationHelper
       links << link_to('删除',attach_path(attach),
                        {:confirm => 'Are you sure?', :method => :delete})
     end
+    if attach.can_checked_by?(user)
+      case attach.checked
+        when 'n' then links << link_to('选中',check_attach_path(attach),
+                                       {:method => :put})
+        when 'y' then links << link_to('取消选中',uncheck_attach_path(attach),
+                                       {:method => :put})
+        end
+    end
     links.join(' | ')
   end
 

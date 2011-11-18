@@ -76,6 +76,21 @@ class AttachesController < ApplicationController
     end
   end
 
+  def set_checked(value)
+    attach = Attach.find(params[:id])
+    attach.checked = value
+    attach.save
+    redirect_to solution_path(attach.fk_id)
+  end
+
+  def check
+    set_checked('y')
+  end
+
+  def uncheck
+    set_checked('n')
+  end
+
   def update
     @attach = Attach.find(params[:id])
     @attach.check_update_right(@cur_user)

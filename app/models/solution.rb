@@ -3,11 +3,15 @@ class Solution < ActiveRecord::Base
   belongs_to :org
   has_many :items,:class_name=>'SolutionItem',:foreign_key=>'fk_id'
   has_many :attaches,:class_name=>'SolutionAttach',:foreign_key => 'fk_id'
+  has_many :comments,
+    :class_name=>'SolutionComment',:foreign_key=>'fk_id',:order=>'id desc'
 
   def check_read_right(a_user)
     return true if can_read_by?(a_user)
     raise SecurityError
   end
+
+  alias :check_comment_right :check_read_right
 
   def check_edit_right(a_user)
     return true if can_edit_by?(a_user)
@@ -19,8 +23,10 @@ class Solution < ActiveRecord::Base
     return true if assigned_by?(a_user)
   end
 
+  alias :can_commented_by? :can_read_by?
+
   def can_edit_by?(a_user)
-    owned_by?(a_user)
+    owned_by?(a_user) 
   end
 
   def owned_by?(a_user)

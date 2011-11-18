@@ -46,5 +46,6 @@
 #rails g controller sessions new create destroy
 #rails g web_app_theme:theme --no-layout
 
-rails g migration add_note_to_items
+#rails g migration add_note_to_items
+rails g migration add_checked_to_attaches
 

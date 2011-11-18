@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111117053448) do
+ActiveRecord::Schema.define(:version => 20111118112508) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20111117053448) do
     t.datetime "attach_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "checked",             :limit => 1, :default => "n"
   end
 
   create_table "brief_vendors", :force => true do |t|

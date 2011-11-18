@@ -6,10 +6,17 @@ Cheil::Application.routes.draw do
   resources :attaches do
     member do 
       get :download
+      put :check
+      put :uncheck
     end
   end
 
-  resources :items 
+  resources :items do
+    member do
+      put :check
+      put :uncheck
+    end
+  end
 
   resources :comments , :only=>[:new,:create,:destroy]
   resources :solutions

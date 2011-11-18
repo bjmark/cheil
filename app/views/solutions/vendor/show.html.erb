@@ -9,11 +9,13 @@
 ]
 %>
 <%=attaches(@solution)%>
+
 <%=render 'share/block',
   :title=>'子项',
   :content=>{:partial=>'solutions/vendor/items/index',
     :locals=>{:solution=>@solution,:total=>@total}
 } unless @solution.items.empty?%>
 
+<%=comments(@solution)%>
 
 

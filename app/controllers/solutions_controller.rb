@@ -11,20 +11,30 @@ class SolutionsController < ApplicationController
     end
   end
 
-  def show
-    @solution = Solution.find(params[:id])
-    @total = {}
+  def vendor_solution_total(solution)
+    total = {}
     total_all = 0
     [:design,:product,:tran,:other].each do |k|
-      total_all += (@total[k] = @solution.total(k))
+      total_all += (total[k] = solution.total(k))
     end
-    @total[:all] = total_all 
+    total[:all] = total_all 
+    
+    return total
+  end
+
+  def show
+    @solution = Solution.find(params[:id])
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'
     when CheilOrg
-      render 'briefs/cheil/show'
+      case
+      when @solution.instance_of?(VendorSolution) 
+        @total = vendor_solution_total(@solution)
+        render 'solutions/cheil/vendor_solution/show'
+      end
     when VendorOrg
+      @total = vendor_solution_total(@solution)
       render 'solutions/vendor/show'
     end
 

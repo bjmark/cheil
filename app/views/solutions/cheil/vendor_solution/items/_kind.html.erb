@@ -1,0 +1,25 @@
+<%
+  #briefs/items/_kind
+#locals =>brief,items,kind_cn
+%>
+<%n=0
+items.each do |e|%>
+  <tr class="<%=['odd','even'][(n+=1)%2]%>">
+    <%n.upto(1)do %>
+      <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+    <%end%>
+    <td><%= e.name  %></td>
+    <td><%= e.quantity  %></td>
+    <td><%= e.note  %></td>
+    <td><%= e.price  %></td>
+    <td><%= e.total if e.total > 0 %></td>
+    <td class="last">
+      <%if e.checked == 'n'%>
+        <%=link_to('选中',check_item_path(e),{:method => :put})%>
+      <%else%>
+        <%=link_to('取消选中',check_item_path(e),{:method => :put})%>
+      <%end%>
+    </td>
+  </tr>
+<%end%>
+

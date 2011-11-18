@@ -1,0 +1,47 @@
+<%
+  #solutions/vendor/items/_index
+#locals=>solution,total
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+      <th>说明</th>
+      <th>单价</th>
+      <th>合计</th>
+      <th></th>
+    </tr>
+    <%=render 'solutions/cheil/vendor_solution/items/kind',
+      :solution=>solution,
+      :items=>solution.designs,
+      :kind_cn=>'设计' unless solution.designs.empty?
+    %>
+    <%=render 'solutions/cheil/vendor_solution/items/kind',
+      :solution=>solution,
+      :items=>solution.products,
+      :kind_cn=>'制作' unless solution.products.empty?
+    %>
+    <%=render 'solutions/cheil/vendor_solution/items/kind',
+      :solution=>solution,
+      :items=>solution.trans,
+      :kind_cn=>'运输' unless solution.trans.empty?
+    %>
+    <%=render 'solutions/cheil/vendor_solution/items/kind',
+      :solution=>solution,
+      :items=>solution.others,
+      :kind_cn=>'其他' unless solution.others.empty?
+    %>
+  </tbody>
+</table>
+<%
+  a=[] 
+  a << "设计(#{total[:design]})" if total[:design] > 0 
+  a << "制作(#{total[:product]})" if total[:product] > 0 
+  a << "运输(#{total[:tran]})" if total[:tran] > 0 
+  a << "其他(#{total[:other]})" if total[:other] > 0
+%>
+总计
+<%= "= #{a.join(' + ')}" unless a.empty?%>
+=<%=total[:all]%>

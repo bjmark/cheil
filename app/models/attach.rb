@@ -13,4 +13,7 @@ class Attach < ActiveRecord::Base
   def check_update_right(user)
   end
 
+  def can_checked_by?(a_user)
+    return false
+  end
 end

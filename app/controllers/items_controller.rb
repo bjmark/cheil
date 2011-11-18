@@ -94,6 +94,21 @@ class ItemsController < ApplicationController
     end
   end
 
+  def set_checked(value)
+    item = Item.find(params[:id])
+    item.checked = value
+    item.save
+    redirect_to solution_path(item.fk_id)
+  end
+
+  def check
+    set_checked('y')
+  end
+
+  def uncheck
+    set_checked('n')
+  end
+
   def update
     @item = Item.find(params[:id])
     @item.check_edit_right(@cur_user)
