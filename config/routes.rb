@@ -9,11 +9,7 @@ Cheil::Application.routes.draw do
     end
   end
 
-  resources :items do
-    member do
-      get :price
-    end
-  end
+  resources :items 
 
   resources :comments , :only=>[:new,:create,:destroy]
   resources :solutions

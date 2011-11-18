@@ -9,11 +9,8 @@ class Item < ActiveRecord::Base
   
   def total
     a1 = quantity.to_f * price.to_f
-    a2 = a1.to_i
-    if a1 == a2
-      return a2
-    end
-
+    a2 = a1.to_i 
+    a1 = a2 if a1 == a2
     return a1
   end
     

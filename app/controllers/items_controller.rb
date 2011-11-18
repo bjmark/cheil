@@ -2,9 +2,6 @@
 class ItemsController < ApplicationController
   before_filter :cur_user 
 
-  def price
-  end
-
   def index
     if params[:solution_id]
       @solution = Solution.find(params[:solution_id])
@@ -35,13 +32,22 @@ class ItemsController < ApplicationController
   end
 
   def new
-    if params[:brief_id]
+    case
+    when params[:brief_id]
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user)
       @item = BriefItem.new
       @item.kind = params[:kind]
       @path = items_path(:brief_id=>brief.id)
       @back = brief_path(brief)
+    when params[:solution_id]
+      solution = Solution.find(params[:solution_id])
+      solution.check_edit_right(@cur_user)
+      @item = SolutionItem.new
+      @item.kind = params[:kind]
+      @path = items_path(:solution_id=>solution.id)
+      @back = solution_path(solution)
+      @form = 'tran_form'
     end
   end
 
@@ -50,26 +56,41 @@ class ItemsController < ApplicationController
     @item.check_edit_right(@cur_user)
     @path = item_path(@item)
     @back = owner_path(@item)
+    @form = case 
+            when (params[:spec] == 'price') then 'price_form'
+            when ['tran','other'].include?(@item.kind) then 'tran_form'
+            end
   end
 
   def create
-    if params[:brief_id]
+    case
+      #add a item to solution
+    when (params[:solution_id] and params[:item_id])
+      item = Item.find(params[:item_id])
+      item.add_to_solution(params[:solution_id])
+      redirect_to flash[:dest] and return
+
+      #create a brief_item
+    when params[:brief_id]
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user)
       @item = brief.items.new(params[:brief_item])
       @path = items_path(:brief_id=>brief.id)
       @back = owner_path(@item)
-      if @item.save
-        redirect_to @back, notice: 'Item was successfully created.'  and return
-      else
-        render action: "new"  and return
-      end
+
+      #create a solution_item
+    when params[:solution_id]
+      solution = Solution.find(params[:solution_id])
+      solution.check_edit_right(@cur_user)
+      @item = solution.items.new(params[:solution_item])
+      @path = items_path(:solution_id=>solution.id)
+      @back = owner_path(@item)
     end
 
-    if params[:solution_id] and params[:item_id]
-      item = Item.find(params[:item_id])
-      item.add_to_solution(params[:solution_id])
-      redirect_to flash[:dest]
+    if @item.save
+      redirect_to @back, notice: 'Item was successfully created.'  and return
+    else
+      render action: "new"  and return
     end
   end
 
@@ -95,17 +116,16 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    if params[:solution_id]
+    case
+    when params[:solution_id]
       item = Item.find(params[:id])
       item.del_from_solution(params[:solution_id])
-      redirect_to flash[:dest] and return
+    else
+      item = Item.find(params[:id])
+      item.check_edit_right(@cur_user)
+      item.destroy
     end
-
-    item = Item.find(params[:id])
-    item.check_edit_right(@cur_user)
-    item.destroy
-    flash[:dest] and redirect_to flash[:dest] and return
-    redirect_to owner_path(item)
+    redirect_to (flash[:dest] or owner_path(item))
   end
 
 end

@@ -13,6 +13,12 @@ class SolutionsController < ApplicationController
 
   def show
     @solution = Solution.find(params[:id])
+    @total = {}
+    total_all = 0
+    [:design,:product,:tran,:other].each do |k|
+      total_all += (@total[k] = @solution.total(k))
+    end
+    @total[:all] = total_all 
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'

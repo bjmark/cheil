@@ -1,1 +1,2 @@
-<%=render 'share/block',:title=>'新建子项',:content=>{:partial=>'form'}%>
+<%=render 'share/block',:title=>'新建子项',
+  :content=>{:partial=>(@form or 'form')}%>

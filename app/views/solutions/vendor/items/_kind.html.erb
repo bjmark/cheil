@@ -11,11 +11,11 @@ items.each do |e|%>
     <td><%= e.name  %></td>
     <td><%= e.quantity  %></td>
     <td><%= e.note  %></td>
-    <td><%= e.price.to_f  %></td>
-    <td><%= e.quantity.to_f * e.price.to_f %></td>
+    <td><%= e.price  %></td>
+    <td><%= e.total if e.total > 0 %></td>
     <td class="last">
       <% if e.kind == 'design' or e.kind == 'product' %>
-        <%= link_to '报价',price_item_path(e) %>
+        <%= link_to '报价',edit_item_path(e,:spec=>'price') %>
       <%else%>
         <%= link_to '修改',edit_item_path(e)  %>
         <%= link_to '删除',
