@@ -13,29 +13,25 @@
       <th>合计</th>
       <th></th>
     </tr>
-    <%designs=solution.designs%>
     <%=render 'solutions/cheil/vendor_solution/items/kind',
       :solution=>solution,
-      :items=>designs,
-      :kind_cn=>'设计' unless designs.empty?
+      :items=>solution.designs,
+      :kind_cn=>'设计' unless solution.designs.empty?
     %>
-    <%products=solution.products%>
     <%=render 'solutions/cheil/vendor_solution/items/kind',
       :solution=>solution,
-      :items=>products,
-      :kind_cn=>'制作' unless products.empty?
+      :items=>solution.products,
+      :kind_cn=>'制作' unless solution.products.empty?
     %>
-    <%trans=solution.trans%>
     <%=render 'solutions/cheil/vendor_solution/items/kind',
       :solution=>solution,
-      :items=>trans,
-      :kind_cn=>'运输' unless trans.empty?
+      :items=>solution.trans,
+      :kind_cn=>'运输' unless solution.trans.empty?
     %>
-    <%others=solution.others%>
     <%=render 'solutions/cheil/vendor_solution/items/kind',
       :solution=>solution,
-      :items=>others,
-      :kind_cn=>'其他' unless others.empty?
+      :items=>solution.others,
+      :kind_cn=>'其他' unless solution.others.empty?
     %>
   </tbody>
 </table>

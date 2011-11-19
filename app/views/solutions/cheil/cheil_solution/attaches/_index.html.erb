@@ -1,0 +1,44 @@
+<%
+  #solutions/cheil/cheil_solution/attaches/_index
+#solution
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>文件名</th>
+      <th>创建者</th>
+      <th></th>
+    </tr>
+    <%n=1
+    solution.checked_attaches.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e.attach_file_name  %>
+        </td>
+        <td>
+          <%= e.solution.org.name  %>
+        </td>
+        <td class="last">
+          <%=link_to('下载',download_attach_path(e))%> 
+          <%=link_to('取消选中',uncheck_attach_path(e),{:method => :put})%>
+        </td>
+      </tr>
+    <%end%>
+    <%solution.attaches.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e.attach_file_name  %>
+        </td>
+        <td>
+          <%= solution.org.name  %>
+        </td>
+        <td class="last">
+          <%=link_to('下载',download_attach_path(e))%> 
+          <%=link_to('更新',edit_attach_path(e))%> 
+          <%=link_to('删除',attach_path(e),{:confirm => 'Are you sure?',:method => :delete})%>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+<%=link_to '新建附件', new_attach_path(:solution_id=>@solution.id)%>

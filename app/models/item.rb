@@ -14,6 +14,10 @@ class Item < ActiveRecord::Base
     return a1
   end
     
+  def checked?
+    checked == 'y'
+  end
+
   def check_edit_right(a_user)
   end
 

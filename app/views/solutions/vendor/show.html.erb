@@ -13,7 +13,7 @@
 <%=render 'share/block',
   :title=>'子项',
   :content=>{:partial=>'solutions/vendor/items/index',
-    :locals=>{:solution=>@solution,:total=>@total}
+    :locals=>{:solution=>@solution,:total=>@solution.total}
 } unless @solution.items.empty?%>
 
 <%=comments(@solution)%>

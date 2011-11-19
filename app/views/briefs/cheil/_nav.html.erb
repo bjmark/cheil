@@ -1,6 +1,6 @@
 <%
   #partial => briefs/cheil/_nav
-#locals => brief
+#locals => brief,
 %>
 <li class="first">
 <%=link_to '返回',briefs_path%>
@@ -11,5 +11,8 @@
 <li <%=raw 'class="active"' if solutions_path == request.fullpath.split('?').first%>>
 <%=link_to '已选Vendor',solutions_path(:brief_id=>brief.id)%>
 </li>
-
+<li <%=raw 'class="active"' if solution_path(brief.cheil_solution) == 
+  request.fullpath.split('?').first%>>
+<%=link_to '方案',solution_path(brief.cheil_solution)%>
+</li>
 

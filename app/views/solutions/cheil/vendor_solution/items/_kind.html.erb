@@ -14,7 +14,7 @@ items.each do |e|%>
     <td><%= e.price  %></td>
     <td><%= e.total if e.total > 0 %></td>
     <td class="last">
-      <%if e.checked == 'n'%>
+      <%unless e.checked?%>
         <%=link_to('选中',check_item_path(e),{:method => :put})%>
       <%else%>
         <%=link_to('取消选中',check_item_path(e),{:method => :put})%>

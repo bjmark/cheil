@@ -1,6 +1,6 @@
 <%
   #solutions/cheil/vendor_solution/show 
-# @brief,@solution
+#@solution
 %>
 <%=render 'share/block',
   :nav=>{:partial=>'solutions/cheil/vendor_solution/nav',
@@ -14,7 +14,7 @@
 <%=render 'share/block',
   :title=>'子项',
   :content=>{:partial=>'solutions/cheil/vendor_solution/items/index',
-    :locals=>{:solution=>@solution,:total=>@total}
+    :locals=>{:solution=>@solution,:total=>@solution.total}
 } unless @solution.items.empty?
 %>
 

@@ -80,7 +80,7 @@ class AttachesController < ApplicationController
     attach = Attach.find(params[:id])
     attach.checked = value
     attach.save
-    redirect_to solution_path(attach.fk_id)
+    redirect_to flash[:dest] or solution_path(attach.fk_id)
   end
 
   def check

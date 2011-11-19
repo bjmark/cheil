@@ -10,7 +10,7 @@ class SolutionsController < ApplicationController
       @brief = Brief.find(params[:brief_id])
     end
   end
-
+=begin
   def vendor_solution_total(solution)
     total = {}
     total_all = 0
@@ -21,20 +21,21 @@ class SolutionsController < ApplicationController
     
     return total
   end
-
+=end
   def show
     @solution = Solution.find(params[:id])
+    flash[:dest] = solution_path(@solution)
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'
     when CheilOrg
       case
       when @solution.instance_of?(VendorSolution) 
-        @total = vendor_solution_total(@solution)
         render 'solutions/cheil/vendor_solution/show'
+      when @solution.instance_of?(CheilSolution)
+        render 'solutions/cheil/cheil_solution/show'
       end
     when VendorOrg
-      @total = vendor_solution_total(@solution)
       render 'solutions/vendor/show'
     end
 

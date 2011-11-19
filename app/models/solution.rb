@@ -71,18 +71,4 @@ class Solution < ActiveRecord::Base
     items.find_all_by_kind('other')
   end
 
-  def total(kind=:all)
-    all_kind = [:design,:product,:tran,:other]
-    kinds = case 
-               when all_kind.include?(kind) then [kind]
-               when (kind == :all) then all_kind
-               else return
-               end
-
-    sum = 0 
-    kinds.each do |k| 
-      send("#{k}s".to_sym).each{|e| sum += e.total}
-    end
-    return sum
   end
-end
