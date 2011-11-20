@@ -98,7 +98,7 @@ class ItemsController < ApplicationController
     item = Item.find(params[:id])
     item.checked = value
     item.save
-    redirect_to solution_path(item.fk_id)
+    redirect_to flash[:dest] or solution_path(item.fk_id)
   end
 
   def check

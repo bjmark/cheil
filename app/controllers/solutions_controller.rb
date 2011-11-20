@@ -10,24 +10,13 @@ class SolutionsController < ApplicationController
       @brief = Brief.find(params[:brief_id])
     end
   end
-=begin
-  def vendor_solution_total(solution)
-    total = {}
-    total_all = 0
-    [:design,:product,:tran,:other].each do |k|
-      total_all += (total[k] = solution.total(k))
-    end
-    total[:all] = total_all 
-    
-    return total
-  end
-=end
+
   def show
     @solution = Solution.find(params[:id])
     flash[:dest] = solution_path(@solution)
     case @cur_user.org
     when RpmOrg
-      render 'briefs/rpm/show'
+      render 'solutions/rpm/show'
     when CheilOrg
       case
       when @solution.instance_of?(VendorSolution) 

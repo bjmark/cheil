@@ -5,11 +5,12 @@
 <li class="first">
 <%= link_to '返回', briefs_path %>
 </li>
-<li class="active">
+<li <%=raw 'class="active"' if brief_path(brief) == request.fullpath%>>
 <%= link_to '需求', brief_path(brief) %>
 </li>
 <li>
-<%= link_to '方案', edit_brief_path(brief) %>
+<li <%=raw 'class="active"' if solution_path(brief.cheil_solution) == request.fullpath%>>
+<%= link_to '方案', solution_path(brief.cheil_solution) %>
 </li>
 
 

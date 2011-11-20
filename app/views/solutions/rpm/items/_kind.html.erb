@@ -1,5 +1,5 @@
 <%
-  #solutions/cheil/cheil_solution/items/_kind
+  #solutions/rpm/items/_kind
 #checked_items,items,kind_cn
 %>
 <%n=0
@@ -17,7 +17,6 @@ checked_items.each do |e|%>
     <td><%= e.total if e.total > 0 %></td>
     <td><%= e.solution.org.name %></td>
     <td class="last">
-      <%=link_to('取消选中',uncheck_item_path(e),{:method => :put})%>
     </td>
   </tr>
 <%end%>
@@ -35,12 +34,6 @@ checked_items.each do |e|%>
     <td><%= e.total if e.total > 0 %></td>
     <td><%= e.solution.org.name %></td>
     <td class="last">
-      <%= link_to '修改',edit_item_path(e)  %>
-      <%= link_to '删除',
-        item_path(e), 
-        :confirm => 'Are you sure?', 
-        :method => :delete 
-      %> 
     </td>
   </tr>
 <%end%>

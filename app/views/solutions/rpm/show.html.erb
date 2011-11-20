@@ -1,24 +1,24 @@
 <%
-  #solutions/cheil/vendor_solution/show 
+  #solutions/rpm/show 
 #@solution
 %>
 <%=render 'share/block',
-  :nav=>{:partial=>'briefs/cheil/nav',
+  :nav=>{:partial=>'briefs/rpm/nav',
     :locals=>{:brief=>@solution.brief}},
-    :contents=>[{:partial=>'solutions/cheil/cheil_solution/links',
+    :contents=>[{:partial=>'solutions/rpm/links',
       :locals=>{:solution=>@solution}}
 ]
 %>
 <%=render 'share/block',
       :title=>'附件',
-      :content=>{:partial=>'solutions/cheil/cheil_solution/attaches/index',
+      :content=>{:partial=>'solutions/rpm/attaches/index',
         :locals=>{:solution=>@solution}} unless 
 (@solution.attaches.empty? and @solution.checked_attaches.empty?)
 %>
 
 <%=render 'share/block',
   :title=>'子项',
-  :content=>{:partial=>'solutions/cheil/cheil_solution/items/index',
+  :content=>{:partial=>'solutions/rpm/items/index',
     :locals=>{:solution=>@solution,:total=>@solution.total}
 } unless @solution.items.empty? and @solution.checked_items.empty?
 %>

@@ -1,5 +1,5 @@
 <%
-  #solutions/cheil/cheil_solution/items/_index
+  #solutions/rpm/items/_index
 #locals=>solution,total
 %>
 <table class="table">
@@ -18,7 +18,7 @@
       checked_designs=solution.checked_designs
       designs=solution.designs
     %>
-    <%=render 'solutions/cheil/cheil_solution/items/kind',
+    <%=render 'solutions/rpm/items/kind',
       :solution=>solution,
       :checked_items=>checked_designs,
       :items=>designs,
@@ -28,7 +28,7 @@
       checked_products=solution.checked_products
       products=solution.products
     %>
-    <%=render 'solutions/cheil/cheil_solution/items/kind',
+    <%=render 'solutions/rpm/items/kind',
       :solution=>solution,
       :checked_items=>checked_products,
       :items=>products,
@@ -38,7 +38,7 @@
       checked_trans=solution.checked_trans
       trans=solution.trans
     %>
-    <%=render 'solutions/cheil/cheil_solution/items/kind',
+    <%=render 'solutions/rpm/items/kind',
       :solution=>solution,
       :checked_items=>checked_trans,
       :items=>trans,
@@ -48,7 +48,7 @@
       checked_others=solution.checked_others
       others=solution.others
     %>
-    <%=render 'solutions/cheil/cheil_solution/items/kind',
+    <%=render 'solutions/rpm/items/kind',
       :solution=>solution,
       :checked_items=>checked_others,
       :items=>others,
@@ -66,8 +66,3 @@
 总计
 <%= "= #{a.join(' + ')}" unless a.empty?%>
 =<%=total[:all]%>
-<p>
-<%= link_to '新建运输项', new_item_path(:solution_id=>solution.id,:kind=>'tran')%>
-|
-<%= link_to '新建其他项', new_item_path(:solution_id=>solution.id,:kind=>'other')%>
-</p>

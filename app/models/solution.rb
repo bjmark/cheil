@@ -64,11 +64,13 @@ class Solution < ActiveRecord::Base
   end
 
   def trans
-    items.find_all_by_kind('tran')
+    #items.find_all_by_kind('tran')
+    items.where(:kind=>'tran')
   end
 
   def others
-    items.find_all_by_kind('other')
+    #items.find_all_by_kind('other')
+    items.where(:kind=>'other')
   end
 
   end
