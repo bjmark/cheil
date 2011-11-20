@@ -23,45 +23,44 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
     @user = User.find(params[:id])
-    render 'users/show/show'
+    flash[:dest] = flash[:dest]
   end
 
   # GET /users/new
   def new
     org = Org.find(params[:org_id])
+    flash[:dest] = flash[:dest]
     @user = org.users.build
-
-    @title = '新建用户'
-    render 'share/new_edit'
   end
 
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-    @title = '修改用户'
-    render 'share/new_edit'
+    @back = user_path(@user)
+    flash[:dest] = flash[:dest]
   end
 
   # POST /users
   def create
     @user = User.new(params[:user])
 
-    bread_pop!
     if @user.save
-      redirect_to bread_pre , notice: 'User was successfully created.' 
+      redirect_to flash[:dest] , notice: 'User was successfully created.' 
     else
-      render 'share/new_edit'
+      render :action=>:new
     end
   end
 
   # PUT /users/1
   def update
     @user = User.find(params[:id])
+    flash[:dest] = flash[:dest]
 
     if @user.update_attributes(params[:user])
       redirect_to @user, notice: 'User was successfully updated.' 
     else
-      render 'share/new_edit'
+      @back = user_path(@user)
+      render :action=>:edit
     end
   end
 
@@ -70,6 +69,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
 
-    redirect_to bread_pre 
+    redirect_to flash[:dest] 
   end
 end

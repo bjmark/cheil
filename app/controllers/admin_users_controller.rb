@@ -12,27 +12,25 @@ class AdminUsersController < ApplicationController
   # GET /admin_users
   def index
     @admin_users = AdminUser.all
-    render 'admin_users/index/show'
   end
 
   # GET /admin_users/1
   def show
     @admin_user = AdminUser.find(params[:id])
-    render 'admin_users/show/show'
+    #render 'admin_users/show/show'
   end
 
   # GET /admin_users/new
   def new
     @admin_user = AdminUser.new
     @title = '新建管理员'
-    render 'share/new_edit'
+    @back = admin_users_path
   end
 
   # GET /admin_users/1/edit
   def edit
     @admin_user = AdminUser.find(params[:id])
-    @title = '修改管理员'
-    render 'share/new_edit'
+    @back = admin_users_path
   end
 
   # POST /admin_users
@@ -42,8 +40,7 @@ class AdminUsersController < ApplicationController
     if @admin_user.save
       redirect_to admin_users_path, notice: 'Admin user was successfully created.' 
     else
-      bread_pop!
-      render 'share/new_edit' 
+      render :action=>:new 
     end
   end
 
@@ -54,8 +51,7 @@ class AdminUsersController < ApplicationController
     if @admin_user.update_attributes(params[:admin_user])
       redirect_to admin_users_path, notice: 'Admin user was successfully updated.' 
     else
-      bread_pop!
-      render 'share/new_edit' 
+      render :action=>:edit 
     end
   end
 

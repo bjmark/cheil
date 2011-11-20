@@ -17,5 +17,7 @@
   <%= user.phone %>
 </p>
 
-
+<%= link_to '修改', edit_user_path(user) %>
+|
+<%= link_to '删除', user,:method=>'delete',:confirm=>'确定吗？' %>
 

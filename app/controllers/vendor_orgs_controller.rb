@@ -13,7 +13,8 @@ class VendorOrgsController < ApplicationController
 
   # GET /vendor_orgs
   def index
-    if params[:brief_id]
+    case
+    when params[:brief_id]
       #已被选中的vendors
       @brief = Brief.find(params[:brief_id])
       bv = @brief.vendor_solutions
@@ -25,11 +26,11 @@ class VendorOrgsController < ApplicationController
       @path = solutions_path(:brief_id=>@brief.id)
       @back = solutions_path(:brief_id=>@brief.id)
 
-      render 'vendor_orgs/sel/index' and return 
+      render 'vendor_orgs/sel/index' 
+    else
+      @vendor_orgs = VendorOrg.all
+      flash[:dest] = vendor_orgs_path
     end
-
-    @vendor_orgs = VendorOrg.all
-    render 'vendor_orgs/index/show'
   end
 
   # GET /vendor_orgs/1
@@ -45,16 +46,11 @@ class VendorOrgsController < ApplicationController
   # GET /vendor_orgs/new
   def new
     @vendor_org = VendorOrg.new
-
-    @title = '新建Vendor'
-    render 'share/new_edit'
   end
 
   # GET /vendor_orgs/1/edit
   def edit
     @vendor_org = VendorOrg.find(params[:id])
-    @title = '修改Vendor'
-    render 'share/new_edit'
   end
 
   # POST /vendor_orgs
@@ -76,8 +72,7 @@ class VendorOrgsController < ApplicationController
     if @vendor_org.update_attributes(params[:vendor_org])
       redirect_to vendor_orgs_path, notice: 'Vendor org was successfully updated.' 
     else
-      @title = '修改Vendor'
-      render 'share/new_edit'
+      render :action=>:edit
     end
   end
 

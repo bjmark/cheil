@@ -13,7 +13,7 @@ class RpmOrgsController < ApplicationController
   # GET /orgs.json
   def index
     @rpm_orgs = RpmOrg.all
-    render 'rpm_orgs/index/show'
+    flash[:dest] = rpm_orgs_path
   end
 
   # GET /orgs/1
@@ -30,15 +30,13 @@ class RpmOrgsController < ApplicationController
   # GET /orgs/new
   def new
     @rpm_org = RpmOrg.new
-    @title = '新建RPM'
-    render 'share/new_edit'
+    @back = rpm_orgs_path
   end
 
   # GET /orgs/1/edit
   def edit
     @rpm_org = RpmOrg.find(params[:id])
-    @title = '修改RPM'
-    render 'share/new_edit'
+    @back = rpm_orgs_path
   end
 
   # POST /orgs
@@ -51,8 +49,7 @@ class RpmOrgsController < ApplicationController
       @rpm_org.cheil_org = CheilOrg.new(:name=>name)
       redirect_to rpm_orgs_path, notice: 'RpmOrg was successfully created.' 
     else
-      bread_pop!
-      render 'share/new_edit' 
+      render :action=>:new 
     end
   end
 
@@ -64,8 +61,7 @@ class RpmOrgsController < ApplicationController
       @rpm_org.cheil_org.update_attributes(:name=>@rpm_org.name)
       redirect_to rpm_orgs_path, notice: 'Org was successfully updated.' 
     else
-      bread_pop!
-      render 'share/new_edit' 
+      render :action=>:edit 
     end
   end
 

@@ -15,7 +15,7 @@
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>
             <%= e.org.name %>
-            (<%= "#{e.items.length}/#{brief_items_size}"%>)
+            (<%= "#{e.designs.length+e.products.length}/#{brief_items_size}"%>)
           </td>
           <td class="last">
             <%= link_to '方案',solution_path(e)  %>

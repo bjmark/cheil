@@ -1,24 +1,10 @@
-<p>
-  <b>Name:</b>
-  <%= @user.name %>
-</p>
+<%
+  # users/show
+# @user
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'users/show/nav',:locals=>{:user=>@user}},
+  :title=>'显示用户',
+  :content=>{:partial=>'users/show/content',
+    :locals=>{:user=>@user}} %>
 
-<p>
-  <b>Email:</b>
-  <%= @user.email %>
-</p>
-
-<p>
-  <b>Phone:</b>
-  <%= @user.phone %>
-</p>
-
-<p>
-  <b>Org:</b>
-  <%= @user.org.name %>
-</p>
-
-
-<%= link_to 'Destroy', @user, confirm: 'Are you sure?', method: :delete %> |
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', @back_path %>

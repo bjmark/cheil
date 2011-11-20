@@ -1,6 +1,2 @@
-<h1>Editing user</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', @back_path %>
+<%=render 'share/block',:title=>'编辑用户',
+  :content=>{:partial=>(@form or 'form')}%>

@@ -1,9 +1,8 @@
 <%
-  # rpm_orgs/index/show
+  # rpm_orgs/index
 # @rpm_orgs
 %>
 <%=render 'share/block',
-  :nav=>{:partial=>'rpm_orgs/index/nav'},
   :title=>'RPM列表',
   :content=>{:partial=>'rpm_orgs/index/content',
     :locals=>{:rpm_orgs=>@rpm_orgs}} unless @rpm_orgs.empty?%>

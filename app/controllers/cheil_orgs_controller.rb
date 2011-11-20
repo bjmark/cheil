@@ -11,7 +11,7 @@ class CheilOrgsController < ApplicationController
   # GET /cheil_orgs
   def index
     @cheil_orgs = CheilOrg.all
-    render 'cheil_orgs/index/show'
+    flash[:dest] = cheil_orgs_path
   end
 
   # GET /cheil_orgs/1

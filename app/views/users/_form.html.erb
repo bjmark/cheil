@@ -30,5 +30,6 @@
   <%=f.hidden_field :org_id%>
   <div class="actions">
     <%= f.submit '提交'%>
+    <%= link_to '取消', (@back or flash[:dest]) %>
   </div>
 <% end %>
