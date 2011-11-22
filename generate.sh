@@ -44,8 +44,12 @@
 #rails g controller solutions
 #rails g migration add_type_to_users 
 #rails g controller sessions new create destroy
-#rails g web_app_theme:theme --no-layout
 
 #rails g migration add_note_to_items
-rails g migration add_checked_to_attaches
+#rails g migration add_checked_to_attaches
+
+rails g web_app_theme:theme --no-layout
+#rails g web_app_theme:theme --theme=bec --no-layout
+#rails g web_app_theme:theme --theme=red --no-layout
+#rails g web_app_theme:theme --theme=amro --no-layout
 
