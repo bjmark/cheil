@@ -14,6 +14,6 @@ class VendorOrg < Org
 
   def briefs
     brief_ids = solutions.collect{|e| e.brief_id}
-    Brief.find(brief_ids)
+    Brief.where(:id=>brief_ids)
   end
 end

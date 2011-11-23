@@ -35,7 +35,7 @@ class ItemsController < ApplicationController
     case
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
-      brief.check_edit_right(@cur_user)
+      brief.check_edit_right(@cur_user.org_id)
       @item = BriefItem.new
       @item.kind = params[:kind]
       @path = items_path(:brief_id=>brief.id)
@@ -73,7 +73,7 @@ class ItemsController < ApplicationController
       #create a brief_item
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
-      brief.check_edit_right(@cur_user)
+      brief.check_edit_right(@cur_user.org_id)
       @item = brief.items.new(params[:brief_item])
       @path = items_path(:brief_id=>brief.id)
       @back = owner_path(@item)

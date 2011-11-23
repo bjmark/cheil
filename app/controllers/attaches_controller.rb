@@ -33,7 +33,7 @@ class AttachesController < ApplicationController
     case 
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
-      brief.check_edit_right(@cur_user)
+      brief.check_edit_right(@cur_user.org_id)
       @attach = BriefAttach.new
       @path = attaches_path(:brief_id=>brief.id)
       @back = brief_path(brief)
@@ -57,7 +57,7 @@ class AttachesController < ApplicationController
     case
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
-      brief.check_edit_right(@cur_user)
+      brief.check_edit_right(@cur_user.org_id)
       @attach = brief.attaches.new(params[:brief_attach])
       @path = attaches_path(:brief_id=>brief.id)
     when params[:solution_id]

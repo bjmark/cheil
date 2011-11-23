@@ -1,4 +1,6 @@
 class Brief < ActiveRecord::Base
+  paginates_per 5
+
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
   belongs_to :user
@@ -42,57 +44,42 @@ class Brief < ActiveRecord::Base
     self.create_cheil_solution(:org_id=>self.cheil_id)
   end
 
-  def check_comment_right(a_user)
-    return true if can_commented_by?(a_user)
-    raise SecurityError
+  def check_comment_right(org_id)
+    can_commented_by?(org_id) or SecurityError
   end
 
-  def can_commented_by?(a_user)
-    owned_by?(a_user) or received_by?(a_user)
+  def can_commented_by?(org_id)
+    owned_by?(org_id) or received_by?(org_id)
   end
 
-  def check_read_right(a_user)
-    return true if can_read_by?(a_user)
-    raise SecurityError
+  def check_read_right(org_id)
+    can_read_by?(org_id) or raise SecurityError
   end
 
-  def check_edit_right(a_user)
-    return true if can_edit_by?(a_user)
-    raise SecurityError
+  def check_edit_right(org_id)
+    can_edit_by?(org_id) or raise SecurityError
   end
 
   alias check_destroy_right check_edit_right
 
-  def can_read_by?(a_user)
-    return true if can_edit_by? a_user
-    return true if received_by? a_user.org
-    return true if consult_by? a_user.org
+  def can_read_by?(org_id)
+    can_edit_by?(org_id) or received_by?(org_id) or consult_by?(org_id)
   end
 
-  def can_edit_by?(a_user)
-    owned_by?(a_user.org)
+  def can_edit_by?(org_id)
+    owned_by?(org_id)
   end
 
-  #ug is a user or a org
-  def owned_by?(ug)
-    if (u=ug).instance_of? User
-      return true if u.id == user_id
-    end
-
-    if (g=ug).instance_of? RpmOrg
-      return true if g.id == rpm_id
-    end
-  end
-  
-  #ug should be a cheil_org or a user
-  def received_by?(ug)
-    g = ug.instance_of?(User) ? ug.org : ug 
-    g.instance_of?(CheilOrg) and (cheil_id == g.id)
+  def owned_by?(org_id)
+    org_id == rpm_id
   end
 
-  #ug should be a vendor_org or a user
-  def consult_by?(g)
-    g.instance_of?(VendorOrg) and solutions.find_by_org_id(g.id)
+  def received_by?(org_id)
+    cheil_id == org_id
+  end
+
+  def consult_by?(org_id)
+    solutions.find_by_org_id(org_id)
   end
 
 end

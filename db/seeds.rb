@@ -25,11 +25,9 @@ vendor1.users << User.new(:name=>'vendor1_u1',:password=>'123')
 
 vendor2 = VendorOrg.create(:name=>'vendor2')
 vendor2.users << User.new(:name=>'vendor2_u1',:password=>'123')
-=begin
-rpm_u1 = User.find_by_name('rpm_u1')
-(1..10).each do |n|
-   b = Brief.create(:name=>"brief#{n}",:org_id=>rpm1.id,:user_id=>rpm_u1.id)
-   b.items << Item.new(:name=>"design#{n}",:kind=>'design')
-   b.items << Item.new(:name=>"product1#{n}",:kind=>'product')
+
+(1..100).each do |i|
+  brief = rpm1.briefs.create(:name=>"brief#{i}",:deadline=>Time.now)
+  brief.send_to_cheil!
+  brief.vendor_solutions.create(:org_id=>vendor1.id) 
 end
-=end

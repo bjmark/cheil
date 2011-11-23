@@ -48,8 +48,11 @@
 #rails g migration add_note_to_items
 #rails g migration add_checked_to_attaches
 
-rails g web_app_theme:theme --no-layout
+#rails g web_app_theme:theme --no-layout
 #rails g web_app_theme:theme --theme=bec --no-layout
 #rails g web_app_theme:theme --theme=red --no-layout
 #rails g web_app_theme:theme --theme=amro --no-layout
-
+#rails g kaminari:config
+rails g kaminari:views default
+#rails g kaminari:views google 
+#rails g kaminari:views github 

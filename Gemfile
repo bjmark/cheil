@@ -36,8 +36,10 @@ group :test, :development do
   gem "rspec-rails", "~> 2.0"
 end
 
-gem "will_paginate", "~> 3.0.2"
+#gem "will_paginate", "~> 3.0.2"
 
 gem "paperclip", "~> 2.4"
 
 gem 'web-app-theme', '~> 0.8.0'
+
+gem 'kaminari'

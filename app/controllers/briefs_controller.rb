@@ -18,14 +18,14 @@ class BriefsController < ApplicationController
   # GET /briefs
   def index
     #@briefs = @cur_user.org.briefs.paginate(:page => params[:page])
-    @briefs = @cur_user.org.briefs
-
+    @briefs = @cur_user.org.briefs.page(params[:page])
+    #@briefs = Brief.where(:rpm_id=>@cur_user.org_id).page(params[:page])
   end
 
   # GET /briefs/1
   def show
     @brief = Brief.find(params[:id])
-    @brief.check_read_right(@cur_user)
+    @brief.check_read_right(@cur_user.org_id)
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'
@@ -72,7 +72,7 @@ class BriefsController < ApplicationController
   # PUT /briefs/1.json
   def update
     @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user)
+    @brief.check_edit_right(@cur_user.org_id)
 
     if @brief.update_attributes(params[:brief])
       redirect_to @brief, notice: 'Brief was successfully updated.' 
@@ -85,7 +85,7 @@ class BriefsController < ApplicationController
   # DELETE /briefs/1.json
   def destroy
     @brief = Brief.find(params[:id])
-    @brief.check_destroy_right(@cur_user)
+    @brief.check_destroy_right(@cur_user.org_id)
     @brief.destroy
     redirect_to briefs_url,notice: 'Brief was successfully deleted.' 
   end
@@ -93,7 +93,7 @@ class BriefsController < ApplicationController
   #put /briefs/1/send_to_cheil
   def send_to_cheil
     @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user)
+    @brief.check_edit_right(@cur_user.org_id)
     @brief.send_to_cheil!
     redirect_to(brief_path(@brief),:notice=>'成功发送到cheil') 
   end
