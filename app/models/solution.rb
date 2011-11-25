@@ -6,35 +6,32 @@ class Solution < ActiveRecord::Base
   has_many :comments,
     :class_name=>'SolutionComment',:foreign_key=>'fk_id',:order=>'id desc'
 
-  def check_read_right(a_user)
-    return true if can_read_by?(a_user)
-    raise SecurityError
+  def check_read_right(_org_id)
+    can_read_by?(_org_id) or raise SecurityError
   end
 
   alias :check_comment_right :check_read_right
 
-  def check_edit_right(a_user)
-    return true if can_edit_by?(a_user)
-    raise SecurityError
+  def check_edit_right(_org_id)
+    can_edit_by?(_org_id) or raise SecurityError
   end
 
-  def can_read_by?(a_user)
-    return true if can_edit_by?(a_user)
-    return true if assigned_by?(a_user)
+  def can_read_by?(_org_id)
+    can_edit_by?(_org_id) or assigned_by?(_org_id)
   end
 
   alias :can_commented_by? :can_read_by?
 
-  def can_edit_by?(a_user)
-    owned_by?(a_user) 
+  def can_edit_by?(_org_id)
+    owned_by?(_org_id) 
   end
 
-  def owned_by?(a_user)
-    org_id == a_user.org_id
+  def owned_by?(_org_id)
+    org_id == _org_id
   end
 
-  def assigned_by?(a_user)
-    brief.received_by?(a_user.org)
+  def assigned_by?(_org_id)
+    brief.received_by?(_org_id)
   end
 
   def items_from_brief(reload = false)
@@ -71,4 +68,4 @@ class Solution < ActiveRecord::Base
     items.where(:kind=>'other')
   end
 
-  end
+end

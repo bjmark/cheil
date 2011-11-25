@@ -14,6 +14,6 @@ class VendorOrg < Org
 
   def briefs
     brief_ids = solutions.collect{|e| e.brief_id}
-    Brief.where(:id=>brief_ids)
+    Brief.where(:id=>brief_ids).order('id DESC')
   end
 end

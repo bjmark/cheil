@@ -15,7 +15,7 @@
     <%=brief_items_kind(brief,brief.products,'制作')%>
   </tbody>
 </table>
-<%if brief.can_edit_by?(@cur_user)%>
+<%if brief.can_edit_by?(@cur_user.org_id)%>
   <%= link_to '新建设计项', new_item_path(:brief_id=>brief.id,:kind=>'design') %>
   |
   <%= link_to '新建制作项', new_item_path(:brief_id=>brief.id,:kind=>'product') %>

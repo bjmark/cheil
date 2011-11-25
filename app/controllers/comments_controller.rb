@@ -24,13 +24,13 @@ class CommentsController < ApplicationController
     case 
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
-      brief.check_comment_right(@cur_user)
+      brief.check_comment_right(@cur_user.org_id)
       @comment = BriefComment.new
       @path = comments_path(:brief_id=>brief.id)
       @back = brief_path(brief)
     when
       solution = Solution.find(params[:solution_id])
-      solution.check_comment_right(@cur_user)
+      solution.check_comment_right(@cur_user.org_id)
       @comment = SolutionComment.new
       @path = comments_path(:solution_id=>solution.id)
       @back = solution_path(solution)
@@ -41,13 +41,13 @@ class CommentsController < ApplicationController
     case
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
-      brief.check_comment_right(@cur_user)
+      brief.check_comment_right(@cur_user.org_id)
       @comment = brief.comments.new(params[:brief_comment])
       @comment.user_id = @cur_user.id
       @path = comments_path(:brief_id=>brief.id)
     when
       solution = Solution.find(params[:solution_id])
-      solution.check_comment_right(@cur_user)
+      solution.check_comment_right(@cur_user.org_id)
       @comment = solution.comments.new(params[:solution_comment])
       @comment.user_id = @cur_user.id
       @path = comments_path(:solution_id=>solution.id)

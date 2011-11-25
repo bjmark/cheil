@@ -2,17 +2,15 @@ class Attach < ActiveRecord::Base
   has_attached_file :attach,:path => ":rails_root/attach_files/:id/:filename" 
   belongs_to :user
 
-  def can_update_by?(u)
-    user.org_id == u.org_id
+  def check_read_right(org_id)
+    can_read_by?(org_id) or raise SecurityError
   end
 
-  def check_read_right(user)
+  def check_update_right(org_id)
+    can_update_by?(org_id) or raise SecurityError
   end
 
-  def check_update_right(user)
-  end
-
-  def can_checked_by?(a_user)
-    return false
+  def can_checked_by?(org_id)
+    false
   end
 end

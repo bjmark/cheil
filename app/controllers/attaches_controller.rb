@@ -13,7 +13,7 @@ class AttachesController < ApplicationController
 
   def download
     attach = Attach.find(params[:id])
-    attach.check_read_right(@cur_user)
+    attach.check_read_right(@cur_user.org_id)
 
     send_file attach.attach.path,
       :filename => attach.attach_file_name,
@@ -39,7 +39,7 @@ class AttachesController < ApplicationController
       @back = brief_path(brief)
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
-      solution.check_edit_right(@cur_user)
+      solution.check_edit_right(@cur_user.org_id)
       @attach = SolutionAttach.new
       @path = attaches_path(:solution_id=>solution.id)
       @back = solution_path(solution)
@@ -48,7 +48,7 @@ class AttachesController < ApplicationController
 
   def edit
     @attach = Attach.find(params[:id])
-    @attach.check_update_right(@cur_user)
+    @attach.check_update_right(@cur_user.org_id)
     @path = attach_path(@attach)
     @back = owner_path(@attach)
   end
@@ -62,7 +62,7 @@ class AttachesController < ApplicationController
       @path = attaches_path(:brief_id=>brief.id)
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
-      solution.check_edit_right(@cur_user)
+      solution.check_edit_right(@cur_user.org_id)
       @attach = solution.attaches.new(params[:solution_attach])
       @path = attaches_path(:solution_id=>solution.id)
     end
@@ -78,6 +78,7 @@ class AttachesController < ApplicationController
 
   def set_checked(value)
     attach = Attach.find(params[:id])
+    attach.can_checked_by?(@cur_user.org_id)
     attach.checked = value
     attach.save
     redirect_to flash[:dest] or solution_path(attach.fk_id)
@@ -93,7 +94,7 @@ class AttachesController < ApplicationController
 
   def update
     @attach = Attach.find(params[:id])
-    @attach.check_update_right(@cur_user)
+    @attach.check_update_right(@cur_user.org_id)
 
     case @attach
     when BriefAttach 
@@ -113,7 +114,7 @@ class AttachesController < ApplicationController
 
   def destroy
     attach = Attach.find(params[:id])
-    attach.check_update_right(@cur_user)
+    attach.check_update_right(@cur_user.org_id)
     attach.destroy
 
     redirect_to owner_path(attach)

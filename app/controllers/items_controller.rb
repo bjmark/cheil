@@ -42,7 +42,7 @@ class ItemsController < ApplicationController
       @back = brief_path(brief)
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
-      solution.check_edit_right(@cur_user)
+      solution.check_edit_right(@cur_user.org_id)
       @item = SolutionItem.new
       @item.kind = params[:kind]
       @path = items_path(:solution_id=>solution.id)
@@ -53,7 +53,7 @@ class ItemsController < ApplicationController
 
   def edit
     @item = Item.find(params[:id])
-    @item.check_edit_right(@cur_user)
+    @item.check_edit_right(@cur_user.org_id)
     @path = item_path(@item)
     @back = owner_path(@item)
     @form = case 
@@ -81,7 +81,7 @@ class ItemsController < ApplicationController
       #create a solution_item
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
-      solution.check_edit_right(@cur_user)
+      solution.check_edit_right(@cur_user.org_id)
       @item = solution.items.new(params[:solution_item])
       @path = items_path(:solution_id=>solution.id)
       @back = owner_path(@item)
@@ -111,7 +111,7 @@ class ItemsController < ApplicationController
 
   def update
     @item = Item.find(params[:id])
-    @item.check_edit_right(@cur_user)
+    @item.check_edit_right(@cur_user.org_id)
 
     case @item
     when BriefItem 

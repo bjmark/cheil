@@ -51,7 +51,7 @@ class Brief < ActiveRecord::Base
   end
 
   def check_comment_right(org_id)
-    can_commented_by?(org_id) or SecurityError
+    can_commented_by?(org_id) or raise SecurityError
   end
 
   def can_commented_by?(org_id)

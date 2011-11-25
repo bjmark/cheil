@@ -14,13 +14,13 @@ module ApplicationHelper
 
   def attach_links(owner,attach,user)
     links = []
-    links << link_to('下载',download_attach_path(attach)) if owner.can_read_by?(user) 
-    if owner.can_edit_by?(user)
+    links << link_to('下载',download_attach_path(attach)) if owner.can_read_by?(user.org_id) 
+    if owner.can_edit_by?(user.org_id)
       links << link_to('更新',edit_attach_path(attach)) 
       links << link_to('删除',attach_path(attach),
                        {:confirm => 'Are you sure?', :method => :delete})
     end
-    if attach.can_checked_by?(user)
+    if attach.can_checked_by?(user.org_id)
       case attach.checked
         when 'n' then links << link_to('选中',check_attach_path(attach),
                                        {:method => :put})
@@ -32,7 +32,7 @@ module ApplicationHelper
   end
 
   def new_attach_link(owner,user)
-    if owner.can_edit_by?(user)
+    if owner.can_edit_by?(user.org_id)
       var = case 
             when owner.instance_of?(Brief) then {:brief_id=>owner.id}
             when owner.kind_of?(Solution) then {:solution_id=>owner.id}
@@ -50,7 +50,7 @@ module ApplicationHelper
   end
 
   def new_comment_link(owner,user)
-    if owner.can_commented_by?(user)
+    if owner.can_commented_by?(user.org_id)
       var = case 
             when owner.instance_of?(Brief) then {:brief_id=>owner.id}
             when owner.kind_of?(Solution) then {:solution_id=>owner.id}
