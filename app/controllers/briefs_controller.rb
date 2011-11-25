@@ -29,8 +29,22 @@ class BriefsController < ApplicationController
     render :action => :index
   end
 
+  def str_to_date(s)
+    return nil if s.blank?
+    return nil if (a = s.split('-')).length != 3
+    ymd = a.collect{|e| e.to_i}
+    Date.new(ymd[0],ymd[1],ymd[2])
+  end
+
   def search_res
-    @briefs = @cur_user.org.briefs.search_name(params[:name]).page(params[:page])
+    @briefs = @cur_user.org.briefs.search_name(params[:name]).
+      deadline_great_than(str_to_date(params[:deadline1])).
+      deadline_less_than(str_to_date(params[:deadline2])).
+      create_date_great_than(str_to_date(params[:create_date1])).
+      create_date_less_than(str_to_date(params[:create_date2])).
+      update_date_great_than(str_to_date(params[:update_date1])).
+      update_date_less_than(str_to_date(params[:update_date2])).
+      page(params[:page])
     render :action => :index
   end
 
@@ -72,7 +86,7 @@ class BriefsController < ApplicationController
     if @brief.save
       redirect_to briefs_path, notice: 'Brief was successfully created.' 
     else
-      render action: "new_edit" 
+      render action: "new" 
     end
   end
 

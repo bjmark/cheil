@@ -3,14 +3,24 @@
   <br/>
   <div class="group">
     名称:
-    <%=text_field_tag :name,nil,:size=>'10'%>
+    <%=text_field_tag :name,params[:name],:size=>'10'%>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    期限:
+    <%=text_field_tag :deadline1,params[:deadline1],:placeholder=>'2011-11-24',:size=>10%> 
+    -
+    <%=text_field_tag :deadline2,params[:deadline2],:placeholder=>'2011-12-1',:size=>10%> 
+    日期格式:2011-11-28
   </div>
   <div class="group">
-    期限:
-    <%=text_field_tag :deadline1,nil,:placeholder=>'2011-11-24',:size=>10%> 
+    创建日期:
+    <%=text_field_tag :create_date1,params[:create_date1],:placeholder=>'2011-11-24',:size=>10%> 
     -
-    <%=text_field_tag :deadline2,nil,:placeholder=>'2011-12-1',:size=>10%> 
-    日期格式:2011-11-28
+    <%=text_field_tag :create_date2,params[:create_date2],:placeholder=>'2011-12-1',:size=>10%> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    更新日期:
+    <%=text_field_tag :update_date1,params[:update_date1],:placeholder=>'2011-11-24',:size=>10%> 
+    -
+    <%=text_field_tag :update_date2,params[:update_date2],:placeholder=>'2011-12-1',:size=>10%> 
   </div>
 
   <div class="group">

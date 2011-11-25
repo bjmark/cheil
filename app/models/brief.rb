@@ -1,6 +1,4 @@
 class Brief < ActiveRecord::Base
-  paginates_per 5
-
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
   belongs_to :user
@@ -17,6 +15,12 @@ class Brief < ActiveRecord::Base
   validates :name, :presence => true
 
   scope :search_name, lambda {|word| word.blank? ? where('') : where('name like ?',"%#{word}%")}
+  scope :deadline_great_than, lambda {|d| d.nil? ? where('') : where('deadline > ?',d)}
+  scope :deadline_less_than, lambda {|d| d.nil? ? where('') : where('deadline < ?',d)}
+  scope :create_date_great_than, lambda {|d| d.nil? ? where('') : where('created_at > ?',d)}
+  scope :create_date_less_than, lambda {|d| d.nil? ? where('') : where('created_at < ?',d)}
+  scope :update_date_great_than, lambda {|d| d.nil? ? where('') : where('updated_at > ?',d)}
+  scope :update_date_less_than, lambda {|d| d.nil? ? where('') : where('updated_at < ?',d)}
 
   def designs(reload=false)
     @designs = nil if reload

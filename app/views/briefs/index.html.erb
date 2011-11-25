@@ -16,11 +16,11 @@
   </div>
   <div class="content">
     <div class="inner">
-      <%case%>
-      <%when @briefs%>
-        <%=render 'index'%>
-      <%else%>
+      <%if %w{search_cond search_res}.include? params[:action]%>
         <%=render 'search_form'%>
+      <%end%>
+      <%if @briefs%>
+        <%=render 'index'%>
       <%end%>
     </div>
   </div>

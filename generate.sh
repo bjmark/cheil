@@ -53,6 +53,8 @@
 #rails g web_app_theme:theme --theme=red --no-layout
 #rails g web_app_theme:theme --theme=amro --no-layout
 #rails g kaminari:config
-rails g kaminari:views default
+#rails g kaminari:views default
 #rails g kaminari:views google 
 #rails g kaminari:views github 
+
+#rails g migration drop_admin_users

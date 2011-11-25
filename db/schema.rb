@@ -13,14 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20111118112508) do
 
-  create_table "admin_users", :force => true do |t|
-    t.string   "name"
-    t.string   "hashed_password"
-    t.string   "salt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "attaches", :force => true do |t|
     t.string   "type"
     t.integer  "fk_id"

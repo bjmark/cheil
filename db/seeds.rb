@@ -27,7 +27,7 @@ vendor2 = VendorOrg.create(:name=>'vendor2')
 vendor2.users << User.new(:name=>'vendor2_u1',:password=>'123')
 
 (1..100).each do |i|
-  brief = rpm1.briefs.create(:name=>"brief#{i}",:deadline=>Time.now)
+  brief = rpm1.briefs.create(:name=>"brief#{i}",:deadline=>i.day.from_now)
   brief.send_to_cheil!
   brief.vendor_solutions.create(:org_id=>vendor1.id) 
 end
