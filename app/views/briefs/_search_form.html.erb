@@ -1,0 +1,20 @@
+<%= form_tag search_res_briefs_path,:class=>'form login',:method=>'get' do %>
+  <br/>
+  <br/>
+  <div class="group">
+    名称:
+    <%=text_field_tag :name,nil,:size=>'10'%>
+  </div>
+  <div class="group">
+    期限:
+    <%=text_field_tag :deadline1,nil,:placeholder=>'2011-11-24',:size=>10%> 
+    -
+    <%=text_field_tag :deadline2,nil,:placeholder=>'2011-12-1',:size=>10%> 
+    日期格式:2011-11-28
+  </div>
+
+  <div class="group">
+    <%= submit_tag "搜索" %>
+  </div>
+<% end %>
+

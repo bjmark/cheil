@@ -16,6 +16,8 @@ class Brief < ActiveRecord::Base
 
   validates :name, :presence => true
 
+  scope :search_name, lambda {|word| word.blank? ? where('') : where('name like ?',"%#{word}%")}
+
   def designs(reload=false)
     @designs = nil if reload
     @designs or (@designs = items.find_all_by_kind('design'))

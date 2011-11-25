@@ -1,37 +1,27 @@
 <div class="block">
   <div class="secondary-navigation">
     <ul class="wat-cf">
-      <li class="active first">
+      <li class="<%='active' if request.fullpath == briefs_path%> first">
       <%=link_to '全部',briefs_path(@brief) %>
       </li>
-      <li><%= link_to '未发送', '/' %></li>
-      <li><%= link_to '检索', '/' %></li>
+      <%if @cur_user.org.instance_of?(RpmOrg)%>
+        <li <%=raw 'class="active"' if request.fullpath == not_send_briefs_path%>>
+        <%= link_to '未发送', not_send_briefs_path%>
+        </li>
+      <%end%>
+      <li <%=raw 'class="active"' if [search_cond_briefs_path,search_res_briefs_path].include?(request.fullpath.split('?').first)%>>
+      <%= link_to '检索', search_cond_briefs_path%>
+      </li>
     </ul>
   </div>
   <div class="content">
     <div class="inner">
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>id</th>
-            <th>名称</th>
-            <th>期限</th>
-            <th>创建时间</th>
-            <th>更新时间</th>
-          </tr>
-          <%n=1
-            @briefs.each do |brief| -%>
-            <tr class="<%=['odd','even'][(n+=1)%2]%>">
-              <td><%=brief.id%></td>
-              <td><%=link_to brief.name,brief_path(brief)%></td>
-              <td><%=brief.deadline%></td>
-              <td><%=short_d(brief.created_at)%></td>
-              <td><%=short_d(brief.updated_at)%></td>
-            </tr>
-          <%end -%>
-        </tbody>
-      </table>
-      <%= paginate @briefs,:window => 2 %>
+      <%case%>
+      <%when @briefs%>
+        <%=render 'index'%>
+      <%else%>
+        <%=render 'search_form'%>
+      <%end%>
     </div>
   </div>
 </div>

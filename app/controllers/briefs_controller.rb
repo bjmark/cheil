@@ -17,9 +17,21 @@ class BriefsController < ApplicationController
 
   # GET /briefs
   def index
-    #@briefs = @cur_user.org.briefs.paginate(:page => params[:page])
     @briefs = @cur_user.org.briefs.page(params[:page])
-    #@briefs = Brief.where(:rpm_id=>@cur_user.org_id).page(params[:page])
+  end
+
+  def not_send
+    @briefs = @cur_user.org.briefs.where(:cheil_id=>0).page(params[:page])
+    render :action => :index
+  end
+
+  def search_cond
+    render :action => :index
+  end
+
+  def search_res
+    @briefs = @cur_user.org.briefs.search_name(params[:name]).page(params[:page])
+    render :action => :index
   end
 
   # GET /briefs/1
@@ -32,7 +44,6 @@ class BriefsController < ApplicationController
     when CheilOrg
       render 'briefs/cheil/show'
     when VendorOrg
-      #@solution = @cur_user.org.solutions.find_by_brief_id(@brief.id)
       @solution = @brief.solutions.find_by_org_id(@cur_user.org_id)
       @brief.designs = @solution.designs_from_brief
       @brief.products = @solution.products_from_brief
@@ -43,16 +54,13 @@ class BriefsController < ApplicationController
   # GET /briefs/new
   def new
     @brief = Brief.new
-    @title = '新建 brief'
-    render 'share/new_edit'
   end
 
   # GET /briefs/1/edit
   def edit
     @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user)
-    @title = '修改 brief'
-    render 'share/new_edit'
+    @brief.check_edit_right(@cur_user.org_id)
+    @back = brief_path(@brief)
   end
 
   # POST /briefs

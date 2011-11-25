@@ -31,28 +31,19 @@ Cheil::Application.routes.draw do
     member do
       put :send_to_cheil
     end
-=begin
-    resources :solutions,:only=>[:index,:show,:create,:destroy] do 
-      collection do
-        get :sel_vendor
-      end
+    collection do 
+      get :not_send
+      get :search_cond
+      get :search_res
     end
-=end
   end
 
-=begin
-  controller :items do 
-    post 'solutions/:solution_id/items/:id' => :create,
-      :as=>'solution_item'
-    delete 'solutions/:solution_id/items/:id' => :destroy,
-  end
-=end
   resources :orgs
 
   resources :users
   resources :admin_users
 
-
+=begin
   controller :cheil do
     #brief列表
     get 'cheil/briefs'=>:briefs,:as=>'cheil_briefs'
@@ -131,7 +122,7 @@ Cheil::Application.routes.draw do
     post 'vendor/briefs/:brief_id/items/(:kind)' => :item_create,
       :as=>'vendor_item_create'
   end
-
+=end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -181,7 +172,7 @@ Cheil::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+   root :to => 'sessions#new'
 
   # See how all your routes lay out with "rake routes"
 

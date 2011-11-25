@@ -28,8 +28,8 @@ class RpmOrg < Org
 
   def nav_links
     [
-      ['新建 brief', '/briefs/new'],
-      ['项目列表', '/briefs']
+      ['新建需求', '/briefs/new'],
+      ['需求列表', '/briefs']
     ]
   end
 end
