@@ -39,18 +39,61 @@
     %>
   </tbody>
 </table>
-<%
-  a=[] 
-  a << "设计(#{total[:design]})" if total[:design] > 0 
-  a << "制作(#{total[:product]})" if total[:product] > 0 
-  a << "运输(#{total[:tran]})" if total[:tran] > 0 
-  a << "其他(#{total[:other]})" if total[:other] > 0
-%>
-总计
-<%= "= #{a.join(' + ')}" unless a.empty?%>
-=<%=total[:all]%>
-<p>
+<% if total[:all] > 0%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th></th>
+        <th>总计</th>
+        <th>税率</th>
+        <th>税后总计</th>
+      </tr>
+      <%n=0%>
+      <%if total[:design] > 0%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>设计</td>
+          <td><%=total[:design]%></th>
+          <td><%=solution.design_rate%></td>
+          <td><%=total[:design_r]%></td>
+        </tr>
+      <%end%>
+      <%if total[:product] > 0%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>制作</td>
+          <td><%=total[:product]%></th>
+          <td><%=solution.product_rate%></td>
+          <td><%=total[:product_r]%></td>
+        </tr>
+      <%end%>
+      <%if total[:tran] > 0%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>运输</td>
+          <td><%=total[:tran]%></th>
+          <td><%=solution.tran_rate%></td>
+          <td><%=total[:tran_r]%></td>
+        </tr>
+      <%end%>
+      <%if total[:other] > 0%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>其他</td>
+          <td><%=total[:other]%></th>
+          <td><%=solution.other_rate%></td>
+          <td><%=total[:other_r]%></td>
+        </tr>
+      <%end%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>全部累计</td>
+        <td><%=total[:all]%></th>
+        <td></td>
+        <td><%=total[:all_r]%></td>
+      </tr>
+    </tbody>
+  </table>
+<%end%>
 <%= link_to '新建运输项', new_item_path(:solution_id=>solution.id,:kind=>'tran') %>
 |
 <%= link_to '新建其他项', new_item_path(:solution_id=>solution.id,:kind=>'other') %>
-</p>
+|
+<%= link_to '修改税率', edit_rate_solution_path(solution) %>
+<br/>
+

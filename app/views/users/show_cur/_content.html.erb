@@ -1,0 +1,21 @@
+<%
+  #users/show_cur/_content
+#locals=>user
+%>
+<p>
+  <b>Name:</b>
+  <%= user.name %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%= user.email %>
+</p>
+
+<p>
+  <b>Phone:</b>
+  <%= user.phone %>
+</p>
+
+<%= link_to '修改', edit_user_path('cur') %>
+

@@ -57,4 +57,4 @@
 #rails g kaminari:views google 
 #rails g kaminari:views github 
 
-#rails g migration drop_admin_users
+rails g migration add_rate_to_solutions

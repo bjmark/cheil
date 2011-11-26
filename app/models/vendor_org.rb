@@ -9,7 +9,7 @@ class VendorOrg < Org
   end
 
   def nav_links
-    [['项目列表', '/briefs']]
+    [['需求列表', '/briefs']]
   end
 
   def briefs

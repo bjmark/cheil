@@ -19,7 +19,12 @@ Cheil::Application.routes.draw do
   end
 
   resources :comments , :only=>[:new,:create,:destroy]
-  resources :solutions
+  resources :solutions do
+    member do
+      get :edit_rate
+      put :update_rate
+    end
+  end
 
   resources :vendor_orgs
 
@@ -40,7 +45,8 @@ Cheil::Application.routes.draw do
 
   resources :orgs
 
-  resources :users
+  resources :users 
+
   resources :admin_users
 
 =begin

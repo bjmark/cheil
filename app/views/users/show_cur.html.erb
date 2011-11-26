@@ -1,0 +1,9 @@
+<%
+  # users/show_cur
+# @user
+%>
+<%=render 'share/block',
+  :title=>'当前用户',
+  :content=>{:partial=>'users/show_cur/content',
+    :locals=>{:user=>@user}} %>
+

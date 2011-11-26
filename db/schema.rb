@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111118112508) do
+ActiveRecord::Schema.define(:version => 20111126122658) do
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -84,6 +84,10 @@ ActiveRecord::Schema.define(:version => 20111118112508) do
     t.datetime "sent_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "design_rate",  :default => "0"
+    t.string   "product_rate", :default => "0"
+    t.string   "tran_rate",    :default => "0"
+    t.string   "other_rate",   :default => "0"
   end
 
   create_table "users", :force => true do |t|

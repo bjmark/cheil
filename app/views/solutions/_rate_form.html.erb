@@ -1,0 +1,35 @@
+<%= form_for(@solution,:url=>update_rate_solution_path(@solution),:html=>{:class=>'form'}) do |f| %>
+  <% if @solution.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@solution.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+        <% @solution.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="group">
+    <%= f.label :design_rate,'设计税率',:class=>'label' %>
+    <%= f.text_field :design_rate,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <%= f.label :produt_rate,'制作税率',:class=>'label' %>
+    <%= f.text_field :product_rate,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <%= f.label :tran_rate,'运输税率',:class=>'label' %>
+    <%= f.text_field :tran_rate,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <%= f.label :other_rate,'其他税率',:class=>'label' %>
+    <%= f.text_field :other_rate,:class=>'text_field' %>
+  </div>
+
+  <div class="group">
+    <%= f.submit '提交' %>
+    <%= link_to '取消', solution_path(@solution) %>
+  </div>
+<% end %>

@@ -30,6 +30,22 @@ class SolutionsController < ApplicationController
 
   end
 
+  def edit_rate
+    @solution = Solution.find(params[:id])
+  end
+
+  def update_rate
+    solution = Solution.find(params[:id])
+    att = params[:vendor_solution] 
+    solution.design_rate = att[:design_rate]
+    solution.product_rate = att[:product_rate]
+    solution.tran_rate = att[:tran_rate]
+    solution.other_rate = att[:other_rate]
+    solution.save
+
+    redirect_to solution_path(solution)
+  end
+
   def create
     brief = Brief.find(params[:brief_id])
     vendor_ids = []

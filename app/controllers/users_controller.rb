@@ -3,10 +3,12 @@ class UsersController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
-    case @cur_user
-    when AdminUser then return
-    else  raise SecurityError
+    ok = case @cur_user
+    when AdminUser then true
+    else      
+      %w{show edit update}.include?(params[:action]) and params[:id] == 'cur'
     end
+    ok or (raise SecurityError)
   end
 
   # GET /users
@@ -22,8 +24,14 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    @user = User.find(params[:id])
-    flash[:dest] = flash[:dest]
+    case 
+    when params[:id] == 'cur'
+      @user = @cur_user
+      render 'show_cur'
+    else
+      @user = User.find(params[:id])
+      flash[:dest] = flash[:dest]
+    end
   end
 
   # GET /users/new
@@ -35,9 +43,15 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user = User.find(params[:id])
-    @back = user_path(@user)
-    flash[:dest] = flash[:dest]
+    case 
+    when params[:id] == 'cur'
+      @user = @cur_user
+      render 'edit_cur'
+    else
+      @user = User.find(params[:id])
+      @back = user_path(@user)
+      flash[:dest] = flash[:dest]
+    end
   end
 
   # POST /users
@@ -53,11 +67,16 @@ class UsersController < ApplicationController
 
   # PUT /users/1
   def update
-    @user = User.find(params[:id])
-    flash[:dest] = flash[:dest]
+    case params[:id]
+    when 'cur'
+      @user = User.find(@cur_user.id)
+    else
+      @user = User.find(params[:id])
+      flash[:dest] = flash[:dest]
+    end
 
     if @user.update_attributes(params[:user])
-      redirect_to @user, notice: 'User was successfully updated.' 
+      redirect_to user_path(params[:id]), notice: 'User was successfully updated.' 
     else
       @back = user_path(@user)
       render :action=>:edit

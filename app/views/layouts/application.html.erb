@@ -12,8 +12,7 @@
       <h1><a href="/">Cheil App</a></h1>
       <div id="user-navigation">
         <ul class="wat-cf">
-          <li><a href="#"><%= t("web-app-theme.profile", :default => "Profile") %></a></li>
-          <li><a href="#"><%= t("web-app-theme.settings", :default => "Settings") %></a></li>
+          <li><%= link_to '帐号',user_path('cur') %></li>
           <li>
           <%= link_to '退出', session_path, :method => :delete,:class=>'logout'   %>
           </li>
