@@ -17,7 +17,7 @@ items.each do |e|%>
       <%unless e.checked?%>
         <%=link_to('选中',check_item_path(e),{:method => :put})%>
       <%else%>
-        <%=link_to('取消选中',check_item_path(e),{:method => :put})%>
+        <%=link_to('取消选中',uncheck_item_path(e),{:method => :put})%>
       <%end%>
     </td>
   </tr>

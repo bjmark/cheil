@@ -1,3 +1,4 @@
+#encoding=utf-8
 class CheilSolution < Solution
   def check_read_right(user)
 
@@ -77,18 +78,57 @@ class CheilSolution < Solution
 
   def total
     kinds = [:design,:product,:tran,:other]
-    total_hash = {}
     sum_all = 0
-
+    sum_all_r = 0
+    total_hash = {}
     kinds.each do |k|
-      sum = 0 
-      send("checked_#{k}s".to_sym).each{|e| sum += e.total}
-      send("#{k}s".to_sym).each{|e| sum += e.total}
-      total_hash[k] = sum
-      sum_all += sum
+      total_hash[k]=[]
+      brief.vendor_solutions.each do |vs|
+        sum = 0 
+        vs.send("#{k}s").where(:checked=>'y').collect{|e| sum += e.total}
+        if sum > 0
+          total_hash[k] << 
+          {:name=>vs.org.name,
+            :sum=>sum,
+            :rate=>(rate=vs.send("#{k}_rate")),
+            :sum_r=>(sum_r=sum*(1+rate.to_f))}
+          sum_all += sum
+          sum_all_r += sum_r
+        end
+      end
+      sum = 0
+      send("#{k}s").collect{|e| sum += e.total}
+      if sum > 0
+        total_hash[k] << 
+        {:name=>org.name,
+          :sum=>sum,
+          :rate=>(rate=send("#{k}_rate")),
+          :sum_r=>(sum_r=sum*(1+rate.to_f))}
+        sum_all += sum
+        sum_all_r += sum_r
+      end
+      if total_hash[k].length > 1
+        sub_sum_all = 0 
+        sub_sum_all_r = 0
+        total_hash[k].each do |e| 
+          sub_sum_all += e[:sum]
+          sub_sum_all_r += e[:sum_r]
+        end
+        total_hash[k] << 
+        {:name=>'分项累计',
+          :sum=>sub_sum_all,
+          :rate=>'',
+          :sum_r=>sub_sum_all_r
+        }
+      end
     end
-
-    total_hash[:all] = sum_all
+    total_hash[:all]=[]
+    total_hash[:all] << 
+    {:name=>'全部累计',
+      :sum=>sum_all,
+      :rate=>'',
+      :sum_r=>sum_all_r
+    }
     return total_hash
   end
 

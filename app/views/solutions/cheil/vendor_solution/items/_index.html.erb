@@ -39,13 +39,5 @@
     %>
   </tbody>
 </table>
-<%
-  a=[] 
-  a << "设计(#{total[:design]})" if total[:design] > 0 
-  a << "制作(#{total[:product]})" if total[:product] > 0 
-  a << "运输(#{total[:tran]})" if total[:tran] > 0 
-  a << "其他(#{total[:other]})" if total[:other] > 0
-%>
-总计
-<%= "= #{a.join(' + ')}" unless a.empty?%>
-=<%=total[:all]%>
+<%=render 'solutions/vendor/items/total',:solution=>solution,:total=>total%>
+
