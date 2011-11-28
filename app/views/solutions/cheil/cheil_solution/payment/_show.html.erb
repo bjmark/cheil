@@ -1,0 +1,31 @@
+<%
+  #solutions/cheil/cheil_solution/payment/_show
+#solution
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>vendor</th>
+      <th>应付</th>
+      <th>已付</th>
+      <th>未付余额</th>
+    </tr>
+    <%n=1
+    solution.vendor_money.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e[:name]  %>
+        </td>
+        <td>
+          <%= e[:amount]  %>
+        </td>
+        <td>
+          <%= e[:paid]  %>
+        </td>
+        <td>
+          <%= e[:balance]  %>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>

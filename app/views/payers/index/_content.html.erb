@@ -1,0 +1,27 @@
+<%
+  #payers/index/_content
+#payers
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>名称</th>
+      <th></th>
+    </tr>
+    <%n=1
+    payers.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e.name  %>
+        </td>
+        <td class="last">
+          <%= link_to 'Edit', edit_payer_path(e) %>
+          |
+          <%= link_to 'Destroy', e, confirm: 'Are you sure?', method: :delete %>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+<%= link_to '新建', new_payer_path %>
+

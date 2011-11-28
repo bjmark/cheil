@@ -11,7 +11,7 @@
       <th>说明</th>
       <th>单价</th>
       <th>合计</th>
-      <th>创建者</th>
+      <th>vendor</th>
       <th></th>
     </tr>
     <%
@@ -56,46 +56,7 @@
     %>
   </tbody>
 </table>
-<table class="table">
-  <tbody>
-    <tr>
-      <th></th>
-      <th>名称</th>
-      <th>总计</th>
-      <th>税率</th>
-      <th>税后总计</th>
-    </tr>
-    <%sum_items = total[:design]%>
-    <%=render 'solutions/cheil/cheil_solution/items/kind_sum',
-      :sum_items=>sum_items,
-      :kind_cn=>'设计' unless sum_items.empty?
-    %>
-
-    <%sum_items = total[:product]%>
-    <%=render 'solutions/cheil/cheil_solution/items/kind_sum',
-      :sum_items=>sum_items,
-      :kind_cn=>'制作' unless sum_items.empty?
-    %>
-
-    <%sum_items = total[:tran]%>
-    <%=render 'solutions/cheil/cheil_solution/items/kind_sum',
-      :sum_items=>sum_items,
-      :kind_cn=>'运输' unless sum_items.empty?
-    %>
-
-    <%sum_items = total[:other]%>
-    <%=render 'solutions/cheil/cheil_solution/items/kind_sum',
-      :sum_items=>sum_items,
-      :kind_cn=>'其他' unless sum_items.empty?
-    %>
-    <%sum_items = total[:all]%>
-    <%=render 'solutions/cheil/cheil_solution/items/kind_sum',
-      :sum_items=>sum_items,
-      :kind_cn=>'' unless sum_items.empty?
-    %>
-  </tbody>
-</table>
-
+<%=render 'solutions/cheil/cheil_solution/items/total',:total=>total%>
 <p>
 <%= link_to '新建运输项', new_item_path(:solution_id=>solution.id,:kind=>'tran')%>
 |

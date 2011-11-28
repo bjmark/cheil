@@ -1,0 +1,9 @@
+<%
+  # payers/index
+# @payers
+%>
+<%=render 'share/block',
+  :title=>'payer列表',
+  :content=>{:partial=>'payers/index/content',
+    :locals=>{:payers=>@payers}} %>
+

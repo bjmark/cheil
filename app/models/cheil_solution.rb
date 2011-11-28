@@ -1,8 +1,23 @@
 #encoding=utf-8
 class CheilSolution < Solution
-  def check_read_right(user)
-
+  def check_read_right(_org_id)
+    can_read_by?(_org_id) or raise SecurityError
   end
+
+  alias :check_comment_right :check_read_right
+
+  def can_read_by?(_org_id)
+    can_edit_by?(_org_id) or brief.owned_by?(_org_id)
+  end
+
+  alias :can_commented_by? :can_read_by?
+
+  def check_edit_right(_org_id)
+    can_edit_by?(_org_id) or raise SecurityError
+  end
+
+  alias :can_edit_by? :owned_by? 
+
 
   def check_destroy_right(a_user)
     raise SecurityError
@@ -10,6 +25,18 @@ class CheilSolution < Solution
 
   def can_del_by?(a_user)
     false
+  end
+
+  def check_approve_right(_org_id)
+    can_approved_by?(_org_id) or raise SecurityError
+  end
+
+  def can_approved_by?(_org_id)
+    brief.owned_by?(_org_id)
+  end
+
+  def approved?
+    is_approved == 'y'
   end
 
   def checked_attaches(reload=false)
@@ -35,7 +62,7 @@ class CheilSolution < Solution
 
     return @checked_designs
   end
-  
+
   def checked_products(reload=false)
     @checked_products = nil if reload
     return @checked_products if @checked_products
@@ -85,7 +112,7 @@ class CheilSolution < Solution
       total_hash[k]=[]
       brief.vendor_solutions.each do |vs|
         sum = 0 
-        vs.send("#{k}s").where(:checked=>'y').collect{|e| sum += e.total}
+        vs.send("#{k}s").checked.collect{|e| sum += e.total}
         if sum > 0
           total_hash[k] << 
           {:name=>vs.org.name,
@@ -132,4 +159,32 @@ class CheilSolution < Solution
     return total_hash
   end
 
+  def vendor_money
+    lst=[]
+    brief.vendor_solutions.each do |e|
+      amount = 0
+      paid = 0
+      %w{design product tran other}.each do |k|
+        amount_k = 0
+        e.send("#{k}s").checked.each{|i| amount_k += i.total}
+        amount += amount_k * (1 + e.send("#{k}_rate").to_f)
+      end
+      if amount > 0
+        lst << {:name=>e.org.name,:amount=>amount,:paid=>paid,:balance=>amount-paid}
+      end
+    end
+    
+    amount = 0
+    paid = 0
+
+    %w{design product tran other}.each do |k|
+      amount_k = 0
+      send("#{k}s").each{|i| amount_k += i.total}
+      amount += amount_k * (1 + send("#{k}_rate").to_f)
+    end
+
+    lst << {:name=>org.name,:amount=>amount,:paid=>paid,:balance=>amount-paid}
+
+    return lst
+  end
 end

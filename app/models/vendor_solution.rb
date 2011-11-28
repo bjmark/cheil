@@ -1,5 +1,27 @@
 class VendorSolution < Solution
 
+  def check_read_right(_org_id)
+    can_read_by?(_org_id) or raise SecurityError
+  end
+
+  alias :check_comment_right :check_read_right
+
+  def can_read_by?(_org_id)
+    can_edit_by?(_org_id) or assigned_by?(_org_id)
+  end
+
+  alias :can_commented_by? :can_read_by?
+
+  alias :can_edit_by? :owned_by?
+  
+  def check_edit_right(_org_id)
+    can_edit_by?(_org_id) or raise SecurityError
+  end
+
+  def assigned_by?(_org_id)
+    brief.received_by?(_org_id)
+  end
+
   def check_destroy_right(a_user)
     return true if can_del_by?(a_user)
     raise SecurityError
@@ -22,7 +44,7 @@ class VendorSolution < Solution
 
       sum_r = sum * (send("#{k}_rate").to_f + 1) 
       total_hash["#{k}_r".to_sym] = sum_r
-      
+
       sum_all += sum
       sum_all_r += sum_r
     end
@@ -33,4 +55,4 @@ class VendorSolution < Solution
   end
 
 end
- 
+

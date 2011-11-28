@@ -65,4 +65,25 @@ class SolutionsController < ApplicationController
 
     redirect_to solutions_path(:brief_id=>brief.id) 
   end
+
+  def approve
+    solution = Solution.find(params[:id])
+    solution.check_approve_right(@cur_user.org_id)
+    solution.is_approved = 'y'
+    solution.approved_at = Time.now
+    solution.save
+
+    redirect_to solution_path(solution)
+  end
+
+  def unapprove
+    solution = Solution.find(params[:id])
+    solution.check_approve_right(@cur_user.org_id)
+    solution.is_approved = 'n'
+    solution.approved_at = Time.now
+    solution.save
+
+    redirect_to solution_path(solution)
+  end
+
 end

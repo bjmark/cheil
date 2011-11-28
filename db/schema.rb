@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111126122658) do
+ActiveRecord::Schema.define(:version => 20111128115120) do
+
+  create_table "admin_users", :force => true do |t|
+    t.string   "name"
+    t.string   "hashed_password"
+    t.string   "salt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -24,6 +32,24 @@ ActiveRecord::Schema.define(:version => 20111126122658) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "checked",             :limit => 1, :default => "n"
+  end
+
+  create_table "brief_attaches", :force => true do |t|
+    t.integer  "brief_id"
+    t.string   "attach_file_name"
+    t.string   "attach_content_type"
+    t.integer  "attach_file_size"
+    t.datetime "attach_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "brief_comments", :force => true do |t|
+    t.string   "content"
+    t.integer  "brief_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "brief_vendors", :force => true do |t|
@@ -76,6 +102,23 @@ ActiveRecord::Schema.define(:version => 20111126122658) do
     t.integer  "rpm_org_id"
   end
 
+  create_table "payers", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "payments", :force => true do |t|
+    t.integer  "solution_id"
+    t.integer  "payer_id"
+    t.integer  "org_id"
+    t.string   "amount"
+    t.date     "pay_date"
+    t.string   "note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "solutions", :force => true do |t|
     t.integer  "brief_id"
     t.integer  "org_id"
@@ -84,10 +127,12 @@ ActiveRecord::Schema.define(:version => 20111126122658) do
     t.datetime "sent_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "design_rate",  :default => "0"
-    t.string   "product_rate", :default => "0"
-    t.string   "tran_rate",    :default => "0"
-    t.string   "other_rate",   :default => "0"
+    t.string   "design_rate",               :default => "0"
+    t.string   "product_rate",              :default => "0"
+    t.string   "tran_rate",                 :default => "0"
+    t.string   "other_rate",                :default => "0"
+    t.string   "is_approved",  :limit => 1, :default => "n"
+    t.datetime "approved_at"
   end
 
   create_table "users", :force => true do |t|

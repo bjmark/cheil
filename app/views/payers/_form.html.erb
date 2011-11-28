@@ -1,0 +1,23 @@
+<%= form_for(@payer) do |f| %>
+  <% if @payer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@payer.errors.count, "error") %> prohibited this payer from being saved:</h2>
+
+      <ul>
+        <% @payer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+    <%= link_to '取消', payers_path %>
+  </div>
+<% end %>

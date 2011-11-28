@@ -1,6 +1,10 @@
 # encoding: utf-8
 Cheil::Application.routes.draw do
 
+  resources :payments
+
+  resources :payers
+
   resource :session , :only=>[:new,:create,:destroy]
   
   resources :attaches do
@@ -23,6 +27,8 @@ Cheil::Application.routes.draw do
     member do
       get :edit_rate
       put :update_rate
+      put :approve
+      put :unapprove
     end
   end
 

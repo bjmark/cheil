@@ -6,7 +6,8 @@ class Item < ActiveRecord::Base
   #it has a parent if parent_id > 0
   #it has no parent if parent_id ==0
 
-  
+  scope :checked, where(:checked=>'y')
+
   def total
     a1 = quantity.to_f * price.to_f
     a2 = a1.to_i 

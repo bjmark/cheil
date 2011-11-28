@@ -4,5 +4,11 @@
 %>
 <br/>
 <%= link_to '新建评论', new_comment_path(:solution_id=>solution.id)%>
-<%
-  #link_to '确认', new_attach_path(:solution_id=>solution.id)%>
+|
+<%unless solution.approved?%>
+  <%=link_to '确认执行', approve_solution_path(solution),:confirm=>'确定吗?',:method=>:put%>
+<%else%>
+  确认时间:<%=short_d(solution.approved_at)%>
+  &nbsp;  
+  <%=link_to '取消确认', unapprove_solution_path(solution),:confirm=>'确定吗?',:method=>:put%>
+<%end%>

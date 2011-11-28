@@ -57,4 +57,9 @@
 #rails g kaminari:views google 
 #rails g kaminari:views github 
 
-rails g migration add_rate_to_solutions
+#rails g migration add_rate_to_solutions
+#rails generate scaffold payer name:string
+
+#rails g migration add_approved_to_solutions
+
+rails g scaffold payment solution_id:integer payer_id:integer org_id:integer amount:string pay_date:date note:string
