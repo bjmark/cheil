@@ -1,5 +1,6 @@
 #encoding=utf-8
 class CheilSolution < Solution
+
   def check_read_right(_org_id)
     can_read_by?(_org_id) or raise SecurityError
   end
@@ -164,18 +165,22 @@ class CheilSolution < Solution
     brief.vendor_solutions.each do |e|
       amount = 0
       paid = 0
+      payments.each{|r| paid += r.amount if r.org_id == e.org_id }
+
       %w{design product tran other}.each do |k|
         amount_k = 0
         e.send("#{k}s").checked.each{|i| amount_k += i.total}
         amount += amount_k * (1 + e.send("#{k}_rate").to_f)
       end
       if amount > 0
-        lst << {:name=>e.org.name,:amount=>amount,:paid=>paid,:balance=>amount-paid}
+        lst << {:org=>e.org,:amount=>amount,:paid=>paid,:balance=>amount-paid}
       end
     end
     
     amount = 0
     paid = 0
+    
+    payments.each{|r| paid += r.amount if r.org_id = org_id}
 
     %w{design product tran other}.each do |k|
       amount_k = 0
@@ -183,8 +188,9 @@ class CheilSolution < Solution
       amount += amount_k * (1 + send("#{k}_rate").to_f)
     end
 
-    lst << {:name=>org.name,:amount=>amount,:paid=>paid,:balance=>amount-paid}
-
+    if amount > 0
+      lst << {:org=>org,:amount=>amount,:paid=>paid,:balance=>amount-paid}
+    end
     return lst
   end
 end

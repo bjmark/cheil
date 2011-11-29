@@ -62,4 +62,6 @@
 
 #rails g migration add_approved_to_solutions
 
-rails g scaffold payment solution_id:integer payer_id:integer org_id:integer amount:string pay_date:date note:string
+#rails g scaffold payment solution_id:integer payer_id:integer org_id:integer amount:string pay_date:date note:string
+
+rails g migration remove_org_id_from_payment

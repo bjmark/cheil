@@ -1,6 +1,2 @@
-<h1>Editing payment</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @payment %> |
-<%= link_to 'Back', payments_path %>
+<%=render 'share/block',:title=>'修改付款记录',
+  :content=>{:partial=>'form'}%>

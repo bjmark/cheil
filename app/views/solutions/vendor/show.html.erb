@@ -16,6 +16,12 @@
     :locals=>{:solution=>@solution,:total=>@solution.total}
 } unless @solution.items.empty?%>
 
+<%=render 'share/block',
+  :title=>'付款',
+  :content=>{:partial=>'solutions/vendor/payment/show'
+} if @solution.brief.cheil_solution.approved?%>
+
+
 <%=comments(@solution)%>
 
 

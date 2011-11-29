@@ -1,4 +1,6 @@
 class PaymentsController < ApplicationController
+  before_filter :cur_user 
+
   # GET /payments
   # GET /payments.json
   def index
@@ -25,6 +27,8 @@ class PaymentsController < ApplicationController
   # GET /payments/new.json
   def new
     @payment = Payment.new
+    @payment.solution_id = params[:solution_id]
+    @payment.org_id = params[:org_id]
 
     respond_to do |format|
       format.html # new.html.erb
@@ -42,14 +46,11 @@ class PaymentsController < ApplicationController
   def create
     @payment = Payment.new(params[:payment])
 
-    respond_to do |format|
-      if @payment.save
-        format.html { redirect_to @payment, notice: 'Payment was successfully created.' }
-        format.json { render json: @payment, status: :created, location: @payment }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @payment.errors, status: :unprocessable_entity }
-      end
+    if @payment.save
+      redirect_to solution_path(@payment.solution_id), 
+        notice: 'Payment was successfully created.' 
+    else
+      render action: "new" 
     end
   end
 
@@ -58,26 +59,18 @@ class PaymentsController < ApplicationController
   def update
     @payment = Payment.find(params[:id])
 
-    respond_to do |format|
-      if @payment.update_attributes(params[:payment])
-        format.html { redirect_to @payment, notice: 'Payment was successfully updated.' }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @payment.errors, status: :unprocessable_entity }
-      end
+    if @payment.update_attributes(params[:payment])
+      redirect_to solution_path(@payment.solution_id), notice: 'Payment was successfully updated.' 
+    else
+      render action: "edit" 
     end
   end
 
   # DELETE /payments/1
-  # DELETE /payments/1.json
   def destroy
     @payment = Payment.find(params[:id])
     @payment.destroy
 
-    respond_to do |format|
-      format.html { redirect_to payments_url }
-      format.json { head :ok }
-    end
+    redirect_to solution_path(@payment.solution_id) 
   end
 end

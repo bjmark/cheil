@@ -24,8 +24,8 @@
 %>
 <%=render 'share/block',
   :title=>'付款',
-  :content=>{:partial=>'solutions/cheil/cheil_solution/payment/show',
-    :locals=>{:solution=>@solution}} if @solution.approved?%>
+  :content=>{:partial=>'solutions/cheil/cheil_solution/payment/show'
+} if @solution.approved?%>
 
 <%=comments(@solution)%>
 

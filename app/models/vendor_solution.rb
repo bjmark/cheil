@@ -54,5 +54,17 @@ class VendorSolution < Solution
     return total_hash
   end
 
+  def money
+    amount = 0
+    paid = 0
+    brief.cheil_solution.payments.where(:org_id=>org_id).each{|r| paid += r.amount}
+
+    %w{design product tran other}.each do |k|
+      amount_k = 0
+      send("#{k}s").checked.each{|i| amount_k += i.total}
+      amount += amount_k * (1 + send("#{k}_rate").to_f)
+    end
+    {:amount=>amount,:paid=>paid,:balance=>amount-paid}
+  end
 end
 

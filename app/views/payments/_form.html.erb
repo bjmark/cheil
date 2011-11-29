@@ -1,4 +1,4 @@
-<%= form_for(@payment) do |f| %>
+<%= form_for(@payment,:html=>{:class=>'form'}) do |f| %>
   <% if @payment.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@payment.errors.count, "error") %> prohibited this payment from being saved:</h2>
@@ -11,31 +11,26 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :solution_id %><br />
-    <%= f.number_field :solution_id %>
+  <%= f.hidden_field :solution_id %>
+  <div class="group">
+    <%= f.label :payer_id,'支付者',:class=>'label' %>
+    <%= select('payment','payer_id',Payer.all.collect{|p| [p.name,p.id]})%>
   </div>
-  <div class="field">
-    <%= f.label :payer_id %><br />
-    <%= f.number_field :payer_id %>
+    <%= f.hidden_field :org_id %>
+  <div class="group">
+    <%= f.label :amount,'金额',:class=>'label' %>
+    <%= f.text_field :amount,:class=>'text_field' %>
   </div>
-  <div class="field">
-    <%= f.label :org_id %><br />
-    <%= f.number_field :org_id %>
+  <div class="group">
+    <%= f.label :pay_date,'支付日期',:class=>'label' %>
+    <%= f.date_select :pay_date,:use_month_numbers => true %>
   </div>
-  <div class="field">
-    <%= f.label :amount %><br />
-    <%= f.text_field :amount %>
-  </div>
-  <div class="field">
-    <%= f.label :pay_date %><br />
-    <%= f.date_select :pay_date %>
-  </div>
-  <div class="field">
-    <%= f.label :note %><br />
-    <%= f.text_field :note %>
+  <div class="group">
+    <%= f.label :note,'说明',:class=>'label' %>
+    <%= f.text_field :note,:class=>'text_field' %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit '提交' %>
+    <%= link_to '取消',solution_path(@payment.solution_id) %>
   </div>
 <% end %>

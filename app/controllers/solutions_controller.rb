@@ -16,15 +16,23 @@ class SolutionsController < ApplicationController
     flash[:dest] = solution_path(@solution)
     case @cur_user.org
     when RpmOrg
+      @payments = Payment.where(:solution_id=>@solution.id).all
       render 'solutions/rpm/show'
     when CheilOrg
       case
       when @solution.instance_of?(VendorSolution) 
         render 'solutions/cheil/vendor_solution/show'
       when @solution.instance_of?(CheilSolution)
+        @payments = Payment.where(:solution_id=>@solution.id).all
+        #payment.org_id get from @solution.org_id in erb,i think it is a bug
+        #@payments = @solution.payments
         render 'solutions/cheil/cheil_solution/show'
       end
     when VendorOrg
+      @money = @solution.money
+      @payments = Payment.where(
+        :solution_id=>@solution.brief.cheil_solution.id,
+        :org_id=>@cur_user.org_id)
       render 'solutions/vendor/show'
     end
 
@@ -69,7 +77,7 @@ class SolutionsController < ApplicationController
   def approve
     solution = Solution.find(params[:id])
     solution.check_approve_right(@cur_user.org_id)
-    solution.is_approved = 'y'
+    solution.is_approved = ((block_given? and yield) or 'y')
     solution.approved_at = Time.now
     solution.save
 
@@ -77,13 +85,7 @@ class SolutionsController < ApplicationController
   end
 
   def unapprove
-    solution = Solution.find(params[:id])
-    solution.check_approve_right(@cur_user.org_id)
-    solution.is_approved = 'n'
-    solution.approved_at = Time.now
-    solution.save
-
-    redirect_to solution_path(solution)
+    approve{'n'}
   end
 
 end

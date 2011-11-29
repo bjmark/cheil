@@ -8,5 +8,5 @@
   :content=>{:partial=>'show',:locals=>{:brief=>@brief}}
 %>
 <%=attaches(@brief)%>
-<%=brief_items(@brief)%>
+<%=brief_items(@brief) unless (@brief.designs.empty? and @brief.products.empty?)%>
 

@@ -111,12 +111,12 @@ ActiveRecord::Schema.define(:version => 20111128115120) do
   create_table "payments", :force => true do |t|
     t.integer  "solution_id"
     t.integer  "payer_id"
-    t.integer  "org_id"
     t.string   "amount"
     t.date     "pay_date"
     t.string   "note"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "org_id"
   end
 
   create_table "solutions", :force => true do |t|

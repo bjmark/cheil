@@ -6,6 +6,8 @@ class Solution < ActiveRecord::Base
   has_many :comments,
     :class_name=>'SolutionComment',:foreign_key=>'fk_id',:order=>'id desc'
 
+  has_many :payments,:order=>'org_id'
+
   def check_approve_right(_org_id)
     raise SecurityError
   end
