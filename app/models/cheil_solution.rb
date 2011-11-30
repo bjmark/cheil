@@ -180,7 +180,7 @@ class CheilSolution < Solution
     amount = 0
     paid = 0
     
-    payments.each{|r| paid += r.amount if r.org_id = org_id}
+    payments.each{|r| paid += r.amount if r.org_id == org_id}
 
     %w{design product tran other}.each do |k|
       amount_k = 0
