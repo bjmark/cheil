@@ -1,11 +1,10 @@
+#encoding=utf-8
 class User < ActiveRecord::Base
-  #belongs_to :rpm_org, :foreign_key=>:org_id
-  #belongs_to :cheil_org, :foreign_key=>:org_id
-  #belongs_to :vendor_org, :foreign_key=>:org_id
   belongs_to :org
 
-  validates :name, :uniqueness => true
-  validates :name, :presence => true
+  validates_presence_of :name , :message=>'不可为空'
+  validates_presence_of :password , :on=>:create,:message=>'不可为空'
+  validates_uniqueness_of :name , :message=>'已存在'
 
   def password
     ''

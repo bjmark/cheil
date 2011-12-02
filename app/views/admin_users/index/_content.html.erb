@@ -1,6 +1,6 @@
 <%
-  #partial=>_content
-#locals=>brief,back
+  #admin_users/index/_content
+#brief,back
 %>
 <table class="table">
   <tbody>
@@ -15,11 +15,11 @@
           <%= e.name  %>
         </td>
         <td class="last">
-          <%= link_to 'Show', e %>
+          <%= link_to '显示', e %>
           |
-          <%= link_to 'Edit', edit_admin_user_path(e) %>
+          <%= link_to '修改', edit_admin_user_path(e) %>
           |
-          <%= link_to 'Destroy', e, confirm: 'Are you sure?', method: :delete %>
+          <%= link_to '删除', e, confirm: '确定删除该用户吗?', method: :delete %>
         </td>
       </tr>
     <%end%>
