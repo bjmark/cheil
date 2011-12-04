@@ -60,8 +60,7 @@ class VendorOrgsController < ApplicationController
     if @vendor_org.save
       redirect_to vendor_orgs_path, notice: 'Vendor org was successfully created.' 
     else
-      @title = '新建RPM'
-      render 'share/new_edit'
+      render :action => :new
     end
   end
 

@@ -1,13 +1,13 @@
 <%
-  #partial=>_content
-#locals=>brief,back
+  #rpm_orgs
+#rpm_orgs
 %>
 <table class="table">
   <tbody>
     <tr>
-      <th>Name</th>
+      <th>名称</th>
       <th>Cheil</th>
-      <th>Users</th>
+      <th>用户</th>
       <th></th>
     </tr>
 
@@ -19,11 +19,11 @@
             <%= link_to e.name,user_path(e) %>
           <%end%> </td>
         <td class="last">
-          <%= link_to 'Edit', edit_rpm_org_path(r) %>
+          <%= link_to '修改', edit_rpm_org_path(r) %>
           |
-          <%= link_to 'Destroy', r, confirm: 'Are you sure?', method: :delete %>
+          <%= link_to '删除', r, confirm: '确定删除吗?', method: :delete %>
           |
-          <%= link_to 'Create user', new_user_path(:org_id=>r.id) %>
+          <%= link_to '新建用户', new_user_path(:org_id=>r.id) %>
         </td>
       </tr>
     <% end %>

@@ -7,11 +7,11 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :name , :message=>'已存在'
 
   def password
-    ''
+    @password
   end
 
   def password=(s)
-    return if s.blank?
+    return if (@password = s).blank?
     self.salt = self.object_id.to_s + rand.to_s
     self.hashed_password = User.encrypt_password(s, self.salt)
   end

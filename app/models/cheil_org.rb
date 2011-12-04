@@ -1,7 +1,7 @@
 #encoding=utf-8
 class CheilOrg < Org
-  validates :name, :uniqueness => true
-  validates :name , :presence => true
+  validates_uniqueness_of :name, :message=>'已存在'
+
   belongs_to :rpm_org
   has_many :briefs , :foreign_key => :cheil_id , :order => 'id DESC'
 
@@ -15,5 +15,9 @@ class CheilOrg < Org
 
   def nav_links
     [['需求列表', '/briefs']]
+  end
+
+  def self.name2
+    'Cheil'
   end
 end

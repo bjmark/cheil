@@ -1,20 +1,30 @@
 <%
-  #partial=>_content
-#locals=>brief,back
+  #users/_content
+#user
 %>
+
 <p>
-  <b>Name:</b>
-  <%= user.name %>
+<b><%= user.org.class.name2%>:</b>
+<%= user.org.name %>
+</p>
+<p>
+<b>用户名:</b>
+<%= user.name %>
 </p>
 
 <p>
-  <b>Email:</b>
-  <%= user.email %>
+<b>用户名:</b>
+<%= user.name %>
 </p>
 
 <p>
-  <b>Phone:</b>
-  <%= user.phone %>
+<b>Email:</b>
+<%= user.email %>
+</p>
+
+<p>
+<b>电话:</b>
+<%= user.phone %>
 </p>
 
 <%= link_to '修改', edit_user_path(user) %>

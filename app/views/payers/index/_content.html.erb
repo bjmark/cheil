@@ -15,9 +15,9 @@
           <%= e.name  %>
         </td>
         <td class="last">
-          <%= link_to 'Edit', edit_payer_path(e) %>
+          <%= link_to '修改', edit_payer_path(e) %>
           |
-          <%= link_to 'Destroy', e, confirm: 'Are you sure?', method: :delete %>
+          <%= link_to '删除', e, confirm: '确定删除吗?', method: :delete %>
         </td>
       </tr>
     <%end%>

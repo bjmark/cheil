@@ -16,12 +16,12 @@
     <%= f.text_field :phone,:class=>'text_field' %>
   </div>
 
-  <div class="group">
+  <div class="group navform wat-cf">
     <button class="button" type="submit">
-      <img src="images/icons/tick.png" alt="Save" />
       提交
     </button>
-    <%= link_to '取消', @back %>
+    <span class="text_button_padding">或</span>
+    <%= link_to '取消', @back,:class=>'text_button_padding link_button' %>
   </div>
 <% end %>
 

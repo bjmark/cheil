@@ -1,5 +1,7 @@
 #encoding=utf-8
 class VendorOrg < Org 
+  validates_uniqueness_of :name , :message => '已存在'
+
   def self.nav_partial
     'share/vendor_menu'
   end
@@ -10,6 +12,10 @@ class VendorOrg < Org
 
   def nav_links
     [['需求列表', '/briefs']]
+  end
+
+  def self.name2
+    'Vendor'
   end
 
   def briefs
