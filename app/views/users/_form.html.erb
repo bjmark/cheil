@@ -1,6 +1,6 @@
 <%= form_for(@user,:html=>{:class=>'form'}) do |f| %>
   <div class="group">
-    <label class="label"><%=@user.org.class.name2%>:<%=@user.org.name%></label>
+    <label class="label"><%=@user.org.class.type_name%>:<%=@user.org.name%></label>
   </div>
   <div class="group">
     <%= f.label :name ,'用户名',:class=>'label' %>

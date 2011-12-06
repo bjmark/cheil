@@ -8,10 +8,6 @@ class RpmOrg < Org
   has_one :cheil_org , :dependent => :destroy 
   has_many :briefs , :foreign_key => :rpm_id , :order => 'id DESC'
 
-  def self.name2
-    'RPM'
-  end
-
   def check_right(model,action)
     begin
       break unless OP[model]

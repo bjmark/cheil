@@ -5,10 +5,9 @@ class ApplicationController < ActionController::Base
   def cur_user
     (redirect_to new_session_path and return) unless session[:user_id]
     @cur_user = User.find(session[:user_id])
-    bread_push!(request.fullpath)
     @sidebar = ['share/nav','share/cur_user']
   end
-
+=begin
   def bread
     (session[:bread] or '').split(':')
   end
@@ -48,7 +47,7 @@ class ApplicationController < ActionController::Base
   def bread_pre
     bread[bread.length-2]
   end
-
+=end
   def invalid_op
     raise SecurityError
   end

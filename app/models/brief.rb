@@ -1,3 +1,4 @@
+#encoding=utf-8
 class Brief < ActiveRecord::Base
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
@@ -12,7 +13,7 @@ class Brief < ActiveRecord::Base
 
   has_many :attaches,:class_name=>'BriefAttach',:foreign_key => 'fk_id'
 
-  validates :name, :presence => true
+  validates_presence_of :name, :message=>'不可为空'
 
   scope :search_name, lambda {|word| word.blank? ? where('') : where('name like ?',"%#{word}%")}
   scope :deadline_great_than, lambda {|d| d.nil? ? where('') : where('deadline > ?',d)}

@@ -17,7 +17,4 @@ class CheilOrg < Org
     [['需求列表', '/briefs']]
   end
 
-  def self.name2
-    'Cheil'
-  end
 end

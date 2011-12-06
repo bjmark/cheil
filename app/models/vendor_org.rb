@@ -14,10 +14,6 @@ class VendorOrg < Org
     [['需求列表', '/briefs']]
   end
 
-  def self.name2
-    'Vendor'
-  end
-
   def briefs
     brief_ids = solutions.collect{|e| e.brief_id}
     Brief.where(:id=>brief_ids).order('id DESC')

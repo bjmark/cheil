@@ -99,6 +99,7 @@ class BriefsController < ApplicationController
     if @brief.update_attributes(params[:brief])
       redirect_to @brief, notice: 'Brief was successfully updated.' 
     else
+      @back = brief_path(@brief)
       render action: "edit" 
     end
   end

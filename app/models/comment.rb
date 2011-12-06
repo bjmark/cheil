@@ -1,4 +1,7 @@
+#encoding=utf-8
 class Comment < ActiveRecord::Base
+  validates_presence_of :content,:message=>'不可为空'
+
   belongs_to :user
 
   def check_destroy_right(a_user)

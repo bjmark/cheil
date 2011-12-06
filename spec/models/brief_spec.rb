@@ -1,3 +1,4 @@
+#encoding=utf-8
 require 'spec_helper'
 
 describe Brief do
@@ -6,75 +7,106 @@ describe Brief do
   let(:rpm_org) { RpmOrg.create(:name=>'rpm')}
   let(:cheil_org) { CheilOrg.create(:name=>'cheil')}
   let(:vendor_org) { VendorOrg.create(:name=>'cheil')}
-  let(:user) { User.create(:name=>'user') }
+  let(:user) { User.create(:name=>'user',:password=>'123') }
   let(:brief_item) { BriefItem.create }
-  let(:brief_comment1) { BriefComment.create }
-  let(:brief_comment2) { BriefComment.create }
+  let(:brief_comment1) { BriefComment.create(:content=>'abc') }
+  let(:brief_comment2) { BriefComment.create(:content=>'efg') }
   let(:cheil_solution) { CheilSolution.create }
   let(:vendor_solution) { VendorSolution.create }
   let(:brief_attach) { BriefAttach.create }
 
-  describe 'belongs_to :rpm_org,:foreign_key => :rpm_id' do 
-    it 'should set rpm_id' do
-      brief.rpm_org = rpm_org
-      brief.rpm_id.should == rpm_org.id
-    end
-
-    specify { brief.rpm_org.should be_nil}
-  end
-
-  describe 'belongs_to :cheil_org,:foreign_key => :cheil_id' do 
-    specify { brief.cheil_org.should be_nil}
-
-    it 'should set cheil_id' do
-      brief.cheil_org = cheil_org
-      brief.cheil_id.should == cheil_org.id
+  
+  # "validates_presence_of :name, :message=>'不可为空'"  
+  describe "brief name is blank" do 
+    it 'save should fail' do
+      brief = Brief.new
+      brief.name = ''
+      brief.save
+      brief.should have(1).errors_on(:name)
     end
   end
 
-  describe 'belongs_to :user' do
-    specify { brief.user.should be_nil}
-
-    it 'should set user_id' do
-      brief.user = user
-      brief.user_id.should == user.id
+  describe "brief name is 'abc'" do
+    it 'save should return true' do
+      brief = Brief.new
+      brief.name = 'abc'
+      brief.save.should be_true
     end
-
   end
 
-  describe "has_many :items,:class_name=>'BriefItem',:foreign_key=>'fk_id'" do
-    specify { brief.items.should be_empty}
-    
+  # 'belongs_to :rpm_org,:foreign_key => :rpm_id' do 
+  describe 'brief.rpm_id = rpm_org.id' do 
+    specify{
+      brief.rpm_id = rpm_org.id
+      brief.rpm_org.should == rpm_org
+    }
+  end
+
+  # 'belongs_to :cheil_org,:foreign_key => :cheil_id'  
+  describe 'brief.cheil_id = cheil_org.id' do 
+    specify{
+      brief.cheil_id = cheil_org.id
+      brief.cheil_org.should == cheil_org 
+    }
+  end
+
+  # 'belongs_to :user' 
+  describe 'brief.user_id = user.id' do
+    specify{
+      brief.user_id = user.id
+      brief.user.should == user
+    }
+  end
+
+  # "has_many :items,:class_name=>'BriefItem',:foreign_key=>'fk_id'" 
+  describe "brief.items << Item.new" do
     it 'should raise a execption' do
       expect {
         brief.items << Item.new
       }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
     end
-
-    it 'have one item' do
-      brief.items << brief_item
-      brief.items.length.should == 1 
-      brief_item.fk_id.should == brief.id
-    end
   end
 
-  describe 'has_many :solutions' do 
-    before do 
-      brief.solutions << cheil_solution
-      brief.solutions << vendor_solution
-    end
-
-    it 'should have two solutions' do
-      brief.solutions.length.should == 2
-    end
-
-    it 'should have one vendor_solutions' do
-      brief.vendor_solutions.length.should == 1
-    end
-
-    specify {
-      brief.cheil_solution.should == cheil_solution
+  describe "brief.items << brief_item " do
+    specify{
+      brief.items.empty?.should be_true
+      brief.items << brief_item
+      brief.items.empty?.should be_false 
+      brief_item.fk_id.should == brief.id
     }
+  end
+
+  # 'has_many :solutions'  
+  describe 'brief.solution << cheil_solution' do
+    specify{
+      brief.solutions << cheil_solution
+      brief.solutions.length.should == 1
+    }
+  end
+
+  describe 'brief.solution << vendor_solution' do
+    specify{
+      brief.solutions << vendor_solution
+      brief.solutions.length.should == 1
+    }
+  end
+
+  #has_many :vendor_solutions
+  describe "brief.vendor_solutions << vendor_solution" do
+    specify{
+      brief.vendor_solutions << vendor_solution
+      brief.vendor_solutions.length.should == 1
+      brief.solutions.length.should == 1
+      brief.cheil_solution.should be_nil
+    }
+  end
+
+  #has_one :cheil_solution
+  describe "brief.create_cheil_solution" do
+    specify{
+      c = brief.create_cheil_solution
+      brief.cheil_solution.should == c 
+    } 
   end
 
   describe "has_many :comments,:class_name=>'BriefComment',:foreign_key=>'fk_id',:order=>'id desc'" do 
@@ -142,7 +174,7 @@ describe Brief do
       brief.send_to_cheil!
     }
 
-   specify {
+    specify {
       brief.owned_by?(rpm_org.id).should be_true
     }
 
@@ -155,7 +187,7 @@ describe Brief do
       brief.owned_by?(cheil_org.id).should be_false
     }
   end
-   
+
   describe '#received_by?' do
     before {
       rpm_org.cheil_org = cheil_org
@@ -187,5 +219,5 @@ describe Brief do
       }.to raise_exception(SecurityError)
     end
 =end
- 
+
 end
