@@ -6,7 +6,7 @@ describe Brief do
   let(:brief) { Brief.create(:name=>'brief') }
   let(:rpm_org) { RpmOrg.create(:name=>'rpm')}
   let(:cheil_org) { CheilOrg.create(:name=>'cheil')}
-  let(:vendor_org) { VendorOrg.create(:name=>'cheil')}
+  let(:vendor_org) { VendorOrg.create(:name=>'vendor')}
   let(:user) { User.create(:name=>'user',:password=>'123') }
   let(:brief_item) { BriefItem.create }
   let(:brief_comment1) { BriefComment.create(:content=>'abc') }
@@ -109,20 +109,22 @@ describe Brief do
     } 
   end
 
-  describe "has_many :comments,:class_name=>'BriefComment',:foreign_key=>'fk_id',:order=>'id desc'" do 
-    it 'brief.comments order desc' do
+  # "has_many :comments,:class_name=>'BriefComment',:foreign_key=>'fk_id',:order=>'id desc'"  
+  describe "brief.comments order desc" do 
+    specify{
       brief.comments << brief_comment1
       brief.comments << brief_comment2
       brief.comments.first.should eql(brief_comment2)
-    end
+    }
   end
 
-  describe "has_many :attaches,:class_name=>'BriefAttach',:foreign_key => 'fk_id'" do
-    it 'should have one brief_attach' do
+  # "has_many :attaches,:class_name=>'BriefAttach',:foreign_key => 'fk_id'" 
+  describe "should have one brief_attach" do
+    specify{
       brief.attaches << brief_attach
       Attach.create(:fk_id=>brief.id)
       brief.attaches.length.should == 1
-    end
+    }
   end
 
   describe '#designs' do
@@ -167,21 +169,20 @@ describe Brief do
     end
   end
 
+  def send_brief
+    rpm_org.cheil_org = cheil_org
+    brief.rpm_org = rpm_org
+    brief.send_to_cheil!
+  end
+
   describe '#owned_by?' do
     before {
-      rpm_org.cheil_org = cheil_org
-      brief.rpm_org = rpm_org
-      brief.send_to_cheil!
+      send_brief
     }
 
     specify {
       brief.owned_by?(rpm_org.id).should be_true
     }
-
-    it 'should owned by the user' do
-      user.org = rpm_org
-      brief.owned_by?(user.org_id).should be_true
-    end
 
     specify {
       brief.owned_by?(cheil_org.id).should be_false
@@ -190,19 +191,47 @@ describe Brief do
 
   describe '#received_by?' do
     before {
-      rpm_org.cheil_org = cheil_org
-      brief.rpm_org = rpm_org
-      brief.send_to_cheil!
+      send_brief
     }
 
     specify {
       brief.received_by?(cheil_org.id).should be_true
     }
+  end
 
-    specify {
-      user.org = cheil_org
-      brief.received_by?(user.org_id).should be_true
+  describe 'check_comment_right(org_id) and can_commented_by?(org_id)' do
+    specify{
+      send_brief
+      brief.can_commented_by?(rpm_org.id).should be_true
+      brief.can_commented_by?(cheil_org.id).should be_true
+      brief.can_commented_by?(vendor_org.id).should be_false
+
+      brief.check_comment_right(rpm_org.id).should be_true
+      brief.check_comment_right(cheil_org.id).should be_true
+      expect {
+        brief.check_comment_right(vendor_org.id)
+      }.to raise_exception(SecurityError)
     }
+  end
+
+  describe 'can_read_by?(org_id) and check_read_right(org_id)' do
+    specify{
+      send_brief
+      brief.can_read_by?(rpm_org.id).should be_true
+      brief.can_read_by?(cheil_org.id).should be_true
+      brief.can_read_by?(vendor_org.id).should be_false
+
+      brief.check_read_right(rpm_org.id).should be_true
+      brief.check_read_right(cheil_org.id).should be_true
+      expect {
+        brief.check_read_right(vendor_org.id)
+      }.to raise_exception(SecurityError)
+
+      brief.vendor_solutions << VendorSolution.new(:org_id=>vendor_org.id)
+      brief.can_read_by?(vendor_org.id).should be_true
+      brief.check_read_right(vendor_org.id).should be_true
+    }
+
   end
 
   describe '#consult_by?(g)' do
@@ -211,13 +240,33 @@ describe Brief do
       brief.consult_by?(vendor_org.id).should be_true
     }
   end
+
 =begin
-    it 'should raise a exception' do
-      expect {
-        user.org = CheilOrg.create(:name=>'cheil2')
-        brief.check_comment_right(user)
-      }.to raise_exception(SecurityError)
-    end
+  scope :search_name, lambda {|word| word.blank? ? where('') : where('name like ?',"%#{word}%")}
+  scope :deadline_great_than, lambda {|d| d.nil? ? where('') : where('deadline > ?',d)}
+  scope :deadline_less_than, lambda {|d| d.nil? ? where('') : where('deadline < ?',d)}
+  scope :create_date_great_than, lambda {|d| d.nil? ? where('') : where('created_at > ?',d)}
+  scope :create_date_less_than, lambda {|d| d.nil? ? where('') : where('created_at < ?',d)}
+  scope :update_date_great_than, lambda {|d| d.nil? ? where('') : where('updated_at > ?',d)}
+  scope :update_date_less_than, lambda {|d| d.nil? ? where('') : where('updated_at < ?',d)}
 =end
 
+  describe 'scope' do
+    specify {
+      brief1 = Brief.create(:name=>'brief_西门',:deadline=>5.day.from_now)
+      brief2 = Brief.create(:name=>'brief_装修',:deadline=>10.day.from_now)
+      Brief.search_name('rie').length.should == 2
+      Brief.search_name('西').length.should == 1
+      Brief.search_name('abc').length.should == 0
+      Brief.search_name('').length.should == 2
+
+      Brief.deadline_great_than(6.day.from_now).length.should == 1
+      Brief.deadline_great_than(3.day.from_now).length.should  == 2
+      Brief.deadline_great_than(nil).length.should == 2
+
+      Brief.deadline_less_than(6.day.from_now).length.should == 1
+      Brief.deadline_less_than(3.day.from_now).length.should  == 0
+      Brief.deadline_less_than(nil).length.should == 2
+    }
+  end
 end
