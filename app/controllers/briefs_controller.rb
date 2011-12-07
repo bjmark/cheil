@@ -3,16 +3,18 @@ class BriefsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
-    rpm =[:index,:new,:show,:edit,:create,:update,:destroy,:send]
-    cheil = [:index,:show]
-    vendor = [:index,:show]
+    rpm =[:index,:new,:show,:edit,:create,:update,:destroy,:send_to_cheil,
+      :not_send,:search_cond,:search_res]
+    cheil = [:index,:show,:search_cond,:search_res]
+    vendor = [:index,:show,:search_cond,:search_res]
 
-    case @cur_user.org
-    when RpmOrg then rpm.include?(params[:action].to_sym)
-    when CheilOrg then cheil.include?(params[:action].to_sym)
-    when VendorOrg then vendor.include?(params[:action].to_sym)
-    else  raise SecurityError
-    end
+    ok=case @cur_user.org
+       when RpmOrg then rpm.include?(params[:action].to_sym)
+       when CheilOrg then cheil.include?(params[:action].to_sym)
+       when VendorOrg then vendor.include?(params[:action].to_sym)
+       else false
+       end
+    ok or (raise SecurityError) 
   end
 
   # GET /briefs

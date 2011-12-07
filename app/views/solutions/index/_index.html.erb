@@ -1,6 +1,6 @@
 <%
-  #partial=>briefs/cheil/brief_solution/_content
-#locals=>brief
+  #solutions/index/_index
+#brief
 %>
 <table class="table brief_attaches">
   <tbody>
@@ -23,7 +23,7 @@
             <%=link_to '指派的子项',items_path(:solution_id=>e.id)  %>
             |
             <%= link_to '删除', solution_path(e),
-            :confirm => 'Are you sure?', :method => :delete %>
+            :confirm => '确定删除吗?', :method => :delete %>
           </td>
         </tr>
       <%end%>

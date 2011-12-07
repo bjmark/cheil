@@ -3,16 +3,30 @@ class SolutionsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
+    rpm =[:show]
+    cheil = [:index,:show]
+    vendor = [:show]
+
+    ok=case @cur_user.org
+       when RpmOrg then rpm.include?(params[:action].to_sym)
+       when CheilOrg then cheil.include?(params[:action].to_sym)
+       when VendorOrg then vendor.include?(params[:action].to_sym)
+       else false
+       end
+    ok or (raise SecurityError) 
   end
+
 
   def index
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
+      raise SecurityError unless @brief.received_by?(@cur_user.org_id)
     end
   end
 
   def show
     @solution = Solution.find(params[:id])
+    @solution.check_read_right(@cur_user.org_id)
     flash[:dest] = solution_path(@solution)
     case @cur_user.org
     when RpmOrg
@@ -24,8 +38,6 @@ class SolutionsController < ApplicationController
         render 'solutions/cheil/vendor_solution/show'
       when @solution.instance_of?(CheilSolution)
         @payments = Payment.where(:solution_id=>@solution.id).all
-        #payment.org_id get from @solution.org_id in erb,i think it is a bug
-        #@payments = @solution.payments
         render 'solutions/cheil/cheil_solution/show'
       end
     when VendorOrg
@@ -33,7 +45,7 @@ class SolutionsController < ApplicationController
       @payments = Payment.where(
         :solution_id=>@solution.brief.cheil_solution.id,
         :org_id=>@cur_user.org_id)
-      render 'solutions/vendor/show'
+        render 'solutions/vendor/show'
     end
 
   end
