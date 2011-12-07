@@ -22,7 +22,7 @@ describe BriefsController do
   let(:rpm_org) { RpmOrg.create(:name=>'rpm') }
   let(:cheil_org) { rpm_org.create_cheil_org(:name=>'cheil')}
   let(:vendor_org) {VendorOrg.create(:name=>'vendor')}
-  
+
   let(:rpm_org2) { RpmOrg.create(:name=>'rpm2') }
   let(:cheil_org2) {CheilOrg.create(:name=>'cheil2')}
   let(:vendor_org2) {VendorOrg.create(:name=>'vendor2')}
@@ -35,6 +35,10 @@ describe BriefsController do
   let(:cheil2_user) { cheil_org2.users.create(:name=>'cheil2_user',:password=>'123')}
   let(:vendor2_user) { vendor_org2.users.create(:name=>'vendor2_user',:password=>'123')}
 
+  def set_current_user(user)
+    session[:user_id] = user.id
+  end
+
   describe "GET index" do
     describe "not login" do
       specify{
@@ -43,14 +47,10 @@ describe BriefsController do
       }
     end
 
-    def set_current_user(user)
-      session[:user_id] = user.id
-    end
-
     describe "current user is a rpm_user" do
       specify{
         set_current_user(rpm_user)
-        
+
         brief1 = rpm_org.briefs.create(:name=>'brief1')
         rpm_org2.briefs.create(:name=>'brief2')
 
@@ -95,22 +95,27 @@ describe BriefsController do
 
   end
 
-=begin    
-    it "assigns all briefs as @briefs" do
-      brief = Brief.create! valid_attributes
-      get :index
-      assigns(:briefs).should eq([brief])
-    end
-=end
-=begin
   describe "GET show" do
-    it "assigns the requested brief as @brief" do
-      brief = Brief.create! valid_attributes
-      get :show, :id => brief.id
-      assigns(:brief).should eq(brief)
+    describe "current user is a rpm_user" do
+      specify{
+        set_current_user(rpm_user)
+        brief1 = rpm_org.briefs.create(:name=>'brief1')
+        get 'show',:id=>brief1.id
+        assigns(:brief).should eq(brief1)
+        response.should render_template('briefs/rpm/show')
+      }
+
+     specify{
+        set_current_user(rpm2_user)
+        brief1 = rpm_org.briefs.create(:name=>'brief1')
+        expect { 
+          get 'show',:id=>brief1.id
+        }.to raise_exception(SecurityError)
+      }
     end
   end
 
+=begin
   describe "GET new" do
     it "assigns a new brief as @brief" do
       get :new
