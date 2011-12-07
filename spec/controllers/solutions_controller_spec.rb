@@ -19,6 +19,8 @@ describe SolutionsController do
   let(:cheil2_user) { cheil_org2.users.create(:name=>'cheil2_user',:password=>'123')}
   let(:vendor2_user) { vendor_org2.users.create(:name=>'vendor2_user',:password=>'123')}
 
+  let(:brief) { cheil_org.rpm_org.briefs.create(:name=>'brief') }
+
   def set_current_user(user)
     session[:user_id] = user.id
   end
@@ -27,7 +29,6 @@ describe SolutionsController do
     context 'current user is a rpm_user' do
       specify{
         set_current_user(rpm_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect{
           get :index,:brief_id=>brief.id
         }.to raise_exception(SecurityError)
@@ -37,7 +38,6 @@ describe SolutionsController do
     context 'current user is a vendor_user' do
       specify{
         set_current_user(vendor_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect{
           get :index,:brief_id=>brief.id
         }.to raise_exception(SecurityError)
@@ -47,7 +47,6 @@ describe SolutionsController do
     context 'current user is a bad cheil_user' do
       specify{
         set_current_user(cheil2_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         brief.send_to_cheil!
         expect{
           get :index,:brief_id=>brief.id
@@ -58,7 +57,6 @@ describe SolutionsController do
     context 'current user is a good cheil_user' do
       specify{
         set_current_user(cheil_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         brief.send_to_cheil!
         get :index,:brief_id=>brief.id
         response.should render_template('index')
@@ -69,8 +67,6 @@ describe SolutionsController do
 
   describe "show" do
     context 'a cheil_solution' do
-      let(:brief){ rpm_user.org.briefs.create(:name=>'brief') }
-      
       before do
         brief.send_to_cheil!
       end
@@ -95,9 +91,8 @@ describe SolutionsController do
       context 'a good cheil_user' do
         specify{
           set_current_user(cheil_user)
-          cheil_user.org_id.should == brief.cheil_solution.org_id
-          #get :show,:id=>brief.cheil_solution.id
-          #response.should render_template 'solutions/cheil/cheil_solution/show'
+          get :show,:id=>brief.cheil_solution.id
+          response.should render_template 'solutions/cheil/cheil_solution/show'
         }
       end
     end
