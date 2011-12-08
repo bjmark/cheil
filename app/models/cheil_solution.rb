@@ -20,11 +20,11 @@ class CheilSolution < Solution
   alias :can_edit_by? :owned_by? 
 
 
-  def check_destroy_right(a_user)
+  def check_destroy_right(_org_id)
     raise SecurityError
   end
 
-  def can_del_by?(a_user)
+  def can_del_by?(_org_id)
     false
   end
 

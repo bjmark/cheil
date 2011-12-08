@@ -22,13 +22,8 @@ class VendorSolution < Solution
     brief.received_by?(_org_id)
   end
 
-  def check_destroy_right(a_user)
-    return true if can_del_by?(a_user)
-    raise SecurityError
-  end
-
-  def can_del_by?(a_user)
-    assigned_by?(a_user)
+  def check_destroy_right(_org_id)
+    brief.received_by?(_org_id) or raise SecurityError
   end
 
   def total

@@ -69,6 +69,10 @@ class Brief < ActiveRecord::Base
 
   alias check_destroy_right check_edit_right
 
+  def check_create_solution_right(org_id)
+    received_by?(org_id) or raise SecurityError
+  end
+
   def can_read_by?(org_id)
     can_edit_by?(org_id) or received_by?(org_id) or consult_by?(org_id)
   end

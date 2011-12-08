@@ -3,9 +3,9 @@ class SolutionsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
-    rpm =[:show]
-    cheil = [:index,:show]
-    vendor = [:show]
+    rpm =[:show,:approve,:unapprove]
+    cheil = [:index,:show,:edit_rate,:update_rate,:create,:destroy]
+    vendor = [:show,:edit_rate,:update_rate]
 
     ok=case @cur_user.org
        when RpmOrg then rpm.include?(params[:action].to_sym)
@@ -20,7 +20,8 @@ class SolutionsController < ApplicationController
   def index
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
-      raise SecurityError unless @brief.received_by?(@cur_user.org_id)
+      #raise SecurityError unless @brief.received_by?(@cur_user.org_id)
+      @brief.check_create_solution_right(@cur_user.org_id)
     end
   end
 
@@ -52,10 +53,12 @@ class SolutionsController < ApplicationController
 
   def edit_rate
     @solution = Solution.find(params[:id])
+    @solution.check_edit_right(@cur_user.org_id)
   end
 
   def update_rate
     solution = Solution.find(params[:id])
+    solution.check_edit_right(@cur_user.org_id)
     att = params[:vendor_solution] 
     solution.design_rate = att[:design_rate]
     solution.product_rate = att[:product_rate]
@@ -68,6 +71,8 @@ class SolutionsController < ApplicationController
 
   def create
     brief = Brief.find(params[:brief_id])
+    brief.check_create_solution_right(@cur_user.org_id)
+
     vendor_ids = []
     params.each {|k,v| vendor_ids << v if k=~/vendor\d+/}
     vendor_ids.each do |org_id|
@@ -80,7 +85,7 @@ class SolutionsController < ApplicationController
   def destroy
     s = Solution.find(params[:id])
     brief = s.brief
-    s.check_destroy_right(@cur_user)
+    s.check_destroy_right(@cur_user.org_id)
     s.destroy
 
     redirect_to solutions_path(:brief_id=>brief.id) 

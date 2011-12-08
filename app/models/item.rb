@@ -6,6 +6,8 @@ class Item < ActiveRecord::Base
   #it has a parent if parent_id > 0
   #it has no parent if parent_id ==0
 
+  validates_presence_of :name, :message=>'不可为空'
+
   scope :checked, where(:checked=>'y')
 
   def total

@@ -85,12 +85,13 @@ class ItemsController < ApplicationController
       @item = solution.items.new(params[:solution_item])
       @path = items_path(:solution_id=>solution.id)
       @back = owner_path(@item)
+      @form = 'tran_form'
     end
 
     if @item.save
-      redirect_to @back, notice: 'Item was successfully created.'  and return
+      redirect_to @back, notice: 'Item was successfully created.' 
     else
-      render action: "new"  and return
+      render action: "new" 
     end
   end
 
