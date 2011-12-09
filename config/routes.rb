@@ -15,7 +15,7 @@ Cheil::Application.routes.draw do
     end
   end
 
-  resources :items do
+  resources(:items,:except=>[:show]) do
     member do
       put :check
       put :uncheck
@@ -55,86 +55,6 @@ Cheil::Application.routes.draw do
 
   resources :admin_users
 
-=begin
-  controller :cheil do
-    #brief列表
-    get 'cheil/briefs'=>:briefs,:as=>'cheil_briefs'
-
-    #显示单个brief
-    get 'cheil/briefs/:id'=>:show_brief,:as=>'cheil_show_brief'
-
-    #下载附件
-    get 'cheil/briefs/:brief_id/attaches/:attach_id/download' => :download_brief_attach,
-      :as => 'cheil_download_brief_attach'
-
-    get 'cheil/briefs/:brief_id/comments/new'=>:new_brief_comment,
-      :as=>'cheil_new_brief_comment'
-
-    #创建brief评论
-    post 'cheil/briefs/:brief_id/comments'=>:create_brief_comment,
-      :as=>'cheil_create_brief_comment'
-
-    #删除一条brief评论
-    delete 'cheil/brief/comments/:id' => :destroy_brief_comment,
-      :as=>'cheil_destroy_brief_comment'
-
-    #给brief选择vendor
-    get 'cheil/briefs/:id/vendors'=>:sel_brief_vendor,:as=>'cheil_sel_brief_vendor'
-
-    #给brief指定vendor
-    post 'cheil/briefs/:brief_id/vendors'=>:add_brief_vendor,
-      :as=>'cheil_add_brief_vendor'
-
-    #取消一个指定给brief的vendor
-    delete 'cheil/briefs/:brief_id/vendors/:vendor_id' => :del_brief_vendor,
-      :as=>'cheil_del_brief_vendor'
-
-    #显示brief子项目，指派给指定vendor
-    get 'cheil/briefs/:brief_id/vendors/:vendor_id/items'=>:brief_vendor_items,
-      :as=>'cheil_brief_vendor_items'
-
-    #指派一条item给vendor
-    post 'cheil/briefs/:brief_id/vendors/:vendor_id/items/:item_id'=>:brief_vendor_add_item,
-      :as=>'cheil_brief_vendor_add_item'
-
-    #取消一条指派给vendor的item
-    delete 'cheil/briefs/:brief_id/vendors/:vendor_id/items/:item_id'=>:brief_vendor_del_item,
-      :as=>'cheil_brief_vendor_del_item'
-
-    #显示某个brief的某个vendor的方案
-    get 'cheil/briefs/:brief_id/vendors/:vendor_id/solution'=>:brief_vendor_solution,
-      :as=>'cheil_brief_vendor_solution'
-  end
-
-  controller :vendor do
-    #brief列表
-    get 'vendor/briefs'=>:briefs,:as=>'vendor_briefs'
-
-    #显示单个brief
-    get 'vendor/briefs/:id'=>:show_brief,:as=>'vendor_show_brief'
-
-    get 'vendor/briefs/:brief_id/items/:item_id/price/edit' =>:item_edit_price,
-      :as=>'vendor_item_edit_price'
-
-    put 'vendor/briefs/:brief_id/items/:item_id/price/update' =>:item_update_price,
-      :as=>'vendor_item_update_price'
-
-    get 'vendor/briefs/:brief_id/items/new/(:kind)' => :item_new,
-      :as=>'vendor_item_new'
-
-    get 'vendor/briefs/:brief_id/items/:item_id/edit' => :item_edit,
-      :as=>'vendor_item_edit'
-
-    put 'vendor/briefs/:brief_id/items/:item_id' => :item_update,
-      :as=>'vendor_item_update'
-
-    delete 'vendor/briefs/:brief_id/items/:item_id' => :item_del,
-      :as=>'vendor_item_del'
-
-    post 'vendor/briefs/:brief_id/items/(:kind)' => :item_create,
-      :as=>'vendor_item_create'
-  end
-=end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

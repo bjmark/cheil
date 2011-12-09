@@ -21,9 +21,6 @@ class Item < ActiveRecord::Base
     checked == 'y'
   end
 
-  def check_edit_right(a_user)
-  end
-
   def belongs_to?(a_solution)
     a_solution.items.find{|e| e.id == id or e.parent_id == id}
   end

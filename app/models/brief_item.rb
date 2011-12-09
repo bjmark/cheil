@@ -16,4 +16,8 @@ class BriefItem < Item
     solution.items.find_by_parent_id(self.id) and return
     solution.items.create(:parent_id=>self.id)
   end
+
+  def check_edit_right(_org_id)
+    brief.check_edit_right(_org_id)
+  end
 end

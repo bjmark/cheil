@@ -22,4 +22,7 @@ class SolutionItem < Item
     read_attribute(:kind)
   end
 
+  def check_edit_right(_org_id)
+    solution.check_edit_right(_org_id)
+  end
 end

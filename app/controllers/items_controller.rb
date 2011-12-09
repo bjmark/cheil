@@ -10,7 +10,7 @@ class ItemsController < ApplicationController
       render 'items/index1/index'
     end
   end
-
+  
   def owner_path(item)
     case item
     when BriefItem 
@@ -22,6 +22,7 @@ class ItemsController < ApplicationController
 
   # GET /items/1
   # GET /items/1.json
+=begin
   def show
     @item = Item.find(params[:id])
 
@@ -30,10 +31,10 @@ class ItemsController < ApplicationController
       format.json { render json: @item }
     end
   end
-
+=end
   def new
     case
-    when params[:brief_id]
+    when params[:brief_id] 
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user.org_id)
       @item = BriefItem.new
@@ -48,6 +49,8 @@ class ItemsController < ApplicationController
       @path = items_path(:solution_id=>solution.id)
       @back = solution_path(solution)
       @form = 'tran_form'
+    else
+      raise SecurityError
     end
   end
 
@@ -66,9 +69,13 @@ class ItemsController < ApplicationController
     case
       #add a item to solution
     when (params[:solution_id] and params[:item_id])
-      item = Item.find(params[:item_id])
-      item.add_to_solution(params[:solution_id])
-      redirect_to flash[:dest] and return
+      solution = VendorSolution.find(params[:solution_id])
+      raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
+
+      item = BriefItem.find(params[:item_id])
+      item.add_to_solution(solution)
+      #redirect_to flash[:dest] and return
+      redirect_to items_path(:solution_id=>solution.id) and return
 
       #create a brief_item
     when params[:brief_id]
@@ -86,6 +93,8 @@ class ItemsController < ApplicationController
       @path = items_path(:solution_id=>solution.id)
       @back = owner_path(@item)
       @form = 'tran_form'
+    else
+      raise SecurityError
     end
 
     if @item.save
