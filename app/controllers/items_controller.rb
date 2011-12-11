@@ -6,7 +6,6 @@ class ItemsController < ApplicationController
     if params[:solution_id]
       @solution = Solution.find(params[:solution_id])
       @brief = @solution.brief
-      flash[:dest] = items_path(:solution_id=>@solution.id)
       render 'items/index1/index'
     end
   end
@@ -34,6 +33,7 @@ class ItemsController < ApplicationController
 =end
   def new
     case
+      # new a item for a brief
     when params[:brief_id] 
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user.org_id)
@@ -41,6 +41,7 @@ class ItemsController < ApplicationController
       @item.kind = params[:kind]
       @path = items_path(:brief_id=>brief.id)
       @back = brief_path(brief)
+      # new a item for a solution
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
       solution.check_edit_right(@cur_user.org_id)
@@ -67,15 +68,14 @@ class ItemsController < ApplicationController
 
   def create
     case
-      #add a item to solution
+      #add a brief_item to vendor_solution
     when (params[:solution_id] and params[:item_id])
       solution = VendorSolution.find(params[:solution_id])
       raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
 
       item = BriefItem.find(params[:item_id])
       item.add_to_solution(solution)
-      #redirect_to flash[:dest] and return
-      redirect_to items_path(:solution_id=>solution.id) and return
+      redirect_to(items_path(:solution_id=>solution.id)) and return
 
       #create a brief_item
     when params[:brief_id]
@@ -106,9 +106,10 @@ class ItemsController < ApplicationController
 
   def set_checked(value)
     item = Item.find(params[:id])
+    raise SecurityError unless item.solution.brief.received_by?(@cur_user.org_id)
     item.checked = value
     item.save
-    redirect_to flash[:dest] or solution_path(item.fk_id)
+    redirect_to (flash[:dest] or solution_path(item.fk_id))
   end
 
   def check
@@ -142,15 +143,20 @@ class ItemsController < ApplicationController
 
   def destroy
     case
-    when params[:solution_id]
+    when (params[:id] and params[:solution_id])
+      solution = VendorSolution.find(params[:solution_id])
+      raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
       item = Item.find(params[:id])
       item.del_from_solution(params[:solution_id])
-    else
+      redirect_to(items_path(:solution_id=>solution.id)) and return
+    when params[:id]
       item = Item.find(params[:id])
-      item.check_edit_right(@cur_user)
+      item.check_edit_right(@cur_user.org_id)
       item.destroy
+      redirect_to(owner_path(item)) and return
+    else
+      raise SecurityError
     end
-    redirect_to (flash[:dest] or owner_path(item))
   end
 
 end

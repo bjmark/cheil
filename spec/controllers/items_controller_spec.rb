@@ -1,21 +1,21 @@
 require 'spec_helper'
 
 describe ItemsController do
-  let!(:rpm_org) { RpmOrg.create(:name=>'rpm') }
-  let!(:cheil_org) { rpm_org.create_cheil_org(:name=>'cheil')}
-  let!(:vendor_org) {VendorOrg.create(:name=>'vendor')}
+  let(:rpm_org) { RpmOrg.create(:name=>'rpm') }
+  let(:cheil_org) { rpm_org.create_cheil_org(:name=>'cheil')}
+  let(:vendor_org) {VendorOrg.create(:name=>'vendor')}
 
-  let!(:rpm_org2) { RpmOrg.create(:name=>'rpm2') }
-  let!(:cheil_org2) {CheilOrg.create(:name=>'cheil2')}
-  let!(:vendor_org2) {VendorOrg.create(:name=>'vendor2')}
+  let(:rpm_org2) { RpmOrg.create(:name=>'rpm2') }
+  let(:cheil_org2) {CheilOrg.create(:name=>'cheil2')}
+  let(:vendor_org2) {VendorOrg.create(:name=>'vendor2')}
 
   let!(:rpm_user) { rpm_org.users.create(:name=>'rpm_user',:password=>'123')}
   let!(:cheil_user) { cheil_org.users.create(:name=>'cheil_user',:password=>'123')}
   let!(:vendor_user) { vendor_org.users.create(:name=>'vendor_user',:password=>'123')}
 
-  let!(:rpm2_user) { rpm_org2.users.create(:name=>'rpm2_user',:password=>'123')}
-  let!(:cheil2_user) { cheil_org2.users.create(:name=>'cheil2_user',:password=>'123')}
-  let!(:vendor2_user) { vendor_org2.users.create(:name=>'vendor2_user',:password=>'123')}
+  let(:rpm2_user) { rpm_org2.users.create(:name=>'rpm2_user',:password=>'123')}
+  let(:cheil2_user) { cheil_org2.users.create(:name=>'cheil2_user',:password=>'123')}
+  let(:vendor2_user) { vendor_org2.users.create(:name=>'vendor2_user',:password=>'123')}
 
   let!(:brief){ rpm_user.org.briefs.create(:name=>'brief')}
 
@@ -264,108 +264,199 @@ describe ItemsController do
   end
 
   describe 'update' do
-    context 'brief_item' do
-      specify{
-        set_current_user(rpm_user)
-        item = brief.items.create(:name=>'ddd',:kind=>'design')
-        put :update,:id=>item.id,:brief_item => {:name => 'ppp',:kind => 'product'}
+    context 'a brief_item' do
+      let(:item){ brief.items.create(:name=>'ddd',:kind=>'design') }
 
-        response.should redirect_to(brief_path(item.fk_id))
-        item.reload.name.should == 'ppp'
-      }
+      context 'with the right rpm_user' do
+        context 'and params are valid' do
+          before do
+            set_current_user(rpm_user)
+            put :update,:id=>item.id,:brief_item => {:name => 'ppp',:kind => 'product'}
+          end
 
-      specify{
-        item = brief.items.create(:name=>'ddd',:kind=>'design')
-        set_current_user(rpm2_user)
-        expect{
-          put :update,:id=>item.id,:brief_item => {:name => 'ppp',:kind => 'product'}
-        }.to raise_exception(SecurityError)
-      }
+          it 'should redirect to show brief page' do
+            response.should redirect_to(brief_path(item.fk_id))
+          end
+
+          it 'item name should be changed' do
+            item.reload.name.should == 'ppp'
+          end
+        end
+
+        context 'but params are invalid' do
+          specify{
+            set_current_user(rpm_user)
+            put :update,:id=>item.id,:brief_item => {:name => '',:kind => 'product'}
+            assigns(:item).should have(1).errors_on(:name)
+          }
+        end
+      end
+
+      context 'with the wrong rpm_user2' do
+        specify{
+          set_current_user(rpm2_user)
+          expect{
+            put :update,:id=>item.id,:brief_item => {:name => 'ppp',:kind => 'product'}
+          }.to raise_exception(SecurityError)
+        }
+      end
     end
 
-    context 'solution_item' do
-      specify{
-        brief.send_to_cheil!
-        set_current_user(cheil_user)
-
-        solution = brief.cheil_solution
-        item = solution.items.create(:name=>'ddd',:kind=>'other')
-        put :update,:id => item.id,:solution_item => {:name=>'kkk',:kind=>'other'}
-
-        response.should redirect_to(solution_path(item.fk_id))
-        item.reload.name.should == 'kkk'
-      }
-
-      specify{
-        brief.send_to_cheil!
-        set_current_user(cheil2_user)
-
-        solution = brief.cheil_solution
-        item = solution.items.create(:name=>'ddd',:kind=>'other')
-        expect{
+    context 'a solution_item' do
+      context 'with the right cheil_user' do
+        before do
+          brief.send_to_cheil!
+          set_current_user(cheil_user)
+          solution = brief.cheil_solution
+          item = solution.items.create(:name=>'ddd',:kind=>'other')
           put :update,:id => item.id,:solution_item => {:name=>'kkk',:kind=>'other'}
-        }.to raise_exception(SecurityError)
-      }
+        end
+
+        it 'should redirect to show solution page' do
+          response.should redirect_to(solution_path(assigns(:item).fk_id))
+        end
+
+        it 'item name should be changed' do
+          assigns(:item).name.should == 'kkk'
+        end
+      end
+
+      context 'with the wrong cheil2_user' do
+        specify{
+          brief.send_to_cheil!
+          set_current_user(cheil2_user)
+          solution = brief.cheil_solution
+          item = solution.items.create(:name=>'ddd',:kind=>'other')
+          expect{
+            put :update,:id => item.id,:solution_item => {:name=>'kkk',:kind=>'other'}
+          }.to raise_exception(SecurityError)
+        }
+      end
+    end
+  end
+
+  describe 'delete' do
+    context 'a assigned item from a vendor_solution' do
+      let(:brief_item) { brief.items.create(:name=>'ddd',:kind=>'design') }
+      let(:vendor_solution) { brief.vendor_solutions.create(:org_id=>vendor_user.org_id) }
+      before do
+        brief.send_to_cheil!
+        brief_item.add_to_solution(vendor_solution)
+      end
+      context 'with the right cheil_user' do
+        specify{
+          set_current_user(cheil_user)
+          vendor_solution.items.where(:parent_id=>brief_item).should_not be_empty
+
+          delete :destroy,:id => brief_item.id, :solution_id => vendor_solution.id
+          vendor_solution.items.where(:parent_id=>brief_item).should be_empty
+        }
+      end
+
+      context 'with the wrong cheil2_user' do
+        specify{
+          set_current_user(cheil2_user)
+          expect{
+            delete :destroy,:id => brief_item.id, :solution_id => vendor_solution.id
+          }.to raise_exception(SecurityError)
+        }
+      end
+    end
+
+    context 'a item from brief' do
+      let(:brief_item) { brief.items.create(:name=>'ddd',:kind=>'design') }
+
+      context 'with the right rpm_user' do
+        specify{
+          set_current_user(rpm_user)
+          delete :destroy,:id => brief_item.id
+          brief.items.where(:id=>brief_item.id).should be_empty
+          response.should redirect_to(brief_path(brief))
+        }
+      end
+
+      context 'with the wrong rpm_user' do
+        specify{
+          set_current_user(rpm2_user)
+          expect{
+            delete :destroy,:id => brief_item.id
+          }.to raise_exception(SecurityError)
+        }
+      end
+    end
+
+    context 'a item from chieil_solution' do
+      let(:cheil_solution) { brief.cheil_solution }
+      let(:solution_item) { cheil_solution.items.create(:name=>'trans',:kind=>'tran')}
+      before do
+        brief.send_to_cheil!
+      end
+
+      context 'with the right cheil_user' do
+        specify{
+          set_current_user(cheil_user)
+          delete :destroy,:id => solution_item.id
+          cheil_solution.items.reload.should be_empty
+          response.should redirect_to(solution_path(cheil_solution))
+        }
+      end
+
+      context 'with the wrong cheil_user' do
+        specify{
+          set_current_user(cheil2_user)
+          expect{
+            delete :destroy,:id => solution_item.id
+          }.to raise_exception(SecurityError)
+        }
+      end
+    end
+
+    context 'a item from vendor_solution' do
+      let(:vendor_solution) { brief.vendor_solutions.create(:org_id=>vendor_user.org_id) }
+      let(:solution_item) { vendor_solution.items.create(:name=>'other',:kind=>'other')}
+
+      context 'with the right vendor_user' do
+        specify{
+          set_current_user(vendor_user)
+          delete :destroy,:id => solution_item.id
+          vendor_solution.items.reload.should be_empty
+          response.should redirect_to(solution_path(vendor_solution))
+        }
+      end
+
+      context 'with the wrong vendor_user' do
+        specify{
+          set_current_user(vendor2_user)
+          expect{
+            delete :destroy,:id => solution_item.id
+          }.to raise_exception(SecurityError)
+        }
+      end
+    end
+  end
+
+  context 'check' do
+    context 'a vendor_solution item' do
+      let(:vendor_solution) { brief.vendor_solutions.create(:org_id=>vendor_user.org_id) }
+      let(:solution_item) { vendor_solution.items.create(:name=>'other',:kind=>'other')}
+      before { brief.send_to_cheil! }
+
+      context 'with the right cheil_user' do
+        specify{
+          set_current_user(cheil_user)
+          put :check,:id=>solution_item.id
+          solution_item.reload.checked.should == 'y'
+        }
+      end
+
+      context 'with the wrong cheil2_user' do
+        specify{
+          set_current_user(cheil2_user)
+          expect {
+            put :check,:id=>solution_item.id
+          }.to raise_exception(SecurityError)
+        }
+      end
     end
   end
 end
-=begin
-  describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested item" do
-        item = Item.create! valid_attributes
-        # Assuming there are no other items in the database, this
-        # specifies that the Item created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Item.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => item.id, :item => {'these' => 'params'}
-      end
-
-      it "assigns the requested item as @item" do
-        item = Item.create! valid_attributes
-        put :update, :id => item.id, :item => valid_attributes
-        assigns(:item).should eq(item)
-      end
-
-      it "redirects to the item" do
-        item = Item.create! valid_attributes
-        put :update, :id => item.id, :item => valid_attributes
-        response.should redirect_to(item)
-      end
-    end
-
-    describe "with invalid params" do
-      it "assigns the item as @item" do
-        item = Item.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Item.any_instance.stub(:save).and_return(false)
-        put :update, :id => item.id, :item => {}
-        assigns(:item).should eq(item)
-      end
-
-      it "re-renders the 'edit' template" do
-        item = Item.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Item.any_instance.stub(:save).and_return(false)
-        put :update, :id => item.id, :item => {}
-        response.should render_template("edit")
-      end
-    end
-  end
-
-  describe "DELETE destroy" do
-    it "destroys the requested item" do
-      item = Item.create! valid_attributes
-      expect {
-        delete :destroy, :id => item.id
-      }.to change(Item, :count).by(-1)
-    end
-
-    it "redirects to the items list" do
-      item = Item.create! valid_attributes
-      delete :destroy, :id => item.id
-      response.should redirect_to(items_url)
-    end
-  end
-=end
