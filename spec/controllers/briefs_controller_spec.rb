@@ -188,6 +188,13 @@ describe BriefsController do
           get 'edit',:id=>brief1.id
         }.to raise_exception(SecurityError)
       }
+
+      specify{
+        set_current_user(cheil_user)
+        brief1.send_to_cheil!
+        get 'edit',:id=>brief1.id
+        response.should render_template('edit')
+      }
     end
 
     context "current user is a vendor_user" do
@@ -296,6 +303,13 @@ describe BriefsController do
         expect { 
           put 'update',:id => brief,:brief => valid_attributes 
         }.to raise_exception(SecurityError)
+      }
+
+      specify{
+        set_current_user(cheil_user)
+        brief.send_to_cheil!
+        put 'update',:id => brief,:brief => valid_attributes 
+        response.should redirect_to(brief)
       }
     end
 

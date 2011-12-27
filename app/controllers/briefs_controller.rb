@@ -5,7 +5,7 @@ class BriefsController < ApplicationController
   def check_right
     rpm =[:index,:new,:show,:edit,:create,:update,:destroy,:send_to_cheil,
       :not_send,:search_cond,:search_res]
-    cheil = [:index,:show,:search_cond,:search_res]
+    cheil = [:index,:show,:edit,:update,:search_cond,:search_res]
     vendor = [:index,:show,:search_cond,:search_res]
 
     ok=case @cur_user.org

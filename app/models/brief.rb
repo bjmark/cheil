@@ -78,7 +78,7 @@ class Brief < ActiveRecord::Base
   end
 
   def can_edit_by?(org_id)
-    owned_by?(org_id)
+    owned_by?(org_id) or received_by?(org_id)
   end
 
   def owned_by?(org_id)

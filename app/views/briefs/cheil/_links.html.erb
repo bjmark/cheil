@@ -3,4 +3,6 @@
 #locals=brief
 %>
 <br/>
+<%= link_to '修改', edit_brief_path(brief) %>
+|
 <%= link_to '新建评论', new_comment_path(:brief_id=>brief.id)%>
