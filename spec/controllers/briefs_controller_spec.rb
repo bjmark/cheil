@@ -80,47 +80,59 @@ describe BriefsController do
   end
 
   describe "GET show" do
-    describe "current user is a rpm_user" do
-      specify{
+    #a brief belongs to rpm_org
+    let(:brief1){ rpm_org.briefs.create(:name=>'brief1') }
+
+    context "authorized user" do
+      it "is a rpm_user" do
         set_current_user(rpm_user)
-        brief1 = rpm_org.briefs.create(:name=>'brief1')
+
         get 'show',:id=>brief1.id
         assigns(:brief).should eq(brief1)
         response.should render_template('briefs/rpm/show')
-      }
+      end
 
-     specify{
-        set_current_user(rpm2_user)
-        brief1 = rpm_org.briefs.create(:name=>'brief1')
-        expect { 
-          get 'show',:id=>brief1.id
-        }.to raise_exception(SecurityError)
-      }
-    end
-    
-    describe "current user is a cheil_user" do
-      specify{
+      it "is a cheil_user" do
         set_current_user(cheil_user)
-        brief1 = rpm_org.briefs.create(:name=>'brief1')
         brief1.send_to_cheil!
 
         get 'show',:id=>brief1.id
         assigns(:brief).should eq(brief1)
         response.should render_template('briefs/cheil/show')
-      }
-    end
+      end
 
-    describe "current user is a vendor_user" do
-      specify{
+      it "is a vendor_user" do
         set_current_user(vendor_user)
-        brief1 = rpm_org.briefs.create(:name=>'brief1')
         brief1.send_to_cheil!
         brief1.vendor_solutions.create(:org_id=>vendor_user.org_id)
 
         get 'show',:id=>brief1.id
         assigns(:brief).should eq(brief1)
         response.should render_template('briefs/vendor/show')
-      }
+      end
+    end
+
+    context "unauthorized user" do
+      it "is a rpm2_user" do
+        set_current_user(rpm2_user)
+        expect { 
+          get 'show',:id=>brief1.id
+        }.to raise_exception(SecurityError)
+      end
+
+      it "is a cheil user" do
+        set_current_user(cheil_user)
+        expect { 
+          get 'show',:id=>brief1.id
+        }.to raise_exception(SecurityError)
+      end
+
+      it "is a vendor user" do
+        set_current_user(vendor_user)
+        expect { 
+          get 'show',:id=>brief1.id
+        }.to raise_exception(SecurityError)
+      end
     end
   end
 
@@ -153,10 +165,12 @@ describe BriefsController do
   end
 
   describe "GET edit" do
+    #a brief belongs to rpm_org
+    let(:brief1){ rpm_org.briefs.create(:name=>'brief1') }
+
     context "current user is a rpm_user" do
       specify{
         set_current_user(rpm_user)
-        brief1 = rpm_user.org.briefs.create(:name=>'brief1')
         get 'edit',:id=>brief1.id
         response.should render_template('edit')
 
@@ -171,7 +185,7 @@ describe BriefsController do
       specify{
         set_current_user(cheil_user)
         expect { 
-          get 'edit',:id=>1 
+          get 'edit',:id=>brief1.id
         }.to raise_exception(SecurityError)
       }
     end
@@ -180,15 +194,13 @@ describe BriefsController do
       specify{
         set_current_user(vendor_user)
         expect { 
-          get 'edit',:id=>1 
+          get 'edit',:id=>brief1.id 
         }.to raise_exception(SecurityError)
       }
     end
-
   end
 
   describe "POST create" do
-
     describe "with valid params" do
       it "creates a new Brief" do
         set_current_user(rpm_user)
@@ -248,17 +260,17 @@ describe BriefsController do
   end
 
   describe "PUT update" do
+    let(:brief){ rpm_user.org.briefs.create(:name=>'brief') }
+
     describe "with valid params" do
       it "assigns the requested brief as @brief" do
         set_current_user(rpm_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         put :update, :id => brief.id, :brief => valid_attributes
         assigns(:brief).should eq(brief)
       end
 
       it "redirects to the brief" do
         set_current_user(rpm_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         put :update, :id => brief.id, :brief => valid_attributes
         response.should redirect_to(brief)
       end
@@ -267,14 +279,12 @@ describe BriefsController do
     describe "with invalid params" do
       it "assigns the brief as @brief" do
         set_current_user(rpm_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         put :update, :id => brief.id, :brief => {:name=>''}
         assigns(:brief).should eq(brief)
       end
 
       it "re-renders the 'edit' template" do
         set_current_user(rpm_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         put :update, :id => brief.id, :brief => {:name=>''}
         response.should render_template("edit")
       end
@@ -283,7 +293,6 @@ describe BriefsController do
     context "current user is a cheil_user" do
       specify{
         set_current_user(cheil_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect { 
           put 'update',:id => brief,:brief => valid_attributes 
         }.to raise_exception(SecurityError)
@@ -293,7 +302,6 @@ describe BriefsController do
     context "current user is a vendor_user" do
       specify{
         set_current_user(vendor_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect { 
           put 'update',:id => brief,:brief => valid_attributes 
         }.to raise_exception(SecurityError)
@@ -303,17 +311,19 @@ describe BriefsController do
   end
 
   describe "DELETE destroy" do
+    let(:brief) { rpm_user.org.briefs.create(:name=>'brief') }
+    
     it "destroys the requested brief" do
       set_current_user(rpm_user)
-      brief = rpm_user.org.briefs.create(:name=>'brief')
+      id = brief.id
+
       expect {
-        delete :destroy, :id => brief.id
+        delete :destroy, :id => id
       }.to change(Brief, :count).by(-1)
     end
 
     it "redirects to the briefs list" do
       set_current_user(rpm_user)
-      brief = rpm_user.org.briefs.create(:name=>'brief')
       delete :destroy, :id => brief.id
       response.should redirect_to(briefs_url)
     end
@@ -321,7 +331,6 @@ describe BriefsController do
     context "rpm2_user don't have delete right" do
       specify {
         set_current_user(rpm2_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect {
           delete :destroy, :id => brief.id
         }.to raise_exception(SecurityError)
@@ -331,7 +340,6 @@ describe BriefsController do
     context "current user is a cheil_user" do
       specify{
         set_current_user(cheil_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect { 
           delete 'destroy',:id => brief.id
         }.to raise_exception(SecurityError)
@@ -341,19 +349,19 @@ describe BriefsController do
     context "current user is a vendor_user" do
       specify{
         set_current_user(vendor_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect { 
           delete 'destroy',:id => brief.id
         }.to raise_exception(SecurityError)
       }
     end
   end
-  
+
   describe "send_to_cheil" do
+    let(:brief) { rpm_user.org.briefs.create(:name=>'brief') }
+
     context "current user is good rpm_user" do
       specify{
         set_current_user(rpm_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         put 'send_to_cheil',:id => brief.id
         brief.reload.cheil_org.should == rpm_user.org.cheil_org 
       }
@@ -362,7 +370,6 @@ describe BriefsController do
     context "current user is bad rpm_user" do
       specify{
         set_current_user(rpm2_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect{
           put 'send_to_cheil',:id => brief.id
         }.to raise_exception(SecurityError)
@@ -372,7 +379,6 @@ describe BriefsController do
     context "current user is a cheil_user" do
       specify{
         set_current_user(cheil_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect { 
           put 'send_to_cheil',:id => brief.id
         }.to raise_exception(SecurityError)
@@ -382,12 +388,10 @@ describe BriefsController do
     context "current user is a vendor_user" do
       specify{
         set_current_user(vendor_user)
-        brief = rpm_user.org.briefs.create(:name=>'brief')
         expect { 
           put 'send_to_cheil',:id => brief.id
         }.to raise_exception(SecurityError)
       }
     end
-
   end
 end
