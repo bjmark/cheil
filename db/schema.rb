@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111128115120) do
+ActiveRecord::Schema.define(:version => 20120116084437) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20111128115120) do
     t.integer  "cheil_id",   :default => 0
     t.text     "req"
     t.date     "deadline"
+    t.string   "read_by"
   end
 
   create_table "comments", :force => true do |t|

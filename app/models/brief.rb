@@ -93,4 +93,34 @@ class Brief < ActiveRecord::Base
     solutions.find_by_org_id(org_id)
   end
 
+  def op
+    @op ||= Op.new(self) 
+  end
+end
+
+class Brief
+  class Op
+    def initialize(obj)
+      @obj = obj
+    end
+
+    def save_by(user_id)
+      @obj.read_by = user_id.to_s
+      unless @obj.save
+        return false
+      end
+    end
+
+    def read_by
+      if @obj.read_by.blank?
+        []
+      else
+        @obj.read_by.split(',')
+      end
+    end
+
+    def read?(user_id)
+      read_by.include?(user_id.to_s)
+    end
+  end
 end
