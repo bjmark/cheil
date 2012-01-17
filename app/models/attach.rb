@@ -13,4 +13,8 @@ class Attach < ActiveRecord::Base
   def can_checked_by?(org_id)
     false
   end
+
+  def op
+    @op ||= Cheil::Op.new(self) 
+  end
 end

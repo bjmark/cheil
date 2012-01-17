@@ -1,4 +1,6 @@
 #encoding=utf-8
+#require 'cheil'
+
 class Brief < ActiveRecord::Base
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
@@ -93,4 +95,8 @@ class Brief < ActiveRecord::Base
     solutions.find_by_org_id(org_id)
   end
 
+  def op
+    @op ||= Cheil::Op.new(self) 
+  end
 end
+

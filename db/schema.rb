@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111128115120) do
+ActiveRecord::Schema.define(:version => 20120117093048) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(:version => 20111128115120) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "checked",             :limit => 1, :default => "n"
+    t.string   "read_by"
   end
 
   create_table "brief_attaches", :force => true do |t|
@@ -69,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20111128115120) do
     t.integer  "cheil_id",   :default => 0
     t.text     "req"
     t.date     "deadline"
+    t.string   "read_by"
   end
 
   create_table "comments", :force => true do |t|
@@ -133,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20111128115120) do
     t.string   "other_rate",                :default => "0"
     t.string   "is_approved",  :limit => 1, :default => "n"
     t.datetime "approved_at"
+    t.string   "read_by"
   end
 
   create_table "users", :force => true do |t|

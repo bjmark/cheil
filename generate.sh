@@ -64,4 +64,8 @@
 
 #rails g scaffold payment solution_id:integer payer_id:integer org_id:integer amount:string pay_date:date note:string
 
-rails g migration remove_org_id_from_payment
+#rails g migration remove_org_id_from_payment
+
+#rails g migration add_read_by_to_briefs
+#rails g migration add_read_by_to_attaches
+rails g migration add_read_by_to_solutions

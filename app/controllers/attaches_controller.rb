@@ -15,6 +15,8 @@ class AttachesController < ApplicationController
     attach = Attach.find(params[:id])
     attach.check_read_right(@cur_user.org_id)
 
+    attach.op.read_by(@cur_user.id)
+
     send_file attach.attach.path,
       :filename => attach.attach_file_name,
       :content_type => attach.attach_content_type
@@ -58,18 +60,24 @@ class AttachesController < ApplicationController
     when params[:brief_id]
       brief = Brief.find(params[:brief_id])
       brief.check_edit_right(@cur_user.org_id)
+      
+      brief.op.touch(@cur_user.id)
+      
       @attach = brief.attaches.new(params[:brief_attach])
       @path = attaches_path(:brief_id=>brief.id)
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
       solution.check_edit_right(@cur_user.org_id)
+
+      solution.op.touch(@cur_user.id)
+
       @attach = solution.attaches.new(params[:solution_attach])
       @path = attaches_path(:solution_id=>solution.id)
     end
 
     @back = owner_path(@attach)
 
-    if @attach.save
+    if @attach.op.save_by(@cur_user.id)
       redirect_to @back 
     else
       render :action => 'new'
@@ -98,14 +106,17 @@ class AttachesController < ApplicationController
 
     case @attach
     when BriefAttach 
+      @attach.brief.op.touch(@cur_user.id)
       attr = params[:brief_attach]
     when SolutionAttach
+      @attach.solution.op.touch(@cur_user.id)
       attr = params[:solution_attach]
     end
 
     @back = owner_path(@attach)
 
     if @attach.update_attributes(attr)
+      @attach.op.save_by(@cur_user.id)
       redirect_to @back
     else
       render action: "edit" 
@@ -115,6 +126,14 @@ class AttachesController < ApplicationController
   def destroy
     attach = Attach.find(params[:id])
     attach.check_update_right(@cur_user.org_id)
+
+    case attach
+    when BriefAttach 
+      attach.brief.op.touch(@cur_user.id)
+    when SolutionAttach
+      attach.solution.op.touch(@cur_user.id)
+    end
+
     attach.destroy
 
     redirect_to owner_path(attach)
