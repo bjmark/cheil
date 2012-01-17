@@ -6,14 +6,22 @@
   <tbody>
     <tr>
       <th>文件名</th>
+      <th>创建时间</th>
+      <th>更新时间</th>
       <th></th>
     </tr>
     <%n=1
     owner.attaches.each do |e|%>
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
         <td>
-          <%= e.attach_file_name  %>
+          <%if e.op.read?(@cur_user.id)%>
+            <%= e.attach_file_name  %>
+          <%else%>
+            <span style="<%=unread_color%>"><%= e.attach_file_name  %></span>
+          <%end%>
         </td>
+        <td><%=short_d(e.created_at)%></td>
+        <td><%=short_d(e.updated_at)%></td>
         <td class="last">
           <%=raw attach_links(owner,e,@cur_user) %>
         </td>

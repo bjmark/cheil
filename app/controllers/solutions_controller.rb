@@ -29,6 +29,9 @@ class SolutionsController < ApplicationController
     @solution = Solution.find(params[:id])
     @solution.check_read_right(@cur_user.org_id)
     flash[:dest] = solution_path(@solution)
+    
+    @solution.op.read_by(@cur_user.id)
+    
     case @cur_user.org
     when RpmOrg
       @payments = Payment.where(:solution_id=>@solution.id).all

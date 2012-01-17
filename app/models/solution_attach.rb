@@ -1,5 +1,5 @@
 class SolutionAttach < Attach
-  belongs_to :solution,:foreign_key => 'fk_id',:touch=>true
+  belongs_to :solution,:foreign_key => 'fk_id'
 
   def can_checked_by?(org_id)
     solution.assigned_by?(org_id)

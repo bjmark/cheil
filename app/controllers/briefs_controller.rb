@@ -54,6 +54,10 @@ class BriefsController < ApplicationController
   def show
     @brief = Brief.find(params[:id])
     @brief.check_read_right(@cur_user.org_id)
+    
+    #record cur_user read action,add cur_user.id into @brief.read_by
+    @brief.op.read_by(@cur_user.id)
+    
     case @cur_user.org
     when RpmOrg
       render 'briefs/rpm/show'
@@ -79,13 +83,22 @@ class BriefsController < ApplicationController
     @back = brief_path(@brief)
   end
 
+  def attr_filter(attr_hash)
+    attr_valid = {}
+    attr_name = %w{name req deadline(1i) deadline(2i) deadline(3i)}
+    if attr_hash
+      attr_name.each{|e|attr_valid[e] = attr_hash[e]}
+    end
+    return attr_valid
+  end
+
   # POST /briefs
   def create
-    @brief = Brief.new(params[:brief])
+    @brief = Brief.new(attr_filter(params[:brief]))
     @brief.rpm_id = @cur_user.org_id
     @brief.user_id = @cur_user.id
 
-    if @brief.save
+    if @brief.op.save_by(@cur_user.id)
       redirect_to briefs_path, notice: 'Brief was successfully created.' 
     else
       render action: "new" 
@@ -97,8 +110,12 @@ class BriefsController < ApplicationController
   def update
     @brief = Brief.find(params[:id])
     @brief.check_edit_right(@cur_user.org_id)
+    
+    attr_hash = attr_filter(params[:brief])
+    attr_hash['read_by'] = @cur_user.id.to_s
+    attr_hash['updated_at'] = Time.now
 
-    if @brief.update_attributes(params[:brief])
+    if @brief.update_attributes(attr_hash)
       redirect_to @brief, notice: 'Brief was successfully updated.' 
     else
       @back = brief_path(@brief)

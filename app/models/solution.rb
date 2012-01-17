@@ -54,4 +54,7 @@ class Solution < ActiveRecord::Base
     items.where(:kind=>'other')
   end
 
+  def op
+    @op ||= Cheil::Op.new(self) 
+  end
 end

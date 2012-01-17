@@ -1,5 +1,5 @@
 class BriefAttach < Attach
-  belongs_to :brief,:foreign_key => 'fk_id',:touch=>true
+  belongs_to :brief,:foreign_key => 'fk_id'
 
   def can_read_by?(org_id)
     brief.can_read_by?(org_id)

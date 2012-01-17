@@ -269,4 +269,19 @@ describe Brief do
       Brief.deadline_less_than(nil).length.should == 2
     }
   end
+
+  describe 'op' do
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op.save_by(1).should be_true
+      b.read_by.should == '1'
+      b.op.read_by_to_a.should == %w(1)
+      b.op.read?(1).should be_true
+      
+      b.op.read_by(2)
+      
+      b2 = Brief.find(b.id)
+      b2.op.read?(2).should be_true
+    }
+  end
 end

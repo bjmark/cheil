@@ -1,4 +1,6 @@
 #encoding=utf-8
+#require 'cheil'
+
 class Brief < ActiveRecord::Base
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
@@ -94,33 +96,7 @@ class Brief < ActiveRecord::Base
   end
 
   def op
-    @op ||= Op.new(self) 
+    @op ||= Cheil::Op.new(self) 
   end
 end
 
-class Brief
-  class Op
-    def initialize(obj)
-      @obj = obj
-    end
-
-    def save_by(user_id)
-      @obj.read_by = user_id.to_s
-      unless @obj.save
-        return false
-      end
-    end
-
-    def read_by
-      if @obj.read_by.blank?
-        []
-      else
-        @obj.read_by.split(',')
-      end
-    end
-
-    def read?(user_id)
-      read_by.include?(user_id.to_s)
-    end
-  end
-end

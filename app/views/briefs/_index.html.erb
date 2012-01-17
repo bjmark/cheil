@@ -11,7 +11,11 @@
     @briefs.each do |brief| -%>
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
         <td><%=brief.id%></td>
-        <td><%=link_to brief.name,brief_path(brief)%></td>
+        <%if brief.op.read?(@cur_user.id)%>
+          <td><%=link_to brief.name,brief_path(brief)%></td>
+        <%else%>
+          <td><%=link_to brief.name,brief_path(brief),:style=>"#{unread_color}"%></td>
+        <%end%>
         <td><%=brief.deadline%></td>
         <td><%=short_d(brief.created_at)%></td>
         <td><%=short_d(brief.updated_at)%></td>

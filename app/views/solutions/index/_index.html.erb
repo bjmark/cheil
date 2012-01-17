@@ -18,7 +18,11 @@
             (<%= "#{e.designs.length+e.products.length}/#{brief_items_size}"%>)
           </td>
           <td class="last">
-            <%= link_to '方案',solution_path(e)  %>
+            <%if e.op.read?(@cur_user.id)%>
+              <%= link_to '方案',solution_path(e)  %>
+            <%else%>
+              <%= link_to '方案',solution_path(e) , :style=>"#{unread_color}"%>
+            <%end%>
             |
             <%=link_to '指派的子项',items_path(:solution_id=>e.id)  %>
             |

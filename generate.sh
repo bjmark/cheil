@@ -67,3 +67,5 @@
 #rails g migration remove_org_id_from_payment
 
 #rails g migration add_read_by_to_briefs
+#rails g migration add_read_by_to_attaches
+rails g migration add_read_by_to_solutions

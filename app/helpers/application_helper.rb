@@ -59,4 +59,7 @@ module ApplicationHelper
     end
   end
 
+  def unread_color
+    'color:red'
+  end
 end
