@@ -1,7 +1,9 @@
+#coding=utf-8
 require 'spec_helper'
 
 describe ItemsController do
   let(:rpm_org) { RpmOrg.create(:name=>'rpm') }
+  #和rpm_org对应的cheil_org
   let(:cheil_org) { rpm_org.create_cheil_org(:name=>'cheil')}
   let(:vendor_org) {VendorOrg.create(:name=>'vendor')}
 
@@ -202,26 +204,46 @@ describe ItemsController do
       }
     end
 
-    context 'create a brief_item' do
+    context 'brief ower(rpm_user) create a brief_item' do
       specify{
         set_current_user(rpm_user)
         post :create,:brief_id=>brief.id , :brief_item=>{:name=>'design1',:kind=>'design'}
         response.should redirect_to(brief_path(brief))
         brief.items.first.name.should == 'design1'
+        brief.items.first.op.read_by_to_a.should == [rpm_user.id.to_s]
+
+        #brief should be touched
+        brief.reload.op.read_by_to_a.should == [rpm_user.id.to_s]
       }
 
-      specify{
+      it "should have 1 errors,as name is blank" do
         set_current_user(rpm_user)
         post :create,:brief_id=>brief.id , :brief_item=>{:name=>'',:kind=>'design'}
         response.should render_template('new')
         assigns(:item).should have(1).errors_on(:name)
-      }
+      end
 
-      specify{
+      it "raise exception,as rpm2_user is not owner" do
         set_current_user(rpm2_user)
         expect{
           post :create,:brief_id=>brief.id , :brief_item=>{:name=>'design1',:kind=>'design'}
         }.to raise_exception(SecurityError)
+      end
+    end
+
+    context 'brief send to cheil,cheil can create a brief_item' do
+      specify{
+        brief.send_to_cheil!
+        
+        set_current_user(cheil_user)
+
+        post :create,:brief_id=>brief.id , :brief_item=>{:name=>'design1',:kind=>'design'}
+        response.should redirect_to(brief_path(brief))
+        brief.items.first.name.should == 'design1'
+        brief.items.first.op.read_by_to_a.should == [cheil_user.id.to_s]
+
+        #brief should be touched
+        brief.reload.op.read_by_to_a.should == [cheil_user.id.to_s]
       }
     end
 

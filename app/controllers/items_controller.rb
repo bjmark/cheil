@@ -85,6 +85,8 @@ class ItemsController < ApplicationController
       @path = items_path(:brief_id=>brief.id)
       @back = owner_path(@item)
 
+      brief.op.touch(@cur_user.id)
+
       #create a solution_item
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
@@ -93,11 +95,13 @@ class ItemsController < ApplicationController
       @path = items_path(:solution_id=>solution.id)
       @back = owner_path(@item)
       @form = 'tran_form'
+
+      solution.op.touch(@cur_user.id)
     else
       raise SecurityError
     end
 
-    if @item.save
+    if @item.op.save_by(@cur_user.id)
       redirect_to @back, notice: 'Item was successfully created.' 
     else
       render action: "new" 
@@ -127,7 +131,9 @@ class ItemsController < ApplicationController
     case @item
     when BriefItem 
       attr = params[:brief_item]
+      @item.brief.op.touch(@cur_user.id)
     when SolutionItem
+      @item.solution.op.touch(@cur_user.id)
       attr = params[:solution_item]
     end
 
@@ -135,6 +141,7 @@ class ItemsController < ApplicationController
     @back = owner_path(@item)
 
     if @item.update_attributes(attr)
+      @item.op.save_by(@cur_user.id)
       redirect_to @back, notice: 'Item was successfully updated.' 
     else
       render action: "edit" 
@@ -152,6 +159,14 @@ class ItemsController < ApplicationController
     when params[:id]
       item = Item.find(params[:id])
       item.check_edit_right(@cur_user.org_id)
+
+      case item
+      when BriefItem 
+        item.brief.op.touch(@cur_user.id)
+      when SolutionItem
+        item.solution.op.touch(@cur_user.id)
+      end
+
       item.destroy
       redirect_to(owner_path(item)) and return
     else

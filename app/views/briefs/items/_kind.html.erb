@@ -8,7 +8,12 @@ items.each do |e|%>
     <%n.upto(1)do %>
       <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
     <%end%>
-    <td><%= e.name  %></td>
+    <%if e.op.read?(@cur_user.id)%>
+      <td><%= e.name  %></td>
+    <%else%>
+      <%e.op.read_by(@cur_user.id)%>
+      <td><span style="<%=unread_color%>"><%= e.name  %></span></td>
+    <%end%>
     <td><%= e.quantity  %></td>
     <td><%= e.note  %></td>
     <td class="last">
