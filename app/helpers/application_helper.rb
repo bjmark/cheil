@@ -62,4 +62,11 @@ module ApplicationHelper
   def unread_color
     'color:red'
   end
+
+  def percentage(d)
+    f = d.to_f * 100
+    i = f.to_i
+    f = i if f == i
+    "#{f}%"
+  end
 end

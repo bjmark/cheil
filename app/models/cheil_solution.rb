@@ -105,33 +105,38 @@ class CheilSolution < Solution
   end
 
   def total
-    kinds = [:design,:product,:tran,:other]
-    sum_all = 0
-    sum_all_r = 0
-    total_hash = {}
-    kinds.each do |k|
-      total_hash[k]=[]
-      brief.vendor_solutions.each do |vs|
-        sum = 0 
-        vs.send("#{k}s").checked.collect{|e| sum += e.total}
+    kinds = [:design,:product,:tran,:other]  #四种类型报价
+    sum_all = 0      #总计
+    sum_all_r = 0    #税后总计
+    total_hash = {}  #分项结果
+
+    kinds.each do |k|  #对每种类型的item
+      total_hash[k]=[]  #每种类型，每个vendor的报价合计
+      brief.vendor_solutions.each do |vs|    #对brief的每个vendor方案
+        sum = 0           #合计
+        vs.send("#{k}s").checked.collect{|e| sum += e.total} #累加选中的某种类型的item
+        sum = sum.to_i    #抹去小数点后的部分
         if sum > 0
           total_hash[k] << 
           {:name=>vs.org.name,
-            :sum=>sum,
-            :rate=>(rate=vs.send("#{k}_rate")),
-            :sum_r=>(sum_r=sum*(1+rate.to_f))}
+            :sum=>sum,                                  
+            :rate=>(rate=vs.send("#{k}_rate")),        #税率
+            :sum_r=>(sum_r=(sum*(1+rate.to_f)).to_i)}  #税后，抹去小数点后的部分
           sum_all += sum
           sum_all_r += sum_r
         end
       end
-      sum = 0
+
+      sum = 0  #cheil自己的方案
       send("#{k}s").collect{|e| sum += e.total}
+      sum = sum.to_i
+
       if sum > 0
         total_hash[k] << 
         {:name=>org.name,
           :sum=>sum,
           :rate=>(rate=send("#{k}_rate")),
-          :sum_r=>(sum_r=sum*(1+rate.to_f))}
+          :sum_r=>(sum_r=(sum*(1+rate.to_f)).to_i)}
         sum_all += sum
         sum_all_r += sum_r
       end

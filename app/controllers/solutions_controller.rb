@@ -36,14 +36,17 @@ class SolutionsController < ApplicationController
     when RpmOrg
       @payments = Payment.where(:solution_id=>@solution.id).all
       render 'solutions/rpm/show'
-    when CheilOrg
+
+    when CheilOrg          #current user is a cheil user
       case
-      when @solution.instance_of?(VendorSolution) 
+      when @solution.instance_of?(VendorSolution)         #show a vendor solution
         render 'solutions/cheil/vendor_solution/show'
-      when @solution.instance_of?(CheilSolution)
+      
+      when @solution.instance_of?(CheilSolution)           #show a cheil solution
         @payments = Payment.where(:solution_id=>@solution.id).all
         render 'solutions/cheil/cheil_solution/show'
       end
+
     when VendorOrg
       @money = @solution.money
       @payments = Payment.where(

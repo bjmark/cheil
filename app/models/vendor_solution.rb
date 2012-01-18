@@ -37,7 +37,7 @@ class VendorSolution < Solution
       send("#{k}s".to_sym).each{|e| sum += e.total}
       total_hash[k] = sum
 
-      sum_r = sum * (send("#{k}_rate").to_f + 1) 
+      sum_r = (sum * (send("#{k}_rate").to_f + 1)).to_i 
       total_hash["#{k}_r".to_sym] = sum_r
 
       sum_all += sum

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120118015437) do
+ActiveRecord::Schema.define(:version => 20120118094758) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(:version => 20120118015437) do
     t.string   "checked",             :limit => 1, :default => "n"
     t.string   "read_by"
   end
+
+  add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
 
   create_table "brief_attaches", :force => true do |t|
     t.integer  "brief_id"
@@ -73,6 +75,9 @@ ActiveRecord::Schema.define(:version => 20120118015437) do
     t.string   "read_by"
   end
 
+  add_index "briefs", ["cheil_id"], :name => "index_briefs_on_cheil_id"
+  add_index "briefs", ["rpm_id"], :name => "index_briefs_on_rpm_id"
+
   create_table "comments", :force => true do |t|
     t.string   "type"
     t.integer  "fk_id"
@@ -81,6 +86,8 @@ ActiveRecord::Schema.define(:version => 20120118015437) do
     t.datetime "updated_at"
     t.text     "content"
   end
+
+  add_index "comments", ["fk_id"], :name => "index_comments_on_fk_id"
 
   create_table "items", :force => true do |t|
     t.string   "name"
@@ -96,6 +103,8 @@ ActiveRecord::Schema.define(:version => 20120118015437) do
     t.string   "note"
     t.string   "read_by"
   end
+
+  add_index "items", ["fk_id"], :name => "index_items_on_fk_id"
 
   create_table "orgs", :force => true do |t|
     t.string   "name"
@@ -122,6 +131,8 @@ ActiveRecord::Schema.define(:version => 20120118015437) do
     t.integer  "org_id"
   end
 
+  add_index "payments", ["solution_id"], :name => "index_payments_on_solution_id"
+
   create_table "solutions", :force => true do |t|
     t.integer  "brief_id"
     t.integer  "org_id"
@@ -138,6 +149,9 @@ ActiveRecord::Schema.define(:version => 20120118015437) do
     t.datetime "approved_at"
     t.string   "read_by"
   end
+
+  add_index "solutions", ["brief_id"], :name => "index_solutions_on_brief_id"
+  add_index "solutions", ["org_id"], :name => "index_solutions_on_org_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

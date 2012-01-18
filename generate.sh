@@ -70,3 +70,4 @@
 #rails g migration add_read_by_to_attaches
 #rails g migration add_read_by_to_solutions
 #rails g migration add_read_by_to_items
+rails g migration add_indexs

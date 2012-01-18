@@ -16,7 +16,7 @@
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>设计</td>
           <td><%=total[:design]%></th>
-          <td><%=solution.design_rate%></td>
+          <td><%=percentage(solution.design_rate)%></td>
           <td><%=total[:design_r]%></td>
         </tr>
       <%end%>
@@ -24,7 +24,7 @@
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>制作</td>
           <td><%=total[:product]%></th>
-          <td><%=solution.product_rate%></td>
+          <td><%=percentage(solution.product_rate)%></td>
           <td><%=total[:product_r]%></td>
         </tr>
       <%end%>
@@ -32,7 +32,7 @@
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>运输</td>
           <td><%=total[:tran]%></th>
-          <td><%=solution.tran_rate%></td>
+          <td><%=percentage(solution.tran_rate)%></td>
           <td><%=total[:tran_r]%></td>
         </tr>
       <%end%>
@@ -40,7 +40,7 @@
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>其他</td>
           <td><%=total[:other]%></th>
-          <td><%=solution.other_rate%></td>
+          <td><%=percentage(solution.other_rate)%></td>
           <td><%=total[:other_r]%></td>
         </tr>
       <%end%>

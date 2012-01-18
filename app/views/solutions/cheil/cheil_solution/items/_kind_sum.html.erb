@@ -12,7 +12,7 @@ sum_items.each do |e|%>
     <%end%>
     <td><%= e[:name]  %></td>
     <td><%= e[:sum]  %></td>
-    <td><%= e[:rate]  %></td>
+    <td><%= percentage(e[:rate])  %></td>
     <td><%= e[:sum_r]  %></td>
   </tr>
 <%end%>
