@@ -90,6 +90,8 @@ describe BriefsController do
         get 'show',:id=>brief1.id
         assigns(:brief).should eq(brief1)
         response.should render_template('briefs/rpm/show')
+
+        assigns(:brief).op.read_by_to_a.should == [rpm_user.id.to_s]
       end
 
       it "is a cheil_user" do
@@ -99,6 +101,8 @@ describe BriefsController do
         get 'show',:id=>brief1.id
         assigns(:brief).should eq(brief1)
         response.should render_template('briefs/cheil/show')
+
+        assigns(:brief).op.read_by_to_a.should == [cheil_user.id.to_s]
       end
 
       it "is a vendor_user" do
@@ -109,6 +113,8 @@ describe BriefsController do
         get 'show',:id=>brief1.id
         assigns(:brief).should eq(brief1)
         response.should render_template('briefs/vendor/show')
+
+        assigns(:brief).op.read_by_to_a.should == [vendor_user.id.to_s]
       end
     end
 
@@ -223,6 +229,8 @@ describe BriefsController do
         assigns(:brief).should be_persisted
         assigns(:brief).rpm_org.should eq(rpm_user.org)
         assigns(:brief).user.should eq(rpm_user)
+
+        assigns(:brief).op.read_by_to_a.should == [rpm_user.id.to_s]
       end
 
       it "redirects to the created brief" do
@@ -274,6 +282,8 @@ describe BriefsController do
         set_current_user(rpm_user)
         put :update, :id => brief.id, :brief => valid_attributes
         assigns(:brief).should eq(brief)
+
+        assigns(:brief).op.read_by_to_a.should == [rpm_user.id.to_s]
       end
 
       it "redirects to the brief" do
@@ -310,6 +320,8 @@ describe BriefsController do
         brief.send_to_cheil!
         put 'update',:id => brief,:brief => valid_attributes 
         response.should redirect_to(brief)
+        
+        brief.reload.op.read_by_to_a.should == [cheil_user.id.to_s]
       }
     end
 

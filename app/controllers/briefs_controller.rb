@@ -87,7 +87,7 @@ class BriefsController < ApplicationController
     attr_valid = {}
     attr_name = %w{name req deadline(1i) deadline(2i) deadline(3i)}
     if attr_hash
-      attr_name.each{|e|attr_valid[e] = attr_hash[e]}
+      attr_name.each{|e|attr_valid[e] = attr_hash[e] if attr_hash[e]}
     end
     return attr_valid
   end
