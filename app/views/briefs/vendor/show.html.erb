@@ -4,7 +4,7 @@
 %>
 <%=render 'share/block',
   :nav=>{:partial=>'briefs/vendor/nav',:locals=>{:brief=>@brief,:solution=>@solution}},
-  :title=>@brief.name,
+  :title=>(@brief.cancel? ? @brief.name + '(已取消)':@brief.name),
   :content=>{:partial=>'show',:locals=>{:brief=>@brief}}
 %>
 <%=attaches(@brief)%>

@@ -70,4 +70,6 @@
 #rails g migration add_read_by_to_attaches
 #rails g migration add_read_by_to_solutions
 #rails g migration add_read_by_to_items
-rails g migration add_indexs
+#rails g migration add_indexs
+#rails g migration add_status_to_briefs
+rails g migration add_cancel_to_briefs

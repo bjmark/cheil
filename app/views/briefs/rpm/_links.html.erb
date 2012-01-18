@@ -30,4 +30,23 @@
   :method => :put
 %>
 <%end%>
+<%if brief.send_to_cheil?%> 
+  <% if brief.cancel?%>
+    |
+    <%=link_to '恢复',
+    cancel_cancel_brief_path(brief),
+    :confirm => '确定吗？',
+    :method => :put,
+    :style => 'color:red'
+  %>
+<%else%>
+  |
+  <%=link_to '取消',
+  cancel_brief_path(brief),
+  :confirm => '确定吗？',
+  :method => :put,
+  :style => 'color:red'
+%>
+<%end%>
+<%end%>
 

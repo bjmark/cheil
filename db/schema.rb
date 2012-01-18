@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120118094758) do
+ActiveRecord::Schema.define(:version => 20120118134644) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -69,10 +69,12 @@ ActiveRecord::Schema.define(:version => 20120118094758) do
     t.integer  "rpm_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "cheil_id",   :default => 0
+    t.integer  "cheil_id",                :default => 0
     t.text     "req"
     t.date     "deadline"
     t.string   "read_by"
+    t.integer  "status"
+    t.string   "cancel",     :limit => 1, :default => "n"
   end
 
   add_index "briefs", ["cheil_id"], :name => "index_briefs_on_cheil_id"

@@ -41,6 +41,8 @@ Cheil::Application.routes.draw do
   resources :briefs do
     member do
       put :send_to_cheil
+      put :cancel
+      put :cancel_cancel
     end
     collection do 
       get :not_send

@@ -2,6 +2,13 @@
 #require 'cheil'
 
 class Brief < ActiveRecord::Base
+  STATUS = {
+    1 => '制定方案中',
+    2 => '方案待审定',
+    3 => '执行中',
+    4 => '完成'
+  }
+
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
   belongs_to :user
@@ -97,6 +104,10 @@ class Brief < ActiveRecord::Base
 
   def op
     @op ||= Cheil::Op.new(self) 
+  end
+
+  def cancel?
+    self.cancel == 'y'
   end
 end
 

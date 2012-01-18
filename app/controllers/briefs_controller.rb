@@ -4,7 +4,7 @@ class BriefsController < ApplicationController
 
   def check_right
     rpm =[:index,:new,:show,:edit,:create,:update,:destroy,:send_to_cheil,
-      :not_send,:search_cond,:search_res]
+      :not_send,:search_cond,:search_res,:cancel,:cancel_cancel]
     cheil = [:index,:show,:edit,:update,:search_cond,:search_res]
     vendor = [:index,:show,:search_cond,:search_res]
 
@@ -138,5 +138,21 @@ class BriefsController < ApplicationController
     @brief.check_edit_right(@cur_user.org_id)
     @brief.send_to_cheil!
     redirect_to(brief_path(@brief),:notice=>'成功发送到cheil') 
+  end
+
+  def cancel_cancel
+    cancel{'n'}
+  end
+
+  def cancel
+    @brief = Brief.find(params[:id])
+    @brief.check_edit_right(@cur_user.org_id)
+    if block_given?
+      @brief.cancel = yield
+    else
+      @brief.cancel = 'y'
+    end
+    @brief.op.save_by(@cur_user.id)
+    redirect_to(brief_path(@brief)) 
   end
 end
