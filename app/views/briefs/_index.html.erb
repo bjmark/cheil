@@ -10,16 +10,8 @@
     <%n=1
     @briefs.each do |brief| -%>
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
-        <%if brief.cancel?%>
-          <td><span style="color:red"><%=brief.id%></span></td>
-        <%else%>
-          <td><%=brief.id%></td>
-        <%end%>
-        <%if brief.op.read?(@cur_user.id)%>
-          <td><%=link_to brief.name,brief_path(brief)%></td>
-        <%else%>
-          <td><%=link_to brief.name,brief_path(brief),:style=>"#{unread_color}"%></td>
-        <%end%>
+        <td><%=brief.id%></td>
+        <td><%=link_to brief_name(brief),brief_path(brief)%></td>
         <td><%=brief.deadline%></td>
         <td><%=short_d(brief.created_at)%></td>
         <td><%=short_d(brief.updated_at)%></td>

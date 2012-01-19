@@ -4,7 +4,7 @@ class SolutionsController < ApplicationController
 
   def check_right
     rpm =[:show,:approve,:unapprove]
-    cheil = [:index,:show,:edit_rate,:update_rate,:create,:destroy]
+    cheil = [:index,:show,:edit_rate,:update_rate,:create,:destroy,:send_to_rpm,:finish,:unfinish]
     vendor = [:show,:edit_rate,:update_rate]
 
     ok=case @cur_user.org
@@ -82,7 +82,7 @@ class SolutionsController < ApplicationController
     vendor_ids = []
     params.each {|k,v| vendor_ids << v if k=~/vendor\d+/}
     vendor_ids.each do |org_id|
-      brief.vendor_solutions << VendorSolution.new(:org_id=>org_id)
+      brief.vendor_solutions << VendorSolution.new(:org_id=>org_id,:read_by=>@cur_user.id.to_s)
     end
 
     redirect_to solutions_path(:brief_id=>brief.id) 
@@ -104,6 +104,10 @@ class SolutionsController < ApplicationController
     solution.approved_at = Time.now
     solution.save
 
+    brief = solution.brief
+    brief.status = solution.is_approved == 'y' ? 3 : 2
+    brief.save
+
     redirect_to solution_path(solution)
   end
 
@@ -111,4 +115,30 @@ class SolutionsController < ApplicationController
     approve{'n'}
   end
 
+  def set_status(solution,status_code)
+    solution.check_edit_right(@cur_user.org.id)
+    brief = solution.brief
+    brief.status = status_code
+    brief.save
+  end
+
+  def send_to_rpm
+    solution = Solution.find(params[:id])
+    set_status(solution,2)
+    redirect_to solution_path(solution)
+  end
+
+  def finish
+    solution = Solution.find(params[:id])
+    set_status(solution,4)
+    solution.finish_at = Time.new
+    solution.save
+    redirect_to solution_path(solution)
+  end
+
+  def unfinish
+    solution = Solution.find(params[:id])
+    set_status(solution,3)
+    redirect_to solution_path(solution)
+  end
 end

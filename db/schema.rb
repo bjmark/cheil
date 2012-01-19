@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120118134644) do
+ActiveRecord::Schema.define(:version => 20120119071823) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(:version => 20120118134644) do
     t.string   "is_approved",  :limit => 1, :default => "n"
     t.datetime "approved_at"
     t.string   "read_by"
+    t.datetime "finish_at"
   end
 
   add_index "solutions", ["brief_id"], :name => "index_solutions_on_brief_id"

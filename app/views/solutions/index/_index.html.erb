@@ -15,14 +15,9 @@
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>
             <%= e.org.name %>
-            (<%= "#{e.designs.length+e.products.length}/#{brief_items_size}"%>)
           </td>
           <td class="last">
-            <%if e.op.read?(@cur_user.id)%>
-              <%= link_to '方案',solution_path(e)  %>
-            <%else%>
-              <%= link_to '方案',solution_path(e) , :style=>"#{unread_color}"%>
-            <%end%>
+            <%= link_to fang_an(e,brief_items_size),solution_path(e)  %>
             |
             <%=link_to '指派的子项',items_path(:solution_id=>e.id)  %>
             |

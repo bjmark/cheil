@@ -69,4 +69,30 @@ module ApplicationHelper
     f = i if f == i
     "#{f}%"
   end
+
+  def brief_name(brief,opt=nil)
+    s = [brief.name]
+
+    opt ||= {}
+    opt[:check_read] = true unless opt.has_key?(:check_read)
+    opt[:check_status] = true unless opt.has_key?(:check_status)
+
+    if opt[:check_read] and !brief.op.read?(@cur_user.id)
+      s << %Q| <span style="color:red;">(新)</span>| 
+    end
+
+    if opt[:check_status]
+      if brief.cancel?
+        s << %Q| <span style="color:red;">(已取消)</span>| 
+      elsif Brief::STATUS.keys.include?(brief.status)
+        s << %Q| <span style=" color:rgb(227,102,39)">(#{Brief::STATUS[brief.status]})</span>|
+      end
+    end
+
+    if opt[:append]
+      s << opt[:append]
+    end
+
+    return raw(s.join)
+  end
 end

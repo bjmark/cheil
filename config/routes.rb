@@ -29,6 +29,9 @@ Cheil::Application.routes.draw do
       put :update_rate
       put :approve
       put :unapprove
+      put :send_to_rpm
+      put :finish
+      put :unfinish
     end
   end
 

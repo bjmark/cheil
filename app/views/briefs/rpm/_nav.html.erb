@@ -9,7 +9,7 @@
 <%= link_to '需求', brief_path(brief) %>
 </li>
 <li>
-<%if brief.send_to_cheil?%>
+<%if brief.send_to_cheil? and brief.status > 1%>
   <li <%=raw 'class="active"' if solution_path(brief.cheil_solution) == request.fullpath%>>
   <%= link_to '方案', solution_path(brief.cheil_solution) %>
   </li>

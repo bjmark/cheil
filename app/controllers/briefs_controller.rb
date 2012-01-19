@@ -55,7 +55,7 @@ class BriefsController < ApplicationController
     @brief = Brief.find(params[:id])
     @brief.check_read_right(@cur_user.org_id)
     
-    #record cur_user read action,add cur_user.id into @brief.read_by
+    #readed by current user
     @brief.op.read_by(@cur_user.id)
     
     case @cur_user.org

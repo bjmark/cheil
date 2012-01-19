@@ -3,8 +3,8 @@
 
 class Brief < ActiveRecord::Base
   STATUS = {
-    1 => '制定方案中',
-    2 => '方案待审定',
+    1 => '方案中',
+    2 => '待审定',
     3 => '执行中',
     4 => '完成'
   }
@@ -56,6 +56,7 @@ class Brief < ActiveRecord::Base
 
   def send_to_cheil!
     self.cheil_org = rpm_org.cheil_org
+    self.status = 1
     save
     self.create_cheil_solution(:org_id=>self.cheil_id)
   end
