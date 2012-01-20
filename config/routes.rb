@@ -60,6 +60,7 @@ Cheil::Application.routes.draw do
 
   resources :admin_users
 
+  resources :pages , :only=>[:show]
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
