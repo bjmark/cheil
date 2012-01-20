@@ -3,10 +3,14 @@ class BriefsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
-    rpm =[:index,:new,:show,:edit,:create,:update,:destroy,:send_to_cheil,
-      :not_send,:search_cond,:search_res,:cancel,:cancel_cancel]
-    cheil = [:index,:show,:edit,:update,:search_cond,:search_res]
-    vendor = [:index,:show,:search_cond,:search_res]
+    share = [:index,:show,:search_cond,:search_res]
+    rpm_cheil = [:edit,:update] 
+
+    rpm =[:new,:create,:destroy,:send_to_cheil,:not_send,:cancel,:cancel_cancel] + 
+      rpm_cheil + share
+
+    cheil = rpm_cheil + share
+    vendor = share
 
     ok=case @cur_user.org
        when RpmOrg then rpm.include?(params[:action].to_sym)
@@ -46,6 +50,7 @@ class BriefsController < ApplicationController
       create_date_less_than(str_to_date(params[:create_date2])).
       update_date_great_than(str_to_date(params[:update_date1])).
       update_date_less_than(str_to_date(params[:update_date2])).
+      status(params[:status]).
       page(params[:page])
     render :action => :index
   end

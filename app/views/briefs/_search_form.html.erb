@@ -23,6 +23,29 @@
     <%=text_field_tag :update_date2,params[:update_date2],:placeholder=>'2011-12-1',:size=>10%> 
   </div>
 
+  <div class="group">
+    状态:
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <%=radio_button_tag :status,'all',(params[:status].blank? or params[:status] == 'all')%>
+    全部
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <%=radio_button_tag :status,'1',(params[:status] == '1')%>
+    方案中
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <%=radio_button_tag :status,'2',(params[:status] == '2')%>
+    待审定
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <%=radio_button_tag :status,'3',(params[:status] == '3')%>
+    执行中
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <%=radio_button_tag :status,'4',(params[:status] == '4')%>
+    完成
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </div>
   <div class="group navform wat-cf">
     <button class="button" type="submit">
       搜索

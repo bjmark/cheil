@@ -31,6 +31,7 @@ class Brief < ActiveRecord::Base
   scope :create_date_less_than, lambda {|d| d.nil? ? where('') : where('created_at < ?',d)}
   scope :update_date_great_than, lambda {|d| d.nil? ? where('') : where('updated_at > ?',d)}
   scope :update_date_less_than, lambda {|d| d.nil? ? where('') : where('updated_at < ?',d)}
+  scope :status, lambda {|d| d == 'all' ? where('') : where('status = ?',d)}
 
   def designs(reload=false)
     @designs = nil if reload
