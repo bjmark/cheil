@@ -1,0 +1,37 @@
+<%=form_tag @var[:post_path] do%>
+  <table>
+    <tr>
+      <td>序号</td>
+      <td>名称</td>
+      <td>数量</td>
+      <td>说明</td>
+      <td>类型</td>
+    </tr>
+    <%@var[:item_count].times do |n|%>
+      <tr>
+        <td><%=n+1%></td>
+        <td><%=text_field_tag (s="name_#{n}"),params[s]%></td>
+        <td><%=text_field_tag (s="quantity_#{n}"),params[s]%></td>
+        <td><%=text_field_tag (s="note_#{n}"),params[s]%></td>
+        <td>
+          <select name="<%="kind_#{n}"%>" size="1">
+            <option value="design" label="design" <%=item_kind_selected(n,'design',@var[:default])%>>
+            设计
+            </option>
+            <option value="product" label="product" <%=item_kind_selected(n,'product',@var[:default])%>>
+            制作
+            </option>
+          </select> 
+        </td>
+      </tr>
+    <%end%>
+  </table>
+  <%=button_tag(:type=>:submit,:id=>'b1',:name=>'save_many') do%>
+    <%='保存'%>
+  <%end%>
+  <%=button_tag '增加5个设计',:type=>:submit,:name=>'add_5_design'%>
+  <%=button_tag '增加5个制作',:type=>:submit,:name=>'add_5_product'%>
+  &nbsp;&nbsp;
+  <%=link_to '取消',@var[:back_path]%>
+<%end%>
+
