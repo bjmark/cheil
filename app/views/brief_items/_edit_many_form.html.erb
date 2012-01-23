@@ -1,0 +1,36 @@
+<%=form_tag update_many_brief_items_path(:brief_id=>@brief.id),:method=>:put do%>
+  <table>
+    <tr>
+      <td>序号</td>
+      <td>名称</td>
+      <td>数量</td>
+      <td>说明</td>
+      <td>类型</td>
+    </tr>
+    <%n=0
+      @items.each do |e|%>
+      <tr>
+        <td><%=n+=1%></td>
+        <td><%=text_field_tag (s="brief_item[name_#{e.id}]"),e.name%></td>
+        <td><%=text_field_tag (s="brief_item[quantity_#{e.id}]"),e.quantity%></td>
+        <td><%=text_field_tag (s="brief_item[note_#{e.id}]"),e.note%></td>
+        <td>
+          <select name="<%="brief_item[kind_#{e.id}]"%>" size="1">
+            <option value="design" label="design" <%='selected' if e.kind == 'design'%>>
+            设计
+            </option>
+            <option value="product" label="product" <%='selected' if e.kind == 'product'%>>
+            制作
+            </option>
+          </select> 
+        </td>
+      </tr>
+    <%end%>
+  </table>
+  <%=button_tag(:type=>:submit,:id=>'b1',:name=>'save_many') do%>
+    <%='保存'%>
+  <%end%>
+  &nbsp;&nbsp;
+  <%=link_to '取消',brief_path(@brief)%>
+<%end%>
+

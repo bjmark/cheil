@@ -18,9 +18,9 @@ items.each do |e|%>
     <td><%= e.note  %></td>
     <td class="last">
       <%if brief.can_edit_by?(@cur_user.org_id)%>
-        <%= link_to '修改',edit_item_path(e)  %>
+        <%= link_to '修改',edit_brief_item_path(e)  %>
         <%= link_to '删除',
-          item_path(e), 
+          brief_item_path(e), 
           :confirm => 'Are you sure?', 
           :method => :delete 
         %> 

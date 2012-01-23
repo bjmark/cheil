@@ -10,6 +10,17 @@ class Item < ActiveRecord::Base
 
   scope :checked, where(:checked=>'y')
 
+  KIND = {
+    'design' => '设计项',
+    'product'=> '制造项',
+    'tran' => '运输项',
+    'other' => '其他项'
+  }
+
+  def self.kind_cn(en)
+    KIND[en]
+  end
+
   def total
     a1 = quantity.to_f * price.to_f
     a2 = a1.to_i 

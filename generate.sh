@@ -74,4 +74,5 @@
 #rails g migration add_status_to_briefs
 #rails g migration add_cancel_to_briefs
 #rails g migration add_finish_at_to_solutions
-rails generate controller pages
+#rails generate controller pages
+rails generate controller brief_items

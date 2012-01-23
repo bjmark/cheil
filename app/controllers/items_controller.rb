@@ -76,21 +76,21 @@ class ItemsController < ApplicationController
       #create a brief_item or many brief_items
     when params[:brief_id]
       case 
-      when params[:save_one]
+      when params[:save_one] #save one item
         aid = BriefItemAid.new(self)
         aid.check_right(:new,@cur_user)
         @var = aid.save_one_by(@cur_user)
-        if @var.blank?
+        if @var.blank?          #success
           redirect_to brief_path(params[:brief_id]), notice: 'Item was successfully created.'  
-        else
+        else                    #got some errors  
           render 'items/brief/new' 
         end
         return
-      when kind = ['design','product'].find{|e| params["add_5_#{e}"]}
+      when kind = ['design','product'].find{|e| params["add_5_#{e}"]} #add 5 design or product
         aid = BriefItemAid.new(self)
         @var = aid.add_5(kind)
         render 'items/brief/new_many' and return
-      when params[:save_many]
+      when params[:save_many]          #save many
         aid = BriefItemAid.new(self)
         aid.check_right(:new,@cur_user)
         aid.save_many_by(@cur_user)

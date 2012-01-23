@@ -13,13 +13,16 @@
 <%= link_to '新建附件', new_attach_path(:brief_id=>brief.id) %>
 |
 <%= link_to '新建设计项', 
-  new_item_path(:brief_id=>brief.id,:kind=>'design') %>
+  new_brief_item_path(:brief_id=>brief.id,:kind=>'design') %>
 |
 <%= link_to '新建制作项', 
   new_item_path(:brief_id=>brief.id,:kind=>'product') %>
 |
-<%= link_to '新建子项(多)', 
-  new_item_path(:brief_id=>brief.id,:many=>'yes') %>
+<%= link_to '新建设计项(多)', 
+  new_many_brief_items_path(:brief_id=>brief.id,:kind=>'design') %>
+|
+<%= link_to '新建制作项(多)', 
+  new_many_brief_items_path(:brief_id=>brief.id,:kind=>'product') %>
 |
 <%= link_to '新建评论', 
   new_comment_path(:brief_id=>brief.id)
