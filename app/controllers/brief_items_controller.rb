@@ -6,7 +6,7 @@ class BriefItemsController < ApplicationController
   def new
     @brief = Brief.find(params[:brief_id]) 
     @item = @brief.items.new
-    @item.kind = params[:kind]
+    @item.kind = params[:kind].blank? ? 'design' : params[:kind]
   end
 
   def edit

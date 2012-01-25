@@ -19,24 +19,9 @@ class ItemsController < ApplicationController
     end
   end
 
-  
+
   def new
     case
-      #items/new?brief_id=1&kind=design      new a item for a brief
-      #items/new?brief_id=1&many=yes         new many items for a brief
-    when params[:brief_id] 
-      aid = BriefItemAid.new(self)
-      aid.check_right(:new,@cur_user)
-      case 
-      when aid.new_one?
-        @var = aid.new_one
-        render 'items/brief/new' and return
-
-      when aid.new_many?
-        @var = aid.new_many
-        render 'items/brief/new_many' and return
-      end
-
       # new a item for a solution
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
@@ -72,30 +57,6 @@ class ItemsController < ApplicationController
       item = BriefItem.find(params[:item_id])
       item.add_to_solution(solution)
       redirect_to(items_path(:solution_id=>solution.id)) and return
-
-      #create a brief_item or many brief_items
-    when params[:brief_id]
-      case 
-      when params[:save_one] #save one item
-        aid = BriefItemAid.new(self)
-        aid.check_right(:new,@cur_user)
-        @var = aid.save_one_by(@cur_user)
-        if @var.blank?          #success
-          redirect_to brief_path(params[:brief_id]), notice: 'Item was successfully created.'  
-        else                    #got some errors  
-          render 'items/brief/new' 
-        end
-        return
-      when kind = ['design','product'].find{|e| params["add_5_#{e}"]} #add 5 design or product
-        aid = BriefItemAid.new(self)
-        @var = aid.add_5(kind)
-        render 'items/brief/new_many' and return
-      when params[:save_many]          #save many
-        aid = BriefItemAid.new(self)
-        aid.check_right(:new,@cur_user)
-        aid.save_many_by(@cur_user)
-        redirect_to brief_path(params[:brief_id]) and return  
-      end
 
       #create a solution_item
     when params[:solution_id]
@@ -139,9 +100,6 @@ class ItemsController < ApplicationController
     @item.check_edit_right(@cur_user.org_id)
 
     case @item
-    when BriefItem 
-      attr = params[:brief_item]
-      @item.brief.op.touch(@cur_user.id)
     when SolutionItem
       @item.solution.op.touch(@cur_user.id)
       attr = params[:solution_item]
@@ -171,8 +129,6 @@ class ItemsController < ApplicationController
       item.check_edit_right(@cur_user.org_id)
 
       case item
-      when BriefItem 
-        item.brief.op.touch(@cur_user.id)
       when SolutionItem
         item.solution.op.touch(@cur_user.id)
       end
@@ -183,119 +139,5 @@ class ItemsController < ApplicationController
       raise SecurityError
     end
   end
-
 end
 
-
-class ItemsController 
-  class BriefItemAid
-    def initialize(contr)
-      @contr = contr
-    end
-
-    def contr
-      @contr
-    end
-
-    def params
-      @contr.params
-    end
-
-    def brief
-      @brief ||= Brief.find(params[:brief_id]) 
-    end
-
-    def check_right(op,cur_user)
-      case op
-      when :new
-        brief.check_edit_right(cur_user.org_id)     #check right
-      end
-    end
-
-    def new_many?
-      params[:many] == 'yes'
-    end
-
-    def new_one?
-      !new_many?
-    end
-
-    def post_path
-      contr.items_path(:brief_id=>brief.id)      
-    end
-
-    def back_path
-      contr.brief_path(brief)
-    end
-
-    def new_one_var(item)
-      kind = {'design' => '设计项','product'=>'制造项'}
-      title = "新建#{kind[params[:kind]]} (#{brief.name})"
-      {
-        :item => item,
-        :title => title,
-        :post_path => post_path,
-        :back_path => back_path
-      }
-    end
-
-    def new_one
-      item = brief.items.new
-      item.kind = params[:kind]
-      new_one_var(item)
-    end
-
-    def save_one_by(cur_user)
-      item = brief.items.new(params[:brief_item])
-      var =
-        if item.op.save_by(cur_user.id)
-          brief.op.touch(cur_user.id)
-          {}
-        else
-          new_one_var(item)
-        end
-    end
-
-    def new_many_var(item_count,default='design')
-      title = "新建子项 (#{brief.name})"
-      {
-        :title => title,
-        :default => default,
-        :item_count => item_count,
-        :post_path => post_path,
-        :back_path => back_path
-      }
-    end
-
-    def new_many
-      new_many_var(5)
-    end
-
-    def add_5(default = 'design')
-      n = 0
-      n += 1 while params["name_#{n}"]
-      item_count = n+5
-      new_many_var(item_count,default)
-    end
-
-    def save_many_by(cur_user)
-      n = 0
-      saved_count = 0
-      while params["name_#{n}"]
-        attr = {}
-        %w{name quantity note kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
-        item = brief.items.new(attr)
-        if item.op.save_by(cur_user.id)
-          saved_count += 1
-        end
-        n += 1
-      end
-      if saved_count > 0
-        brief.op.touch(cur_user.id)
-      end
-
-      return saved_count 
-    end
-
-  end
-end
