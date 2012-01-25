@@ -1,3 +1,4 @@
+#coding=utf-8
 require 'spec_helper'
 
 describe BriefItemsController do
@@ -40,8 +41,87 @@ describe BriefItemsController do
       assigns(:item).should == brief_item
       assigns(:brief).should == brief
     }
+
+    specify {
+      set_current_user(cheil_user)
+      brief_item = brief.items.create(:name=>'d1')
+
+      expect {
+        get :edit,:id => brief_item.id
+      }.to raise_exception(SecurityError)
+    }
+
+    specify {
+      set_current_user(cheil_user)
+      brief_item = brief.items.create(:name=>'d1')
+      brief.send_to_cheil!
+
+      get :edit,:id => brief_item.id
+      assigns(:item).should == brief_item
+      assigns(:brief).should == brief
+    }
+
   end
 
   describe 'create' do
+    specify {
+      set_current_user(rpm_user)
+      brief_item = {
+        :name => 'b1',
+        :quantity => '10',
+        :note => 'abc',
+        :kind => 'design'
+      }
+
+      post :create,:brief_id=>brief.id,:brief_item=>brief_item
+      assigns(:item).new_record?.should be_false
+      assigns(:item).name.should == 'b1'
+      assigns(:item).quantity.should == '10'
+      assigns(:item).note.should == 'abc'
+      assigns(:item).kind.should == 'design'
+      assigns(:item).read_by.should == rpm_user.id.to_s
+      assigns(:item).brief.read_by.should == rpm_user.id.to_s
+      response.should redirect_to(brief_path(brief))
+    }
+
+    #name should not be blank
+    specify {
+      set_current_user(rpm_user)
+      brief_item = {
+        :name => '',
+        :quantity => '10',
+        :note => 'abc',
+        :kind => 'design'
+      }
+
+      post :create,:brief_id=>brief.id,:brief_item=>brief_item
+      assigns(:item).new_record?.should be_true
+      assigns(:item).should have(1).errors_on(:name)
+    }
+
+  end
+
+  describe 'update' do
+    specify{
+      set_current_user(rpm_user)
+      item = brief.items.create(:name=>'d1')
+
+      item_attr = {
+        :name => 'b1',
+        :quantity => '10',
+        :note => 'abc',
+        :kind => 'design'
+      }
+
+      put :update,:id=>item.id,:brief_item=>item_attr
+
+      assigns(:item).name.should == 'b1'
+      assigns(:item).quantity.should == '10'
+      assigns(:item).note.should == 'abc'
+      assigns(:item).kind.should == 'design'
+      assigns(:item).read_by.should == rpm_user.id.to_s
+      assigns(:item).brief.read_by.should == rpm_user.id.to_s
+      response.should redirect_to(brief_path(brief))
+    }
   end
 end

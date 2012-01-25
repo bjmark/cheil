@@ -12,6 +12,7 @@ class BriefItemsController < ApplicationController
   def edit
     @item = BriefItem.find(params[:id])
     @brief = @item.brief
+    @brief.check_edit_right(@cur_user.org_id)     #check right
   end
 
 
