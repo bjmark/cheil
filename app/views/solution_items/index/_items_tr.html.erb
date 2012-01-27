@@ -1,0 +1,28 @@
+<%
+  #solution_items/index/_items_tr
+#items,solution,kind_cn
+%>
+<%unless items.empty?%>
+  <%n=0
+  items.each do |e|%>
+    <tr class="<%=['odd','even'][(n+=1)%2]%>">
+      <%n.upto(1)do %>
+        <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+      <%end%>
+      <td><%= e.name  %></td>
+      <td><%= e.quantity  %></td>
+      <td><%= e.note  %></td>
+      <td class="last">
+        <%if e.belongs_to?(solution)%>
+          <%= button_to '取消指派',
+            solution_item_path(e,:solution_id=>solution.id),
+            :method=>:delete%>
+          <%else%>
+            <%= button_to '指派',
+              solution_items_path(:solution_id=>solution.id,:item_id=>e.id)%>
+        <%end%>
+      </td>
+    </tr>
+  <%end%>
+<%end%>
+

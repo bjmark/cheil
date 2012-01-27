@@ -1,0 +1,12 @@
+<%
+  #solution_items/index 
+# @brief,@solution
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'solution_items/index/nav',
+    :locals=>{:brief=>@brief}},
+    :title=>"指派子项(#{@solution.org.name})",
+  :content=>{:partial=>'solution_items/index/index',
+    :locals=>{:brief=>@brief,
+      :solution=>@solution}}%>
+

@@ -17,6 +17,10 @@ class VendorSolutionsController < ApplicationController
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
       @brief.check_create_solution_right(@cur_user.org_id)
+      @my_solution = @brief.vendor_solutions.where(:org_id=>@cur_user.org_id).first
+      unless @my_solution
+        @my_solution = @brief.vendor_solutions.create(:org_id=>@cur_user.org_id,:read_by=>@cur_user.id.to_s)
+      end
     end
   end
 
@@ -40,8 +44,6 @@ class VendorSolutionsController < ApplicationController
       end
   end
 
-
-
   def create
     brief = Brief.find(params[:brief_id])
     brief.check_create_solution_right(@cur_user.org_id)
@@ -63,4 +65,24 @@ class VendorSolutionsController < ApplicationController
 
     redirect_to vendor_solutions_path(:brief_id=>brief.id) 
   end
+
+  def edit_rate
+    @solution = Solution.find(params[:id])
+    @solution.check_edit_right(@cur_user.org_id)
+  end
+
+  def update_rate
+    solution = Solution.find(params[:id])
+    solution.check_edit_right(@cur_user.org_id)
+    att = params[:vendor_solution] 
+    solution.design_rate = att[:design_rate]
+    solution.product_rate = att[:product_rate]
+    solution.tran_rate = att[:tran_rate]
+    solution.other_rate = att[:other_rate]
+    solution.save
+
+    redirect_to vendor_solution_path(solution)
+  end
+
+
 end

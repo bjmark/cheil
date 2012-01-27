@@ -27,21 +27,21 @@ module VendorSolutionsHelper
 
     if item.solution.org_id == @cur_user.org_id 
       if item.kind == 'design' or item.kind == 'product' 
-        link << link_to('报价',edit_item_path(item,:spec=>'price')) 
+        link << link_to('报价',edit_price_solution_item_path(item)) 
       else
-        link << link_to('修改',edit_item_path(item))  
-        link << link_to('删除',item_path(item),:confirm => 'Are you sure?',:method => :delete) 
+        link << link_to('修改',edit_solution_item_path(item))  
+        link << link_to('删除',solution_item_path(item),:confirm => 'Are you sure?',:method => :delete) 
       end
     end
 
     if @cur_user.org.instance_of?(CheilOrg)
       unless item.checked?
-        link << link_to('选中',check_item_path(item),{:method => :put})
+        link << link_to('选中',check_solution_item_path(item),{:method => :put})
       else
-        link << link_to('不选',uncheck_item_path(item),{:method => :put})
+        link << link_to('不选',uncheck_solution_item_path(item),{:method => :put})
       end
     end
 
-    link.join('|')
+    link.join(' | ')
   end
 end

@@ -23,6 +23,7 @@ Cheil::Application.routes.draw do
   end
 
   resources :brief_items 
+
   scope :path => '/brief_items',:controller => :brief_items do
     get 'new/many' => :new_many, :as=>'new_many_brief_items'
     post 'create/many' => :create_many, :as=>'create_many_brief_items'
@@ -30,7 +31,13 @@ Cheil::Application.routes.draw do
     put 'update/many' => :update_many, :as=>'update_many_brief_items'
   end
 
-  resources :solution_items 
+  resources :solution_items do 
+    member do
+      put :check
+      put :uncheck
+    end
+  end
+
   scope :path => '/solution_items',:controller => :solution_items do
     get ':id/edit/price' => :edit_price, :as=>'edit_price_solution_item'
     put ':id/update/price' => :update_price, :as=>'update_price_solution_item'
@@ -49,7 +56,12 @@ Cheil::Application.routes.draw do
     end
   end
 
-  resources :vendor_solutions 
+  resources :vendor_solutions do
+    member do
+      get :edit_rate
+      put :update_rate
+    end
+  end
 
   resources :vendor_orgs
 
@@ -126,7 +138,7 @@ Cheil::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-   root :to => 'sessions#new'
+  root :to => 'sessions#new'
 
   # See how all your routes lay out with "rake routes"
 

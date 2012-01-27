@@ -1,7 +1,7 @@
 #encoding=utf-8
 class ItemsController < ApplicationController
   before_filter :cur_user 
-
+=begin
   def index
     if params[:solution_id]
       @solution = Solution.find(params[:solution_id])
@@ -9,7 +9,7 @@ class ItemsController < ApplicationController
       render 'items/index1/index'
     end
   end
-
+=end
   def owner_path(item)
     case item
     when BriefItem 
@@ -19,7 +19,7 @@ class ItemsController < ApplicationController
     end
   end
 
-
+=begin
   def new
     case
       # new a item for a solution
@@ -35,7 +35,8 @@ class ItemsController < ApplicationController
       raise SecurityError
     end
   end
-
+=end
+=begin
   def edit
     @item = Item.find(params[:id])
     @item.check_edit_right(@cur_user.org_id)
@@ -46,7 +47,9 @@ class ItemsController < ApplicationController
             when ['tran','other'].include?(@item.kind) then 'tran_form'
             end
   end
+=end
 
+=begin
   def create
     case
       #add a brief_item to vendor_solution
@@ -57,7 +60,6 @@ class ItemsController < ApplicationController
       item = BriefItem.find(params[:item_id])
       item.add_to_solution(solution)
       redirect_to(items_path(:solution_id=>solution.id)) and return
-
       #create a solution_item
     when params[:solution_id]
       solution = Solution.find(params[:solution_id])
@@ -78,7 +80,8 @@ class ItemsController < ApplicationController
       render action: "new" 
     end
   end
-
+=end
+=begin
   def set_checked(value)
     item = Item.find(params[:id])
     raise SecurityError unless item.solution.brief.received_by?(@cur_user.org_id)
@@ -94,7 +97,8 @@ class ItemsController < ApplicationController
   def uncheck
     set_checked('n')
   end
-
+=end
+=begin
   def update
     @item = Item.find(params[:id])
     @item.check_edit_right(@cur_user.org_id)
@@ -115,7 +119,8 @@ class ItemsController < ApplicationController
       render action: "edit" 
     end
   end
-
+=end
+=begin
   def destroy
     case
     when (params[:id] and params[:solution_id])
@@ -139,5 +144,6 @@ class ItemsController < ApplicationController
       raise SecurityError
     end
   end
+=end
 end
 

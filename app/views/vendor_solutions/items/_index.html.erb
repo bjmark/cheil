@@ -41,10 +41,10 @@
 </table>
 <%=render 'vendor_solutions/items/total',:solution=>solution,:total=>total%>
 <%if solution.org_id == @cur_user.org_id%>
-  <%= link_to '新建运输项', new_item_path(:solution_id=>solution.id,:kind=>'tran') %>
+  <%= link_to '新建运输项', new_solution_item_path(:solution_id=>solution.id,:kind=>'tran') %>
   |
-  <%= link_to '新建其他项', new_item_path(:solution_id=>solution.id,:kind=>'other') %>
+  <%= link_to '新建其他项', new_solution_item_path(:solution_id=>solution.id,:kind=>'other') %>
   |
-  <%= link_to '修改税率', edit_rate_solution_path(solution) %>
+  <%= link_to '修改税率', edit_rate_vendor_solution_path(solution) %>
   <br/>
 <%end%>

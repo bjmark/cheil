@@ -56,7 +56,7 @@ class SolutionsController < ApplicationController
     end
 
   end
-
+=begin
   def edit_rate
     @solution = Solution.find(params[:id])
     @solution.check_edit_right(@cur_user.org_id)
@@ -74,7 +74,7 @@ class SolutionsController < ApplicationController
 
     redirect_to solution_path(solution)
   end
-
+=end
 =begin
   def create
     brief = Brief.find(params[:brief_id])

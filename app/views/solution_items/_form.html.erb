@@ -1,0 +1,33 @@
+<%= form_for(@item,:html=>{:class=>'form'}) do |f| %>
+  <%=f.hidden_field :fk_id%>
+   <div class="group">
+    <%= f.label :name,'名称',:class=>'label' %>
+    <%= f.text_field :name,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <%= f.label :quantity,'数量',:class=>'label' %>
+    <%= f.text_field :quantity,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <%= f.label :quantity,'说明',:class=>'label' %>
+    <%= f.text_field :note,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <%= f.label :price,'单价',:class=>'label' %>
+    <%= f.text_field :price,:class=>'text_field' %>
+  </div>
+  <div class="group">
+    <div>
+      <%= f.radio_button :kind,'tran',:class=>'checkbox' %>
+      <%=f.label :kind,'运输项',:class=>'radio'%>
+    </div>
+    <div>
+      <%= f.radio_button :kind,'other',:class=>'checkbox' %>
+      <%=f.label :kind,'其他项',:class=>'radio'%>
+    </div>
+  </div>
+  <div class="group">
+    <%= f.submit '提交' %>
+    <%= link_to '取消', vendor_solution_path(@solution) %>
+  </div>
+<% end %>
