@@ -22,10 +22,6 @@ class VendorOrgsController < ApplicationController
       @vendors = VendorOrg.all.reject do |e| 
         bv.find{|t| t.org_id == e.id}
       end
-
-      @path = solutions_path(:brief_id=>@brief.id)
-      @back = solutions_path(:brief_id=>@brief.id)
-
       render 'vendor_orgs/sel/index' 
     else
       @vendor_orgs = VendorOrg.all

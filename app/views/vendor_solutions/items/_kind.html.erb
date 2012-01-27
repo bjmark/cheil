@@ -1,5 +1,5 @@
 <%
-  #briefs/items/_kind
+  #vendor_solutions/items/_kind
 #locals =>brief,items,kind_cn
 %>
 <%n=0
@@ -19,11 +19,7 @@ items.each do |e|%>
     <td><%= e.price  %></td>
     <td><%= e.total if e.total > 0 %></td>
     <td class="last">
-      <%unless e.checked?%>
-        <%=link_to('选中',check_item_path(e),{:method => :put})%>
-      <%else%>
-        <%=link_to('不选',uncheck_item_path(e),{:method => :put})%>
-      <%end%>
+      <%=raw(vendor_solution_item_link(e))%>
     </td>
   </tr>
 <%end%>

@@ -30,6 +30,12 @@ Cheil::Application.routes.draw do
     put 'update/many' => :update_many, :as=>'update_many_brief_items'
   end
 
+  resources :solution_items 
+  scope :path => '/solution_items',:controller => :solution_items do
+    get ':id/edit/price' => :edit_price, :as=>'edit_price_solution_item'
+    put ':id/update/price' => :update_price, :as=>'update_price_solution_item'
+  end
+
   resources :comments , :only=>[:new,:create,:destroy]
   resources :solutions do
     member do
@@ -42,6 +48,8 @@ Cheil::Application.routes.draw do
       put :unfinish
     end
   end
+
+  resources :vendor_solutions 
 
   resources :vendor_orgs
 

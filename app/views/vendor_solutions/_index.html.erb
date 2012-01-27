@@ -1,0 +1,32 @@
+<%
+  #solutions/index/_index
+#brief
+%>
+<table class="table brief_attaches">
+  <tbody>
+    <tr>
+      <th>名称</th>
+      <th></th>
+    </tr>
+    <%
+      brief_items_size = brief.items.length
+      n=1
+      brief.vendor_solutions.each do |e|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= e.org.name %>
+          </td>
+          <td class="last">
+            <%= link_to fang_an(e,brief_items_size),vendor_solution_path(e)  %>
+            |
+            <%=link_to '指派的子项',items_path(:solution_id=>e.id)  %>
+            |
+            <%= link_to '删除', vendor_solution_path(e),
+            :confirm => '确定删除吗?', :method => :delete %>
+          </td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+
+<%=link_to '选择Vendor',vendor_orgs_path(:brief_id=>brief.id)%>

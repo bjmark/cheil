@@ -1,0 +1,54 @@
+<%
+  #vendor_solutions/items/payment
+#solution
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>应付</th>
+      <th>已付</th>
+      <th>未付余额</th>
+    </tr>
+    <tr class="even">
+      <td>
+        <%= @money[:amount]  %>
+      </td>
+      <td>
+        <%= @money[:paid]  %>
+      </td>
+      <td>
+        <%= @money[:balance]  %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<%unless @payments.empty?%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>支付者</th>
+        <th>金额</th>
+        <th>支付日期</th>
+        <th>说明</th>
+      </tr>
+      <%n=1
+      @payments.each do |p|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= p.payer.name  %>
+          </td>
+          <td>
+            <%= p.amount  %>
+          </td>
+          <td>
+            <%= p.pay_date  %>
+          </td>
+          <td>
+            <%= p.note  %>
+          </td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+<%end%>

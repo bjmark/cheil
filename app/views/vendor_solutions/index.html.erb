@@ -1,0 +1,10 @@
+<%
+  #vendor_solutions/index
+# @brief
+%>
+<%=render 'share/block',
+    :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
+      :title=>brief_name(@brief,:append=>',已选vendors'),
+    :content=>{:partial=>'index',:locals=>{:brief=>@brief}}
+%>
+

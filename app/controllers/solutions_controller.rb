@@ -16,7 +16,7 @@ class SolutionsController < ApplicationController
     ok or (raise SecurityError) 
   end
 
-
+=begin
   def index
     if params[:brief_id]
       @brief = Brief.find(params[:brief_id])
@@ -24,7 +24,7 @@ class SolutionsController < ApplicationController
       @brief.check_create_solution_right(@cur_user.org_id)
     end
   end
-
+=end
   def show
     @solution = Solution.find(params[:id])
     @solution.check_read_right(@cur_user.org_id)
@@ -75,6 +75,7 @@ class SolutionsController < ApplicationController
     redirect_to solution_path(solution)
   end
 
+=begin
   def create
     brief = Brief.find(params[:brief_id])
     brief.check_create_solution_right(@cur_user.org_id)
@@ -87,7 +88,8 @@ class SolutionsController < ApplicationController
 
     redirect_to solutions_path(:brief_id=>brief.id) 
   end
-
+=end
+=begin
   def destroy
     s = Solution.find(params[:id])
     brief = s.brief
@@ -96,7 +98,7 @@ class SolutionsController < ApplicationController
 
     redirect_to solutions_path(:brief_id=>brief.id) 
   end
-
+=end
   def approve
     solution = Solution.find(params[:id])
     solution.check_approve_right(@cur_user.org_id)

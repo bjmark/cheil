@@ -75,4 +75,8 @@
 #rails g migration add_cancel_to_briefs
 #rails g migration add_finish_at_to_solutions
 #rails generate controller pages
-rails generate controller brief_items
+#rails generate controller brief_items
+#rails generate controller solution_items
+#rails g model brief_solution 可能要去掉
+
+rails generate controller vendor_solutions

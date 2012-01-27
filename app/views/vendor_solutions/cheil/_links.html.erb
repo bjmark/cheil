@@ -1,0 +1,8 @@
+<%
+  #vendor_solutions/cheil/_links
+#solution
+%>
+<p>
+<%=solution.brief.name%>(<%=solution.org.name%>)
+</p>
+<%= link_to '新建评论', new_comment_path(:solution_id=>solution.id)%>

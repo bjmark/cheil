@@ -1,0 +1,21 @@
+<%
+  #solutions/vendor/show 
+# @brief,@solution
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/vendor/nav',
+    :locals=>{:brief=>@solution.brief,:solution=>@solution}},
+    :contents=>[{:partial=>'solutions/vendor/links',:locals=>{:solution=>@solution}}
+]
+%>
+<%=attaches(@solution)%>
+<%=vendor_solution_items(@solution)%>
+<%=render 'share/block',
+  :title=>'付款',
+  :content=>{:partial=>'vendor_solutions/items/payment'
+} if @solution.brief.cheil_solution.approved?%>
+
+
+<%=comments(@solution)%>
+
+
