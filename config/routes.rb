@@ -44,10 +44,21 @@ Cheil::Application.routes.draw do
   end
 
   resources :comments , :only=>[:new,:create,:destroy]
+
   resources :solutions do
     member do
       get :edit_rate
       put :update_rate
+      put :approve
+      put :unapprove
+      put :send_to_rpm
+      put :finish
+      put :unfinish
+    end
+  end
+
+  resources :cheil_solutions do
+    member do
       put :approve
       put :unapprove
       put :send_to_rpm

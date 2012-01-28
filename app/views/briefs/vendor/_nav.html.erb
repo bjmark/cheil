@@ -8,7 +8,7 @@
 <li <%=raw 'class="active"' if brief_path(brief) == request.fullpath%>>
 <%=link_to '需求',brief_path(brief)%>
 </li>
-<li <%=raw 'class="active"' if solution_path(solution) == request.fullpath%>>
-<%=link_to '方案',solution_path(solution)%>
+<li <%=raw 'class="active"' if vendor_solution_path(solution) == request.fullpath%>>
+<%=link_to '方案',vendor_solution_path(solution)%>
 </li>
 

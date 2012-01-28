@@ -10,8 +10,8 @@
 </li>
 <li>
 <%if brief.send_to_cheil? and brief.status > 1%>
-  <li <%=raw 'class="active"' if solution_path(brief.cheil_solution) == request.fullpath%>>
-  <%= link_to '方案', solution_path(brief.cheil_solution) %>
+  <li <%=raw 'class="active"' if cheil_solution_path(brief.cheil_solution) == request.fullpath%>>
+  <%= link_to '方案', cheil_solution_path(brief.cheil_solution) %>
   </li>
 <%end%>
 

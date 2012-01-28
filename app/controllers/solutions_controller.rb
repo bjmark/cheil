@@ -39,9 +39,10 @@ class SolutionsController < ApplicationController
 
     when CheilOrg          #current user is a cheil user
       case
+=begin
       when @solution.instance_of?(VendorSolution)         #show a vendor solution
         render 'solutions/cheil/vendor_solution/show'
-      
+=end
       when @solution.instance_of?(CheilSolution)           #show a cheil solution
         @payments = Payment.where(:solution_id=>@solution.id).all
         render 'solutions/cheil/cheil_solution/show'
@@ -99,6 +100,7 @@ class SolutionsController < ApplicationController
     redirect_to solutions_path(:brief_id=>brief.id) 
   end
 =end
+=begin
   def approve
     solution = Solution.find(params[:id])
     solution.check_approve_right(@cur_user.org_id)
@@ -116,20 +118,23 @@ class SolutionsController < ApplicationController
   def unapprove
     approve{'n'}
   end
-
+=end
+=begin
   def set_status(solution,status_code)
     solution.check_edit_right(@cur_user.org.id)
     brief = solution.brief
     brief.status = status_code
     brief.save
   end
-
+=end
+=begin
   def send_to_rpm
     solution = Solution.find(params[:id])
     set_status(solution,2)
     redirect_to solution_path(solution)
   end
-
+=end
+=begin
   def finish
     solution = Solution.find(params[:id])
     set_status(solution,4)
@@ -143,4 +148,5 @@ class SolutionsController < ApplicationController
     set_status(solution,3)
     redirect_to solution_path(solution)
   end
+=end
 end

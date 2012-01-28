@@ -24,7 +24,7 @@ module ApplicationHelper
       case attach.checked
         when 'n' then links << link_to('选中',check_attach_path(attach),
                                        {:method => :put})
-        when 'y' then links << link_to('取消选中',uncheck_attach_path(attach),
+        when 'y' then links << link_to('不选',uncheck_attach_path(attach),
                                        {:method => :put})
         end
     end

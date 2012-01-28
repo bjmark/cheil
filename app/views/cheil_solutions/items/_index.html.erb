@@ -1,0 +1,51 @@
+<%
+  #cheil_solutions/items/_index
+#locals=>solution,total
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+      <th>说明</th>
+      <th>单价</th>
+      <th>合计</th>
+      <th>vendor</th>
+      <th></th>
+    </tr>
+    <%
+      checked_designs=solution.checked_designs
+    %>
+    <%=render 'cheil_solutions/items/kind',
+      :solution=>solution,
+      :checked_items=>checked_designs,
+      :kind_cn=>'设计' unless checked_designs.empty? 
+    %>
+    <%
+      checked_products=solution.checked_products
+    %>
+    <%=render 'cheil_solutions/items/kind',
+      :solution=>solution,
+      :checked_items=>checked_products,
+      :kind_cn=>'制作' unless checked_products.empty? 
+    %>
+    <%
+      checked_trans=solution.checked_trans
+    %>
+    <%=render 'cheil_solutions/items/kind',
+      :solution=>solution,
+      :checked_items=>checked_trans,
+      :kind_cn=>'运输' unless checked_trans.empty? 
+    %>
+    <%
+      checked_others=solution.checked_others
+    %>
+    <%=render 'cheil_solutions/items/kind',
+      :solution=>solution,
+      :checked_items=>checked_others,
+      :kind_cn=>'其他' unless checked_others.empty?
+    %>
+  </tbody>
+</table>
+<%=render 'cheil_solutions/items/total',:total=>total%>

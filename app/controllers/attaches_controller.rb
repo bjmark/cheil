@@ -1,15 +1,6 @@
 #encoding=utf-8
 class AttachesController < ApplicationController
-  before_filter :cur_user , :check_right
-
-  def check_right
-=begin
-    case @cur_user.org
-    when RpmOrg , CheilOrg
-    else  raise SecurityError
-    end
-=end
-  end
+  before_filter :cur_user 
 
   def download
     attach = Attach.find(params[:id])
@@ -27,7 +18,7 @@ class AttachesController < ApplicationController
     when BriefAttach 
       brief_path(attach.fk_id)
     when SolutionAttach
-      solution_path(attach.fk_id)
+      vendor_solution_path(attach.fk_id)
     end
   end
 
@@ -44,7 +35,7 @@ class AttachesController < ApplicationController
       solution.check_edit_right(@cur_user.org_id)
       @attach = SolutionAttach.new
       @path = attaches_path(:solution_id=>solution.id)
-      @back = solution_path(solution)
+      @back = vendor_solution_path(solution)
     end
   end
 
@@ -84,20 +75,27 @@ class AttachesController < ApplicationController
     end
   end
 
-  def set_checked(value)
-    attach = Attach.find(params[:id])
+  def check
+    value = 'y'
+    if block_given?
+      value = yield
+    end
+
+    attach = SolutionAttach.find(params[:id])
     attach.can_checked_by?(@cur_user.org_id)
     attach.checked = value
     attach.save
-    redirect_to flash[:dest] or solution_path(attach.fk_id)
-  end
 
-  def check
-    set_checked('y')
+    if params[:dest]
+      redirect_to params[:dest]
+    else
+      redirect_to vendor_solution_path(attach.solution)
+    end
+
   end
 
   def uncheck
-    set_checked('n')
+    check{'n'}
   end
 
   def update

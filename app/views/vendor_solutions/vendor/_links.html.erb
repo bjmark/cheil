@@ -1,0 +1,12 @@
+<%
+  #solutions/vendor/_links
+#solution
+%>
+<br/>
+<%= link_to '新建附件', new_attach_path(:solution_id=>solution.id)%>
+|
+<%= link_to '新建运输项', new_solution_item_path(:solution_id=>solution.id,:kind=>'tran')%>
+|
+<%= link_to '新建其他项', new_solution_item_path(:solution_id=>solution.id,:kind=>'other')%>
+|
+<%= link_to '新建评论', new_comment_path(:solution_id=>solution.id)%>

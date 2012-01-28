@@ -47,7 +47,7 @@ class PaymentsController < ApplicationController
     @payment = Payment.new(params[:payment])
 
     if @payment.save
-      redirect_to solution_path(@payment.solution_id), 
+      redirect_to cheil_solution_path(@payment.solution_id), 
         notice: 'Payment was successfully created.' 
     else
       render action: "new" 
@@ -71,6 +71,6 @@ class PaymentsController < ApplicationController
     @payment = Payment.find(params[:id])
     @payment.destroy
 
-    redirect_to solution_path(@payment.solution_id) 
+    redirect_to cheil_solution_path(@payment.solution_id) 
   end
 end

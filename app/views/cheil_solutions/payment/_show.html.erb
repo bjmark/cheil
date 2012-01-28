@@ -1,0 +1,79 @@
+<%
+  #solutions/cheil/cheil_solution/payment/_show
+#solution
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>vendor</th>
+      <th>应付</th>
+      <th>已付</th>
+      <th>未付余额</th>
+      <th></th>
+    </tr>
+    <%n=1
+    @solution.vendor_money.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e[:org].name  %>
+        </td>
+        <td>
+          <%= e[:amount]  %>
+        </td>
+        <td>
+          <%= e[:paid]  %>
+        </td>
+        <td>
+          <%= e[:balance]  %>
+        </td>
+        <td class="last">
+          <%if @cur_user.org.instance_of?(CheilOrg)%>
+            <%=link_to '付款',new_payment_path(:solution_id=>@solution.id,:org_id=>e[:org].id)%>
+          <%end%>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+
+<%unless @payments.empty?%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>支付者</th>
+        <th>vendor</th>
+        <th>金额</th>
+        <th>支付日期</th>
+        <th>说明</th>
+        <th></th>
+      </tr>
+      <%n=1
+      @payments.each do |p|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= p.payer.name  %>
+          </td>
+          <td>
+            <%= p.org.name  %>
+          </td>
+          <td>
+            <%= p.amount  %>
+          </td>
+          <td>
+            <%= p.pay_date  %>
+          </td>
+          <td>
+            <%= p.note  %>
+          </td>
+          <td class="last">
+            <%if @cur_user.org.instance_of?(CheilOrg)%>
+              <%= link_to '修改',edit_payment_path(p)%>
+              |
+              <%= link_to '删除',payment_path(p),:confirm=>'确定吗?',:method=>:delete%>
+            </td>
+          <%end%>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+<%end%>

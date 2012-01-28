@@ -1,0 +1,31 @@
+<%
+  #cheil_solutions/cheil/show 
+#@solution
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/cheil/nav',
+    :locals=>{:brief=>@solution.brief}},
+    :contents=>[{:partial=>'cheil_solutions/cheil/links',
+      :locals=>{:solution=>@solution}}
+]
+%>
+<%=render 'share/block',
+      :title=>'附件',
+      :content=>{:partial=>'cheil_solutions/attaches/index',
+        :locals=>{:solution=>@solution}} unless @solution.checked_attaches.empty?
+%>
+
+<%=render 'share/block',
+  :title=>'子项',
+  :content=>{:partial=>'cheil_solutions/items/index',
+    :locals=>{:solution=>@solution,:total=>@solution.total}
+} unless @solution.checked_items.empty?
+%>
+<%=render 'share/block',
+  :title=>'付款',
+  :content=>{:partial=>'cheil_solutions/payment/show'
+} if @solution.approved?%>
+
+<%=comments(@solution)%>
+
+

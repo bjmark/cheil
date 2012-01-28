@@ -1,0 +1,30 @@
+<%
+  #cheil_solutions/attaches/_index
+#solution
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>文件名</th>
+      <th>创建者</th>
+      <th></th>
+    </tr>
+    <%n=1
+    solution.checked_attaches.each do |e|%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>
+          <%= e.attach_file_name  %>
+        </td>
+        <td>
+          <%= e.solution.org.name  %>
+        </td>
+        <td class="last">
+          <%=link_to('下载',download_attach_path(e))%> 
+          <%if @cur_user.org.instance_of?(CheilOrg)%>
+            <%=link_to('不选',uncheck_attach_path(e,:dest=>cheil_solution_path(solution)),{:method => :put}) %>
+          <%end%>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>

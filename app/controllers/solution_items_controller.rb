@@ -122,11 +122,23 @@ class SolutionItemsController < ApplicationController
   end
 
   def check
-    set_checked('y')
+    item = SolutionItem.find(params[:id])
+    raise SecurityError unless item.solution.brief.received_by?(@cur_user.org_id)
+    value = 'y'
+    if block_given? 
+      value = yield
+    end
+    item.checked = value
+    item.save
+    if params[:dest]
+      redirect_to params[:dest]
+    else
+      redirect_to vendor_solution_path(item.solution)
+    end
   end
 
   def uncheck
-    set_checked('n')
+    check{'n'}
   end
 
 end

@@ -1,0 +1,23 @@
+<%
+  #cheil_solutions/cheil/_links
+#solution
+%>
+<br/>
+<%= link_to '新建评论', new_comment_path(:solution_id=>solution.id)%>
+<%if solution.brief.status < 2%>
+  |
+  <%= link_to '提交方案给RPM',send_to_rpm_cheil_solution_path(solution),:method=>:put,:confirm=>'确定吗？'%>
+<%end%>
+<%if solution.approved?%>
+  |
+  确认时间:<%=short_d(solution.approved_at)%>
+<%end%>
+<%if solution.brief.status == 3%>
+  |
+  <%= link_to '完成',finish_cheil_solution_path(solution),:method=>:put,:confirm=>'确定吗？'%>
+<%end%>
+<%if solution.brief.status == 4%>
+  |
+  <%= link_to '取消完成',unfinish_cheil_solution_path(solution),:method=>:put,:confirm=>'确定吗？'%>
+<%end%>
+<h2 class="title"><%=brief_name(solution.brief)%></h2>

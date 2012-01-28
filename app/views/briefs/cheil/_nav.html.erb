@@ -11,8 +11,8 @@
 <li <%=raw 'class="active"' if vendor_solutions_path == request.fullpath.split('?').first%>>
 <%=link_to 'Vendor方案',vendor_solutions_path(:brief_id=>brief.id)%>
 </li>
-<li <%=raw 'class="active"' if solution_path(brief.cheil_solution) == 
+<li <%=raw 'class="active"' if cheil_solution_path(brief.cheil_solution) == 
   request.fullpath.split('?').first%>>
-<%=link_to 'Cheil 方案',solution_path(brief.cheil_solution)%>
+<%=link_to 'Cheil 方案',cheil_solution_path(brief.cheil_solution)%>
 </li>
 

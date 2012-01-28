@@ -79,4 +79,5 @@
 #rails generate controller solution_items
 #rails g model brief_solution 可能要去掉
 
-rails generate controller vendor_solutions
+#rails generate controller vendor_solutions
+#rails generate controller cheil_solutions

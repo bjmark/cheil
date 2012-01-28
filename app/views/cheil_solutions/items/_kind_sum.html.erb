@@ -1,0 +1,19 @@
+<%
+  #cheil_solutions/items/_kind_sum
+#sum_items,kind_cn
+%>
+<%n=0
+sum_items.each do |e|%>
+  <tr class="<%=['odd','even'][(n+=1)%2]%>">
+    <%n.upto(1)do %>
+      <td colspan="1" rowspan="<%=sum_items.length%>">
+        <%=kind_cn%>
+      </td>
+    <%end%>
+    <td><%= e[:name]  %></td>
+    <td><%= e[:sum]  %></td>
+    <td><%= percentage(e[:rate])  %></td>
+    <td><%= e[:sum_r]  %></td>
+  </tr>
+<%end%>
+
