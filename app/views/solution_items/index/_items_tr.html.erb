@@ -13,13 +13,14 @@
       <td><%= e.quantity  %></td>
       <td><%= e.note  %></td>
       <td class="last">
+        (<%=e.solution_items.size%>)
         <%if e.belongs_to?(solution)%>
-          <%= button_to '取消指派',
+          <%= link_to '取消指派',
             solution_item_path(e,:solution_id=>solution.id),
             :method=>:delete%>
           <%else%>
-            <%= button_to '指派',
-              solution_items_path(:solution_id=>solution.id,:item_id=>e.id)%>
+            <%= link_to '指派',
+              solution_items_path(:solution_id=>solution.id,:item_id=>e.id),:method=>:post%>
         <%end%>
       </td>
     </tr>

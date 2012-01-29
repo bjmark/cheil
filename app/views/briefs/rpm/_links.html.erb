@@ -16,7 +16,7 @@
   new_brief_item_path(:brief_id=>brief.id,:kind=>'design') %>
 |
 <%= link_to '新建制作项', 
-  new_item_path(:brief_id=>brief.id,:kind=>'product') %>
+  new_brief_item_path(:brief_id=>brief.id,:kind=>'product') %>
 |
 <%= link_to '新建设计项(多)', 
   new_many_brief_items_path(:brief_id=>brief.id,:kind=>'design') %>
