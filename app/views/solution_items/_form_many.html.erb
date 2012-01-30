@@ -1,4 +1,4 @@
-<%=form_tag create_many_brief_items_path(:brief_id=>@brief.id) do%>
+<%=form_tag create_many_solution_items_path(:solution_id=>@solution.id) do%>
   <table class="">
     <tr>
       <th>序号</th>
@@ -15,11 +15,11 @@
         <td><%=text_field_tag (s="note_#{n}"),params[s]%></td>
         <td>
           <select name="<%="kind_#{n}"%>" size="1">
-            <option value="design" label="design" <%=item_kind_selected(n,'design',@kind_default)%>>
-            设计
+            <option value="tran" label="tran" <%=item_kind_selected(n,'tran',@kind_default)%>>
+            运输
             </option>
-            <option value="product" label="product" <%=item_kind_selected(n,'product',@kind_default)%>>
-            制作
+            <option value="other" label="other" <%=item_kind_selected(n,'other',@kind_default)%>>
+            其他
             </option>
           </select> 
         </td>
@@ -29,9 +29,9 @@
   <%=button_tag(:type=>:submit,:id=>'b1',:name=>'save_many') do%>
     <%='保存'%>
   <%end%>
-  <%=button_tag '增加5个设计',:type=>:submit,:name=>'add_5_design'%>
-  <%=button_tag '增加5个制作',:type=>:submit,:name=>'add_5_product'%>
+  <%=button_tag '增加5个运输',:type=>:submit,:name=>'add_5_tran'%>
+  <%=button_tag '增加5个其他',:type=>:submit,:name=>'add_5_other'%>
   &nbsp;&nbsp;
-  <%=link_to '取消',brief_path(@brief)%>
+  <%=link_to '取消',vendor_solution_path(@solution)%>
 <%end%>
 

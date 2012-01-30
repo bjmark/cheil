@@ -18,6 +18,7 @@ class SolutionItemsController < ApplicationController
   def edit
     @item = Item.find(params[:id])
     @item.check_edit_right(@cur_user.org_id)
+    @solution = @item.solution
   end
 
   def edit_price
@@ -37,6 +38,51 @@ class SolutionItemsController < ApplicationController
     @item.solution.op.touch(@cur_user.id)
 
     redirect_to vendor_solution_path(@item.solution)  
+  end
+
+  def edit_price_many
+    @solution = VendorSolution.find(params[:solution_id])
+    @solution.check_edit_right(@cur_user.org_id)
+
+    items = @solution.items
+    designs = []
+    products = []
+    items.each do |e|
+      case e.kind
+      when 'design' then designs << e
+      when 'product' then products << e
+      end
+    end
+
+    @items = designs + products
+  end
+
+  def update_price_many
+    solution = VendorSolution.find(params[:solution_id])
+    solution.check_edit_right(@cur_user.org_id)
+
+    items = params[:solution_item]
+
+    ids = []
+    items.keys.each{|e| ids << $1 if e =~ /price_(\d+)/}
+
+    updated_count = 0
+
+    ids.each do |id|
+      if item = solution.items.where(:id=>id).first
+        item.note = items["note_#{id}"]
+        item.price = items["price_#{id}"]
+        if item.op.save_by(@cur_user.id)
+          updated_count += 1
+        end
+      end
+    end
+
+    if updated_count > 0
+      solution.op.touch(@cur_user.id)
+    end
+
+    redirect_to vendor_solution_path(params[:solution_id])
   end
 
   def set_attr(attr)
@@ -141,4 +187,86 @@ class SolutionItemsController < ApplicationController
     check{'n'}
   end
 
+  #solution_items/new/many?solution_id=1&kind=design         new many items for a vendor_solution
+  def new_many
+    @solution = VendorSolution.find(params[:solution_id]) 
+    @kind_default = params[:kind]
+    @item_count = 5
+  end
+
+  def create_many
+    @solution = VendorSolution.find(params[:solution_id]) 
+    @solution.check_edit_right(@cur_user.org_id)     #check right
+
+    case
+    when params[:save_many]
+      n = 0
+      saved_count = 0
+      while params["name_#{n}"]
+        attr = {}
+        %w{name quantity note kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
+        item = @solution.items.new(attr)
+        if item.op.save_by(@cur_user.id)
+          saved_count += 1
+        end
+        n += 1
+      end
+      if saved_count > 0
+        @solution.op.touch(@cur_user.id)
+      end
+      redirect_to vendor_solution_path(params[:solution_id])
+    when (params[:add_5_tran] or params[:add_5_other])
+      @kind_default = ['tran','other'].find{|e| params["add_5_#{e}"]} #add 5 tran or other
+      n = 0
+      n += 1 while params["name_#{n}"]
+      @item_count = n+5
+      render :action=>:new_many 
+    end
+  end
+
+  def edit_many
+    @solution = VendorSolution.find(params[:solution_id]) 
+    @solution.check_edit_right(@cur_user.org_id)     #check right
+
+    items = @solution.items
+    trans = []
+    others = []
+    items.each do |e|
+      case e.kind
+      when 'tran' then trans << e
+      when 'other' then others << e
+      end
+    end
+
+    @items = trans + others
+  end
+
+  def update_many
+    solution = VendorSolution.find(params[:solution_id]) 
+    solution.check_edit_right(@cur_user.org_id)     #check right
+    items = params[:solution_item]
+
+    ids = []
+    items.keys.each{|e| ids << $1 if e =~ /name_(\d+)/}
+
+    updated_count = 0
+
+    ids.each do |id|
+      if item = solution.items.where(:id=>id).first
+        item.name = items["name_#{id}"]
+        item.quantity = items["quantity_#{id}"]
+        item.note = items["note_#{id}"]
+        item.kind = items["kind_#{id}"]
+        if item.op.save_by(@cur_user.id)
+          updated_count += 1
+        end
+      end
+    end
+
+    if updated_count > 0
+      solution.op.touch(@cur_user.id)
+    end
+
+    redirect_to vendor_solution_path(params[:solution_id])
+  end
 end

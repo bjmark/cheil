@@ -1,11 +1,11 @@
 <%=form_tag update_many_brief_items_path(:brief_id=>@brief.id),:method=>:put do%>
-  <table>
+  <table class="">
     <tr>
-      <td>序号</td>
-      <td>名称</td>
-      <td>数量</td>
-      <td>说明</td>
-      <td>类型</td>
+      <th>序号</th>
+      <th>名称</th>
+      <th>数量</th>
+      <th>说明</th>
+      <th>类型</th>
     </tr>
     <%n=0
       @items.each do |e|%>

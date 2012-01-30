@@ -41,6 +41,14 @@ Cheil::Application.routes.draw do
   scope :path => '/solution_items',:controller => :solution_items do
     get ':id/edit/price' => :edit_price, :as=>'edit_price_solution_item'
     put ':id/update/price' => :update_price, :as=>'update_price_solution_item'
+
+    get 'edit/price/many' => :edit_price_many, :as=>'edit_price_many_solution_items'
+    put 'update/price/many' => :update_price_many, :as=>'update_price_many_solution_items'
+
+    get 'new/many' => :new_many, :as=>'new_many_solution_items'
+    post 'create/many' => :create_many, :as=>'create_many_solution_items'
+    get 'edit/many' => :edit_many, :as=>'edit_many_solution_items'
+    put 'update/many' => :update_many, :as=>'update_many_solution_items'
   end
 
   resources :comments , :only=>[:new,:create,:destroy]

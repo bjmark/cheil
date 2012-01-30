@@ -18,6 +18,7 @@
 <%end%>
 <%if solution.brief.status == 4%>
   |
+  完成时间:<%=short_d(solution.finish_at)%>
   <%= link_to '取消完成',unfinish_cheil_solution_path(solution),:method=>:put,:confirm=>'确定吗？'%>
 <%end%>
 <h2 class="title"><%=brief_name(solution.brief)%></h2>
