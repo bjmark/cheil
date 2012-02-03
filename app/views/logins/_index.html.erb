@@ -1,0 +1,25 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <th>id</th>
+      <th>user name</th>
+      <th>login time</th>
+      <th>ip</th>
+      <th>is_logout?</th>
+      <th>logout_time</th>
+    </tr>
+    <%n=1
+    @logins.each do |g| -%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td><%=g.id%></td>
+        <td><%=g.name%></td>
+        <td><%=short_d(g.login_time)%></td>
+        <td><%=g.ip%></td>
+        <td><%=g.is_logout%></td>
+        <td><%=short_d(g.logout_time)%></td>
+      </tr>
+    <%end -%>
+  </tbody>
+</table>
+<%= paginate @logins %>
+

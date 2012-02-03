@@ -8,7 +8,8 @@ class AdminUser < User
       ['RPM列表' , '/rpm_orgs'],
       ['Cheil列表' , '/cheil_orgs'],
       ['Vendor列表', '/vendor_orgs'],
-      ['payer列表', '/payers']
+      ['payer列表', '/payers'],
+     # ['login history', '/logins']
     ]
   end
 

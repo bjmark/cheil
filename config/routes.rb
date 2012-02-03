@@ -1,6 +1,8 @@
 # encoding: utf-8
 Cheil::Application.routes.draw do
 
+  resources :logins , :only=>[:index]
+
   resources :payments
 
   resources :payers
@@ -14,14 +16,14 @@ Cheil::Application.routes.draw do
       put :uncheck
     end
   end
-
+=begin
   resources(:items,:except=>[:show]) do
     member do
       put :check
       put :uncheck
     end
   end
-
+=end
   resources :brief_items 
 
   scope :path => '/brief_items',:controller => :brief_items do
