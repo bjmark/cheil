@@ -13,14 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20120203065823) do
 
-  create_table "admin_users", :force => true do |t|
-    t.string   "name"
-    t.string   "hashed_password"
-    t.string   "salt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "attaches", :force => true do |t|
     t.string   "type"
     t.integer  "fk_id"
@@ -36,24 +28,6 @@ ActiveRecord::Schema.define(:version => 20120203065823) do
   end
 
   add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
-
-  create_table "brief_attaches", :force => true do |t|
-    t.integer  "brief_id"
-    t.string   "attach_file_name"
-    t.string   "attach_content_type"
-    t.integer  "attach_file_size"
-    t.datetime "attach_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "brief_comments", :force => true do |t|
-    t.string   "content"
-    t.integer  "brief_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "brief_vendors", :force => true do |t|
     t.integer  "brief_id"

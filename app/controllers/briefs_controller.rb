@@ -24,15 +24,25 @@ class BriefsController < ApplicationController
   # GET /briefs
   def index
     @briefs = @cur_user.org.briefs.page(params[:page])
+    case @cur_user.org
+    when RpmOrg
+      render 'index_rpm'
+    when CheilOrg,VendorOrg
+      render 'index_cheil'
+    end
   end
 
   def not_send
     @briefs = @cur_user.org.briefs.where(:cheil_id=>0).page(params[:page])
-    render :action => :index
   end
 
   def search_cond
-    render :action => :index
+    case @cur_user.org
+    when RpmOrg
+      render 'search_cond_rpm'
+    when CheilOrg,VendorOrg
+      render 'search_cond_cheil'
+    end
   end
 
   def str_to_date(s)
@@ -52,7 +62,13 @@ class BriefsController < ApplicationController
       update_date_less_than(str_to_date(params[:update_date2])).
       status(params[:status]).
       page(params[:page])
-    render :action => :index
+    
+    case @cur_user.org
+    when RpmOrg
+      render 'search_res_rpm'
+    when CheilOrg,VendorOrg
+      render 'search_res_cheil'
+    end
   end
 
   # GET /briefs/1

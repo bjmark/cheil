@@ -1,0 +1,22 @@
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="first">
+      <%=link_to '全部',briefs_path(@brief) %>
+      </li>
+      <li>
+      <%= link_to '未发送', not_send_briefs_path%>
+      </li>
+      <li class="active">
+      <%= link_to '检索', search_cond_briefs_path%>
+      </li>
+    </ul>
+  </div>
+  <div class="content">
+    <div class="inner">
+      <%=render 'search_form'%>
+      <%=render 'index'%>
+    </div>
+  </div>
+</div>
+
