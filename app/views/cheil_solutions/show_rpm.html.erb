@@ -1,0 +1,59 @@
+<%
+  #solutions/rpm/show 
+#@solution
+%>
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="first">
+      <%= link_to '返回', briefs_path %>
+      </li>
+      <li>
+      <%= link_to '需求', brief_path(@brief) %>
+      </li>
+      <li>
+        <li class="active">
+        <%= link_to '方案', cheil_solution_path(@brief.cheil_solution) %>
+        </li>
+    </ul>
+  </div>
+  <div class="content">
+    <div class="inner">
+      <br/>
+      <%= link_to '新建评论', new_comment_path(:solution_id=>@solution.id)%>
+      |
+      <%unless @solution.approved?%>
+        <%=link_to '审定通过,开始执行', approve_cheil_solution_path(@solution),:confirm=>'确定吗?',:method=>:put%>
+      <%else%>
+        确认时间:<%=short_d(@solution.approved_at)%>
+        &nbsp; 
+      <%end%>
+      <%if @solution.brief.status == 3 %>
+        <%=link_to '取消审定', unapprove_cheil_solution_path(@solution),:confirm=>'确定吗?',:method=>:put%>
+      <%end%>
+      <h2 class="title"><%=brief_name(@brief)%></h2>
+    </div>
+  </div>
+</div>
+
+
+<%=render 'share/block',
+  :title=>'附件',
+  :content=>{:partial=>'cheil_solutions/attaches/index',
+    :locals=>{:solution=>@solution}} unless @solution.checked_attaches.empty?
+  %>
+
+  <%=render 'share/block',
+    :title=>'子项',
+    :content=>{:partial=>'cheil_solutions/items/index',
+      :locals=>{:solution=>@solution,:total=>@solution.total}
+  } unless @solution.checked_items.empty?
+%>
+<%=render 'share/block',
+  :title=>'付款',
+  :content=>{:partial=>'cheil_solutions/payment/show'
+} if @solution.approved?%>
+
+<%=comments(@solution)%>
+
+

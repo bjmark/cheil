@@ -1,0 +1,57 @@
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="first">
+      <%= link_to '返回', briefs_path %>
+      </li>
+      <li class="active">
+      <%= link_to '需求', brief_path(@brief) %>
+      </li>
+      <li>
+      <%if @brief.send_to_cheil? and @brief.status > 1%>
+        <li>
+        <%= link_to '方案', cheil_solution_path(@brief.cheil_solution) %>
+        </li>
+      <%end%>
+    </ul>
+  </div>
+  <div class="content">
+    <div class="inner">
+      <br/>
+      <%= link_to '修改', edit_brief_path(@brief) %>
+      |
+      <%= link_to '删除',brief_path(@brief), :confirm => '将删除关联的所有信息,确定?', :method => :delete%>
+      |
+      <%= link_to '新建附件', new_attach_path(:brief_id=>@brief.id) %>
+      |
+      <%= link_to '新建设计项', new_many_brief_items_path(:brief_id=>@brief.id,:kind=>'design') %>
+      |
+      <%= link_to '新建制作项', new_many_brief_items_path(:brief_id=>@brief.id,:kind=>'product') %>
+      |
+      <%= link_to '新建评论', new_comment_path(:brief_id=>@brief.id)%>
+
+      <%unless @brief.send_to_cheil?%>
+        |
+        <%=link_to '发送给cheil',send_to_cheil_brief_path(@brief),:confirm => '确定吗？',:method => :put%>
+      <%end%>
+      <%if @brief.send_to_cheil?%> 
+        <% if @brief.cancel?%>
+          |
+          <%=link_to '恢复',cancel_cancel_brief_path(@brief),:confirm => '确定吗？',:method => :put,:style => 'color:red'
+        %>
+      <%else%>
+        |
+        <%=link_to '取消',cancel_brief_path(@brief),:confirm => '确定吗？',:method => :put,:style => 'color:red'%>
+      <%end%>
+    <%end%>
+  </div>
+</div>
+
+<%=render 'show'%>
+</div>
+
+<%=attaches(@brief)%>
+<%=brief_items(@brief)%>
+<%=comments(@brief)%>
+
+

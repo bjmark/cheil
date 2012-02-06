@@ -8,9 +8,10 @@ class CheilSolutionsController < ApplicationController
 
     @payments = Payment.where(:solution_id=>@solution.id).all
 
+    @brief = @solution.brief
     case @cur_user.org
     when RpmOrg
-      render 'cheil_solutions/rpm/show'
+      render 'show_rpm'
     when CheilOrg       
       render 'cheil_solutions/cheil/show'
     end

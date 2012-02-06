@@ -81,7 +81,7 @@ class BriefsController < ApplicationController
     
     case @cur_user.org
     when RpmOrg
-      render 'briefs/rpm/show'
+      render 'show_rpm'
     when CheilOrg
       render 'briefs/cheil/show'
     when VendorOrg
