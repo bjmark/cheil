@@ -46,12 +46,10 @@
     <%end%>
   </div>
 </div>
-
 <%=render 'show'%>
 </div>
 
-<%=attaches(@brief)%>
-<%=brief_items(@brief)%>
+<%=render 'attaches_rpm' %>
+<%=render 'items_rpm'%>
+
 <%=comments(@brief)%>
-
-
