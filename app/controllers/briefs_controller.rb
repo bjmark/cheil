@@ -83,7 +83,7 @@ class BriefsController < ApplicationController
     when RpmOrg
       render 'show_rpm'
     when CheilOrg
-      render 'briefs/cheil/show'
+      render 'show_cheil'
     when VendorOrg
       @solution = @brief.solutions.find_by_org_id(@cur_user.org_id)
       @brief.designs = @solution.designs_from_brief
