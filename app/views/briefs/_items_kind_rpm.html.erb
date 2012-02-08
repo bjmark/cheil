@@ -4,12 +4,13 @@ items.each do |e|%>
     <%n.upto(1)do %>
       <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
     <%end%>
-    <%if e.op.read?(@cur_user.id)%>
-      <td><%= e.name  %></td>
-    <%else%>
-      <%e.op.read_by(@cur_user.id)%>
-      <td><span style="<%=unread_color%>"><%= e.name  %></span></td>
-    <%end%>
+    <td>
+      <%if !e.op.read?(@cur_user.id)%>
+        <span style="<%=unread_color%>">(新)</span>
+        <%e.op.read_by(@cur_user.id)%>
+      <%end%>
+      <%= e.name  %>
+    </td>
     <td><%= e.quantity  %></td>
     <td><%= e.note  %></td>
     <td class="last">

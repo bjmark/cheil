@@ -38,18 +38,18 @@ class Brief < ActiveRecord::Base
     @designs or (@designs = items.find_all_by_kind('design'))
   end
 
-  def designs=(d)
-    @designs = d
-  end
+  #def designs=(d)
+  #  @designs = d
+  #end
 
   def products(reload=false)
     @products = nil if reload
     @products or (@products = items.find_all_by_kind('product'))
   end
 
-  def products=(p)
-    @products = p
-  end
+  #def products=(p)
+  #  @products = p
+  #end
 
   def send_to_cheil?
     self.cheil_id > 0
@@ -110,6 +110,12 @@ class Brief < ActiveRecord::Base
 
   def cancel?
     self.cancel == 'y'
+  end
+
+  def cur_status
+    return '取消' if cancel?
+    return '未发送' unless send_to_cheil?
+    STATUS[self.status]
   end
 end
 

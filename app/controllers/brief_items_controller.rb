@@ -67,6 +67,7 @@ class BriefItemsController < ApplicationController
   def new_many
     @brief = Brief.find(params[:brief_id]) 
     @kind_default = params[:kind]
+    @brief_item = {}
     @item_count = 5
   end
 
@@ -81,7 +82,9 @@ class BriefItemsController < ApplicationController
       while params["name_#{n}"]
         attr = {}
         %w{name quantity note kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
-        item = @brief.items.new(attr)
+        item = @brief.items.new
+        item.name = param["name_#{n}"]
+
         if item.op.save_by(@cur_user.id)
           saved_count += 1
         end
@@ -89,12 +92,17 @@ class BriefItemsController < ApplicationController
       end
       if saved_count > 0
         @brief.op.touch(@cur_user.id)
+        Cheil.test('@brief.op.touch(@cur_user.id)')
       end
       redirect_to brief_path(params[:brief_id])
     when (params[:add_5_design] or params[:add_5_product])
       @kind_default = ['design','product'].find{|e| params["add_5_#{e}"]} #add 5 design or product
       n = 0
-      n += 1 while params["name_#{n}"]
+      @brief_item = params["brief_item"]
+      n += 1 while @brief_item["name_#{n}"]
+
+      n.times{|i| Cheil.test("brief_item[kind_#{i}]=" + @brief_item["kind_#{i}"])}
+      
       @item_count = n+5
       render :action=>:new_many 
     end

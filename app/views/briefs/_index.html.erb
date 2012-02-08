@@ -3,6 +3,7 @@
     <tr>
       <th>id</th>
       <th>名称</th>
+      <th>状态</th>
       <th>期限</th>
       <th>创建时间</th>
       <th>更新时间</th>
@@ -11,7 +12,13 @@
     @briefs.each do |brief| -%>
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
         <td><%=brief.id%></td>
-        <td><%=link_to brief_name(brief),brief_path(brief)%></td>
+        <td>
+          <%if !brief.op.read?(@cur_user.id)%>
+            <span style="<%=unread_color%>">(新)</span>
+          <%end%>
+          <%=link_to brief.name,brief_path(brief)%>
+        </td>
+        <td><span style=" color:rgb(227,102,39)"><%=brief.cur_status%></span></td>
         <td><%=brief.deadline%></td>
         <td><%=short_d(brief.created_at)%></td>
         <td><%=short_d(brief.updated_at)%></td>

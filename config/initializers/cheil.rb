@@ -43,4 +43,9 @@ module Cheil
     end
   end
 
+  def Cheil.test(s)
+    File.open(File.join(Rails.root,'test'),'a') do |f|
+      f.puts s
+    end
+  end
 end

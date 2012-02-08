@@ -15,11 +15,10 @@
             attaches.each do |e|%>
               <tr class="<%=['odd','even'][(n+=1)%2]%>">
                 <td>
-                  <%if e.op.read?(@cur_user.id)%>
-                    <%= e.attach_file_name  %>
-                  <%else%>
-                    <span style="<%=unread_color%>"><%= e.attach_file_name  %></span>
+                  <%if !e.op.read?(@cur_user.id)%>
+                    <span style="<%=unread_color%>">(新)</span>
                   <%end%>
+                  <%= e.attach_file_name  %>
                 </td>
                 <td><%=short_d(e.created_at)%></td>
                 <td><%=short_d(e.updated_at)%></td>

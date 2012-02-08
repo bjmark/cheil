@@ -10,15 +10,21 @@
     <%@item_count.times do |n|%>
       <tr>
         <td><%=n+1%></td>
-        <td><%=text_field_tag (s="name_#{n}"),params[s]%></td>
-        <td><%=text_field_tag (s="quantity_#{n}"),params[s]%></td>
-        <td><%=text_field_tag (s="note_#{n}"),params[s]%></td>
         <td>
-          <select name="<%="kind_#{n}"%>" size="1">
-            <option value="design" label="design" <%=item_kind_selected(n,'design',@kind_default)%>>
+          <%=text_field_tag "brief_item[name_#{n}]",@brief_item["name_#{n}"]%>
+        </td>
+        <td>
+          <%=text_field_tag "brief_item[quantity_#{n}]",@brief_item["quantity_#{n}"]%>
+        </td>
+        <td>
+          <%=text_field_tag "brief_item[note_#{n}]",@brief_item["note_#{n}"]%>
+        </td>
+        <td>
+          <select name="<%="brief_item[kind_#{n}]"%>" size="1">
+            <option value="design" label="design" <%=brief_item_kind_selected(n,'design',@kind_default)%>>
             设计
             </option>
-            <option value="product" label="product" <%=item_kind_selected(n,'product',@kind_default)%>>
+            <option value="product" label="product" <%=brief_item_kind_selected(n,'product',@kind_default)%>>
             制作
             </option>
           </select> 
