@@ -1,0 +1,18 @@
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li>
+      <%=link_to '返回',briefs_path%>
+      </li>
+      <li class="active">
+      <%=link_to '需求',brief_path(@brief)%>
+      </li>
+      <li>
+      <%=link_to '方案',vendor_solution_path(@solution)%>
+      </li>
+    </ul>
+  </div>
+  <%=render 'show'%>
+</div>
+<%=render 'attaches_vendor'%>
+<%=render 'items_vendor'%>

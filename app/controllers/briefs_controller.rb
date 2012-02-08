@@ -86,9 +86,7 @@ class BriefsController < ApplicationController
       render 'show_cheil'
     when VendorOrg
       @solution = @brief.solutions.find_by_org_id(@cur_user.org_id)
-      @brief.designs = @solution.designs_from_brief
-      @brief.products = @solution.products_from_brief
-      render 'briefs/vendor/show'
+      render 'show_vendor'
     end
   end
 
