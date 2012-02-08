@@ -53,7 +53,7 @@ class BriefItemsController < ApplicationController
     end
   end
 
-  def destroy
+  def destroay
     item = BriefItem.find(params[:id])
     brief = item.brief
     brief.check_edit_right(@cur_user.org_id)     #check right
@@ -79,11 +79,13 @@ class BriefItemsController < ApplicationController
     when params[:save_many]
       n = 0
       saved_count = 0
-      while params["name_#{n}"]
-        attr = {}
-        %w{name quantity note kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
+      attr = params[:brief_item]
+      while attr["name_#{n}"]
         item = @brief.items.new
-        item.name = param["name_#{n}"]
+        item.name = attr["name_#{n}"]
+        item.quantity = attr["quantity_#{n}"]
+        item.note = attr["note_#{n}"]
+        item.kind = attr["kind_#{n}"]
 
         if item.op.save_by(@cur_user.id)
           saved_count += 1
@@ -91,8 +93,8 @@ class BriefItemsController < ApplicationController
         n += 1
       end
       if saved_count > 0
+        @brief.reload   #must reload,it should be a bug of activerecord.relative to brief.items.new? 
         @brief.op.touch(@cur_user.id)
-        Cheil.test('@brief.op.touch(@cur_user.id)')
       end
       redirect_to brief_path(params[:brief_id])
     when (params[:add_5_design] or params[:add_5_product])
@@ -100,8 +102,6 @@ class BriefItemsController < ApplicationController
       n = 0
       @brief_item = params["brief_item"]
       n += 1 while @brief_item["name_#{n}"]
-
-      n.times{|i| Cheil.test("brief_item[kind_#{i}]=" + @brief_item["kind_#{i}"])}
       
       @item_count = n+5
       render :action=>:new_many 
