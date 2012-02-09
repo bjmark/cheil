@@ -39,4 +39,8 @@ class Item < ActiveRecord::Base
   def op
     @op ||= Cheil::Op.new(self) 
   end
+
+  def op_right
+    @op_right ||= Cheil::OpRight.new(self) 
+  end
 end

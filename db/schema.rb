@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209085235) do
+ActiveRecord::Schema.define(:version => 20120209123135) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(:version => 20120209085235) do
     t.integer  "fk_id"
     t.string   "note"
     t.string   "read_by"
+    t.string   "self_right"
   end
 
   add_index "items", ["fk_id"], :name => "index_items_on_fk_id"

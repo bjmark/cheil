@@ -85,4 +85,5 @@
 #rails generate controller logins
 #rails g migration add_right_attach_right_to_briefs
 #rails generate controller brief_attaches
-rails g migration add_self_right_to_attaches
+#rails g migration add_self_right_to_attaches
+rails g migration add_self_right_to_items

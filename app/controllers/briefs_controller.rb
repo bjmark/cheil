@@ -125,7 +125,7 @@ class BriefsController < ApplicationController
     @brief.op_right.set('comment',@cur_user.org_id,'read','update')
 
     if @brief.op.save_by(@cur_user.id)
-      redirect_to briefs_path, notice: 'Brief was successfully created.' 
+      redirect_to brief_path(@brief) 
     else
       render action: "new" 
     end
@@ -169,6 +169,16 @@ class BriefsController < ApplicationController
     brief.op_right.set('item',brief.cheil_id,'read','update')
     brief.op_right.set('comment',brief.cheil_id,'read','update')
     brief.save
+
+    brief.attaches.each do |e| 
+      e.op_right.add('self',brief.cheil_id,'read','update','delete')
+      e.save
+    end
+
+    brief.items.each do |e| 
+      e.op_right.add('self',brief.cheil_id,'read','update','delete')
+      e.save
+    end
 
     redirect_to(brief_path(brief),:notice=>'成功发送到cheil') 
   end

@@ -88,6 +88,11 @@ class BriefItemsController < ApplicationController
         item.kind = attr["kind_#{n}"]
 
         if item.op.save_by(@cur_user.id)
+          item.op_right.set('self',@brief.rpm_id,'read','update','delete')
+          if(@brief.send_to_cheil?)
+            item.op_right.set('self',@brief.cheil_id,'read','update','delete')
+          end
+          item.save
           saved_count += 1
         end
         n += 1
