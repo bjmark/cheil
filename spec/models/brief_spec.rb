@@ -284,4 +284,54 @@ describe Brief do
       b2.op.read?(2).should be_true
     }
   end
+
+  describe 'op_right' do
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op_right.set('self',1,'read','delete')
+      b.save
+
+      b.reload
+      b.op_right.check('self',1,'read').should == true
+    }
+
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op_right.set('attach',1,'read','update')
+      b.save
+
+      b.reload
+      b.op_right.check('attach',1,'read').should == true
+      b.op_right.check('attach',1,'delete').should == false
+    }
+
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op_right.set('item',1)
+      b.save
+
+      b.reload
+      b.op_right.add('item',1,'read')
+      b.save
+
+      b.reload
+      b.op_right.check('item',1,'read').should == true
+      b.op_right.check('item',1,'delete').should == false
+    }
+
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op_right.set('comment',1,'read','update')
+      b.save
+
+      b.reload
+      b.op_right.del('comment',1,'read')
+      b.save
+
+      b.reload
+      b.op_right.check('comment',1,'read').should == false
+      b.op_right.check('comment',1,'update').should == true
+    }
+
+  end
 end

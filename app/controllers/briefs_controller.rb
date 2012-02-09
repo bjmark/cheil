@@ -74,8 +74,8 @@ class BriefsController < ApplicationController
   # GET /briefs/1
   def show
     @brief = Brief.find(params[:id])
-    @brief.check_read_right(@cur_user.org_id)
-    
+    #@brief.check_read_right(@cur_user.org_id)
+    invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'read')
     #readed by current user
     @brief.op.read_by(@cur_user.id)
     
@@ -117,6 +117,11 @@ class BriefsController < ApplicationController
     @brief.rpm_id = @cur_user.org_id
     @brief.user_id = @cur_user.id
 
+    @brief.op_right.set('self',@cur_user.org_id,'read','update','delete')
+    @brief.op_right.set('attach',@cur_user.org_id,'read','update')
+    @brief.op_right.set('item',@cur_user.org_id,'read','update')
+    @brief.op_right.set('comment',@cur_user.org_id,'read','update')
+
     if @brief.op.save_by(@cur_user.id)
       redirect_to briefs_path, notice: 'Brief was successfully created.' 
     else
@@ -153,10 +158,17 @@ class BriefsController < ApplicationController
 
   #put /briefs/1/send_to_cheil
   def send_to_cheil
-    @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user.org_id)
-    @brief.send_to_cheil!
-    redirect_to(brief_path(@brief),:notice=>'成功发送到cheil') 
+    brief = Brief.find(params[:id])
+    raise SecurityError if brief.rpm_id != @cur_user.org_id
+    brief.send_to_cheil!
+
+    brief.op_right.add('self',brief.cheil_id,'read','update')
+    brief.op_right.set('attach',brief.cheil_id,'read','update')
+    brief.op_right.set('item',brief.cheil_id,'read','update')
+    brief.op_right.set('comment',brief.cheil_id,'read','update')
+    brief.save
+
+    redirect_to(brief_path(brief),:notice=>'成功发送到cheil') 
   end
 
   def cancel_cancel

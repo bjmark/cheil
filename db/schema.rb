@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120203065823) do
+ActiveRecord::Schema.define(:version => 20120209033018) do
+
+  create_table "admin_users", :force => true do |t|
+    t.string   "name"
+    t.string   "hashed_password"
+    t.string   "salt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -29,6 +37,24 @@ ActiveRecord::Schema.define(:version => 20120203065823) do
 
   add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
 
+  create_table "brief_attaches", :force => true do |t|
+    t.integer  "brief_id"
+    t.string   "attach_file_name"
+    t.string   "attach_content_type"
+    t.integer  "attach_file_size"
+    t.datetime "attach_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "brief_comments", :force => true do |t|
+    t.string   "content"
+    t.integer  "brief_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "brief_vendors", :force => true do |t|
     t.integer  "brief_id"
     t.integer  "org_id"
@@ -43,12 +69,16 @@ ActiveRecord::Schema.define(:version => 20120203065823) do
     t.integer  "rpm_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "cheil_id",                :default => 0
+    t.integer  "cheil_id",                   :default => 0
     t.text     "req"
     t.date     "deadline"
     t.string   "read_by"
     t.integer  "status"
-    t.string   "cancel",     :limit => 1, :default => "n"
+    t.string   "cancel",        :limit => 1, :default => "n"
+    t.string   "self_right"
+    t.string   "attach_right"
+    t.string   "item_right"
+    t.string   "comment_right"
   end
 
   add_index "briefs", ["cheil_id"], :name => "index_briefs_on_cheil_id"

@@ -108,6 +108,10 @@ class Brief < ActiveRecord::Base
     @op ||= Cheil::Op.new(self) 
   end
 
+  def op_right
+    @op_right ||= Cheil::OpRight.new(self) 
+  end
+
   def cancel?
     self.cancel == 'y'
   end

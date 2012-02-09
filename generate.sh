@@ -82,4 +82,5 @@
 #rails generate controller vendor_solutions
 #rails generate controller cheil_solutions
 #rails generate model login
-rails generate controller logins
+#rails generate controller logins
+rails g migration add_right_attach_right_to_briefs
