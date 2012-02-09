@@ -74,11 +74,13 @@ class BriefsController < ApplicationController
   # GET /briefs/1
   def show
     @brief = Brief.find(params[:id])
-    #@brief.check_read_right(@cur_user.org_id)
+    #check read right
     invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'read')
     #readed by current user
     @brief.op.read_by(@cur_user.id)
     
+    @attaches = @brief.attaches.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+
     case @cur_user.org
     when RpmOrg
       render 'show_rpm'

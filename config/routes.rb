@@ -9,6 +9,12 @@ Cheil::Application.routes.draw do
 
   resource :session , :only=>[:new,:create,:destroy]
   
+  resources :brief_attaches do 
+    member do 
+      get :download
+    end
+  end
+
   resources :attaches do
     member do 
       get :download

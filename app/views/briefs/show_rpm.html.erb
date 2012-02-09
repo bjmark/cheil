@@ -22,7 +22,7 @@
       |
       <%= link_to '删除',brief_path(@brief), :confirm => '将删除关联的所有信息,确定?', :method => :delete%>
       |
-      <%= link_to '新建附件', new_attach_path(:brief_id=>@brief.id) %>
+      <%= link_to '新建附件', new_brief_attach_path(:brief_id=>@brief.id) %>
       |
       <%= link_to '新建设计项', new_many_brief_items_path(:brief_id=>@brief.id,:kind=>'design') %>
       |
@@ -49,7 +49,8 @@
 <%=render 'show'%>
 </div>
 
-<%=render 'attaches_rpm' %>
+<%#=render 'attaches_rpm' %>
+<%=render 'attaches' %>
 <%=render 'items_rpm'%>
 
 <%=comments(@brief)%>

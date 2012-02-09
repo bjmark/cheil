@@ -1,0 +1,2 @@
+module BriefAttachesHelper
+end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209033018) do
+ActiveRecord::Schema.define(:version => 20120209085235) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20120209033018) do
     t.datetime "updated_at"
     t.string   "checked",             :limit => 1, :default => "n"
     t.string   "read_by"
+    t.string   "self_right"
   end
 
   add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
