@@ -14,14 +14,8 @@ class VendorSolutionsController < ApplicationController
   end
 
   def index
-    if params[:brief_id]
-      @brief = Brief.find(params[:brief_id])
-      @brief.check_create_solution_right(@cur_user.org_id)
-      @my_solution = @brief.vendor_solutions.where(:org_id=>@cur_user.org_id).first
-      unless @my_solution
-        @my_solution = @brief.vendor_solutions.create(:org_id=>@cur_user.org_id,:read_by=>@cur_user.id.to_s)
-      end
-    end
+    @brief = Brief.find(params[:brief_id])
+    invalid_op unless @brief.op_right.check('vendor_solution',@cur_user.org_id,'read')
   end
 
   def show
@@ -46,12 +40,39 @@ class VendorSolutionsController < ApplicationController
 
   def create
     brief = Brief.find(params[:brief_id])
-    brief.check_create_solution_right(@cur_user.org_id)
+    #brief.check_create_solution_right(@cur_user.org_id)
+    invalid_op unless brief.op_right.check('vendor_solution',@cur_user.org_id,'update')
 
+    #get selected vendor org_id
     vendor_ids = []
     params.each {|k,v| vendor_ids << v if k=~/vendor\d+/}
+    
+    #create a vendor_solution from each selected vendor
     vendor_ids.each do |org_id|
-      brief.vendor_solutions << VendorSolution.new(:org_id=>org_id,:read_by=>@cur_user.id.to_s)
+      vs = brief.vendor_solutions.new(:org_id=>org_id,:read_by=>@cur_user.id.to_s)
+      
+      #the cheil has read and delete and assign_item right for the new vendor_solution
+      vs.op_right.set('self',brief.cheil_id,'read','delete','assign_item')
+      vs.op_right.set('attach',brief.cheil_id,'read')
+      vs.op_right.set('item',brief.cheil_id,'read')
+      vs.op_right.set('comment',brief.cheil_id,'read','update')
+
+      #the vendor itself has read right for the new vendor_solution
+      vs.op_right.set('self',org_id,'read')
+      vs.op_right.set('attach',org_id,'read','update')
+      vs.op_right.set('item',org_id,'read','update')
+      vs.op_right.set('comment',org_id,'read','update')
+      vs.save
+
+      #the vendor can read the brief
+      brief.op_right.set('self',org_id,'read')
+      brief.save
+
+      #the vendor can read all brief attaches
+      brief.attaches.each do |e|
+        e.op_right.set('self',org_id,'read')
+        e.save
+      end
     end
 
     redirect_to vendor_solutions_path(:brief_id=>brief.id) 

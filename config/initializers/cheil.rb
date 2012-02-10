@@ -67,18 +67,21 @@ right structure as follwing
     #org_id 
     #right_type should be one of 'read','update','delete','create'
     def check(target,org_id,right_type)
+      org_id = org_id.to_i
       hash = read_from(target)
       return false unless hash[org_id]
       hash[org_id].include?(right_type)
     end
 
     def set(target,org_id,*rights)
+      org_id = org_id.to_i
       hash = read_from(target)
       hash[org_id] = rights
       write_to(target,hash)
     end
 
     def add(target,org_id,*rights)
+      org_id = org_id.to_i
       hash = read_from(target)
       if hash[org_id] 
         hash[org_id] += rights-hash[org_id]
@@ -89,6 +92,7 @@ right structure as follwing
     end
 
     def del(target,org_id,*rights)
+      org_id = org_id.to_i
       hash = read_from(target)
       if hash[org_id] 
         hash[org_id] -= rights

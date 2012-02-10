@@ -1,0 +1,32 @@
+<%unless @items.empty?%>
+  <div class="block">
+    <div class="content">
+      <h2 class="title">子项</h2>
+      <div class="inner">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th></th>
+              <th>名称</th>
+              <th>数量</th>
+              <th>说明</th>
+              <th></th>
+            </tr>
+            <%=render 'items_kind',:items=>@designs,:kind_cn=>'设计'%>
+            <%=render 'items_kind',:items=>@products,:kind_cn=>'制作'%>
+          </tbody>
+        </table>
+        <%if @brief.op_right.check('item',@cur_user.org_id,'update')%>
+          <%= link_to '新建设计项', new_many_brief_items_path(:brief_id=>@brief.id,:kind=>'design') %>
+          |
+          <%= link_to '新建制作项', new_many_brief_items_path(:brief_id=>@brief.id,:kind=>'product') %>
+          |
+          <%= link_to '修改', edit_many_brief_items_path(:brief_id=>@brief.id) %>
+        <%end%>
+      </div>
+    </div>
+  </div>
+<%end%>
+
+
+

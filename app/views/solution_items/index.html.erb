@@ -2,11 +2,48 @@
   #solution_items/index 
 # @brief,@solution
 %>
-<%=render 'share/block',
+<%#=render 'share/block',
   :nav=>{:partial=>'solution_items/index/nav',
     :locals=>{:brief=>@brief}},
     :title=>"指派子项(#{@solution.org.name})",
   :content=>{:partial=>'solution_items/index/index',
     :locals=>{:brief=>@brief,
       :solution=>@solution}}%>
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+    </ul>
+  </div>
+
+  <div class="content">
+    <h2 class="title">指派子项</h2>
+    <div class="inner">
+      <%unless @brief.items.empty?%>
+        <%="#{@solution.org.name}"%>
+        <table class="table brief_items">
+          <tbody>
+            <tr>
+              <th></th>
+              <th>名称</th>
+              <th>数量</th>
+              <th>说明</th>
+              <th></th>
+            </tr>
+            <%=render 'index_items_kind',
+              :solution=>@solution,
+              :items=>@brief.designs,
+              :kind_cn=>'设计',
+            %>
+            <%=render 'index_items_kind',
+              :solution=>@solution,
+              :items=>@brief.products,
+              :kind_cn=>'制作',
+            %>
+          </tbody>
+        </table>
+        <%= link_to '返回', vendor_solutions_path(:brief_id=>@brief.id) %>
+      <%end%>
+    </div>
+  </div>
+</div>
 

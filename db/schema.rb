@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209123135) do
+ActiveRecord::Schema.define(:version => 20120210064700) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -70,16 +70,17 @@ ActiveRecord::Schema.define(:version => 20120209123135) do
     t.integer  "rpm_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "cheil_id",                   :default => 0
+    t.integer  "cheil_id",                           :default => 0
     t.text     "req"
     t.date     "deadline"
     t.string   "read_by"
     t.integer  "status"
-    t.string   "cancel",        :limit => 1, :default => "n"
+    t.string   "cancel",                :limit => 1, :default => "n"
     t.string   "self_right"
     t.string   "attach_right"
     t.string   "item_right"
     t.string   "comment_right"
+    t.string   "vendor_solution_right"
   end
 
   add_index "briefs", ["cheil_id"], :name => "index_briefs_on_cheil_id"
@@ -159,14 +160,18 @@ ActiveRecord::Schema.define(:version => 20120209123135) do
     t.datetime "sent_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "design_rate",               :default => "0"
-    t.string   "product_rate",              :default => "0"
-    t.string   "tran_rate",                 :default => "0"
-    t.string   "other_rate",                :default => "0"
-    t.string   "is_approved",  :limit => 1, :default => "n"
+    t.string   "design_rate",                :default => "0"
+    t.string   "product_rate",               :default => "0"
+    t.string   "tran_rate",                  :default => "0"
+    t.string   "other_rate",                 :default => "0"
+    t.string   "is_approved",   :limit => 1, :default => "n"
     t.datetime "approved_at"
     t.string   "read_by"
     t.datetime "finish_at"
+    t.string   "self_right"
+    t.string   "attach_right"
+    t.string   "item_right"
+    t.string   "comment_right"
   end
 
   add_index "solutions", ["brief_id"], :name => "index_solutions_on_brief_id"

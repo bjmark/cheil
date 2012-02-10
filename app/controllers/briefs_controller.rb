@@ -80,6 +80,9 @@ class BriefsController < ApplicationController
     @brief.op.read_by(@cur_user.id)
     
     @attaches = @brief.attaches.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+    @items = @brief.items.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+    @designs = @brief.designs.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+    @products = @brief.products.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
 
     case @cur_user.org
     when RpmOrg
@@ -168,6 +171,7 @@ class BriefsController < ApplicationController
     brief.op_right.set('attach',brief.cheil_id,'read','update')
     brief.op_right.set('item',brief.cheil_id,'read','update')
     brief.op_right.set('comment',brief.cheil_id,'read','update')
+    brief.op_right.set('vendor_solution',brief.cheil_id,'read','update')
     brief.save
 
     brief.attaches.each do |e| 
@@ -179,7 +183,11 @@ class BriefsController < ApplicationController
       e.op_right.add('self',brief.cheil_id,'read','update','delete')
       e.save
     end
-
+    #create a vendor_solution for this cheil,so he can do whatever a vendor can do
+    vs = brief.vendor_solutions.new(:org_id=>brief.cheil_id)
+    vs.op_right.set('self',brief.cheil_id,'read','assign_item')
+    vs.save
+    
     redirect_to(brief_path(brief),:notice=>'成功发送到cheil') 
   end
 

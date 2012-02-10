@@ -98,10 +98,16 @@ class SolutionItemsController < ApplicationController
       #add a brief_item to vendor_solution
     when (params[:solution_id] and params[:item_id])
       solution = VendorSolution.find(params[:solution_id])
-      raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
+      #raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
+      invalid_op unless solution.op_right.check('self',@cur_user.org_id,'assign_item')
 
       item = BriefItem.find(params[:item_id])
       item.add_to_solution(solution)
+
+      #the solution owner can read this brief_item
+      item.op_right.set('self',solution.org_id,'read')
+      item.save
+
       redirect_to(solution_items_path(:solution_id=>solution.id)) and return
     end
 

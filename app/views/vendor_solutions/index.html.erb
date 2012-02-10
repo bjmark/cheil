@@ -1,10 +1,56 @@
-<%
-  #vendor_solutions/index
-# @brief
-%>
-<%=render 'share/block',
-    :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
-      :title=>brief_name(@brief,:append=>',已选vendors'),
-    :content=>{:partial=>'index',:locals=>{:brief=>@brief}}
-%>
+<div class="block">
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="first"><%=link_to '返回',briefs_path%></li>
+      <li><%=link_to '需求',brief_path(@brief)%></li>
+      <li class="active">
+      <%=link_to 'Vendor方案',vendor_solutions_path(:brief_id=>@brief.id)%>
+      </li>
+      <li>
+      <%=link_to 'Cheil 方案',cheil_solution_path(@brief.cheil_solution)%>
+      </li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h2 class="title"><%=@brief.name%></h2>
+    <div class="inner">
+      <table class="table brief_attaches">
+        <tbody>
+          <tr>
+            <th>名称</th>
+            <th></th>
+          </tr>
+          <%
+            n=1
+            brief_items_size = @brief.items.length
+            @brief.vendor_solutions.each do |e|%>
+              <tr class="<%=['odd','even'][(n+=1)%2]%>">
+                <td>
+                  <%= e.org.name %>
+                </td>
+                <td class="last">
+                  <%if !e.op.read?(@cur_user.id) and e.org_id != @cur_user.org_id%>
+                    <span style="<%="#{unread_color}"%>">(新)</span>
+                  <%end%>
+                  <%= link_to "vendor 方案(#{e.designs.length+e.products.length}/#{brief_items_size})",vendor_solution_path(e)  %>
+                  <%if e.op_right.check('self',@cur_user.org_id,'assign_item')%>
+                    |
+                    <%=link_to '指派的子项',solution_items_path(:solution_id=>e.id)  %>
+                  <%end%>
+                  <%if e.op_right.check('self',@cur_user.org_id,'delete')%>
+                    |
+                    <%= link_to '删除', vendor_solution_path(e),:confirm => '确定删除吗?', :method => :delete %>
+                  <%end%>
+                </td>
+              </tr>
+            <%end%>
+          </tbody>
+        </table>
+        <%if @brief.op_right.check('vendor_solution',@cur_user.org_id,'update')%>
+          <%=link_to '选择Vendor',vendor_orgs_path(:brief_id=>@brief.id)%>
+        <%end%>
+      </div>
+    </div>
+  </div>
 

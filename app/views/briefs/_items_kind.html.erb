@@ -1,0 +1,24 @@
+<%n=0
+items.each do |e|%>
+  <tr class="<%=['odd','even'][(n+=1)%2]%>">
+    <%n.upto(1)do %>
+      <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+    <%end%>
+    <td>
+      <%if !e.op.read?(@cur_user.id)%>
+        <span style="<%=unread_color%>">(新)</span>
+        <%e.op.read_by(@cur_user.id)%>
+      <%end%>
+      <%= e.name  %>
+    </td>
+    <td><%= e.quantity  %></td>
+    <td><%= e.note  %></td>
+    <td class="last">
+      <%= link_to '修改',edit_brief_item_path(e) if e.op_right.check('self',@cur_user.org_id,'update')  %>
+      <%if e.op_right.check('self',@cur_user.org_id,'delete')%>
+        <%= link_to '删除',brief_item_path(e), :confirm => '确定要删除吗?', :method => :delete %>
+      <%end%>
+    </td>
+  </tr>
+<%end%>
+

@@ -13,7 +13,13 @@ class BriefAttachesController < ApplicationController
     @attach = @brief.attaches.new(params[:brief_attach])
     @attach.op_right.set('self',@brief.rpm_id,'read','update','delete')
     if @brief.send_to_cheil?
+      #set the rights for the cheil
       @attach.op_right.set('self',@brief.cheil_id,'read','update','delete')
+      
+      #all vendor who has a solution for this brief can see the new attach
+      @brief.vendor_solutions.each do|e|
+        @attach.op_right.set('self',e.org_id,'read')
+      end
     end
 
     if @attach.op.save_by(@cur_user.id)
