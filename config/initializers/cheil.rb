@@ -101,6 +101,37 @@ right structure as follwing
     end
   end
 
+  class OpNotice
+    def initialize(obj)
+      @obj = obj
+    end
+
+    def read
+      s = @obj.notice
+      s.blank? ? [] : s.split(',')
+    end
+
+    def write(a)
+      @obj.notice = a.join(',')
+    end
+
+    def add(org_ids)
+      org_ids = [org_ids] unless org_ids.instance_of?(Array)
+      org_ids = org_ids.collect{|e| e.to_s}
+      write(read - org_ids + org_ids)
+    end
+
+    def del(org_ids)
+      org_ids = [org_ids] unless org_ids.instance_of?(Array)
+      org_ids = org_ids.collect{|e| e.to_s}
+      write(read - org_ids)
+    end
+
+    def include?(org_id)
+      read.include?(org_id.to_s)
+    end
+  end
+
   def Cheil.test(s)
     File.open(File.join(Rails.root,'test'),'a') do |f|
       f.puts s

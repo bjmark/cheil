@@ -89,4 +89,5 @@
 #rails g migration add_self_right_to_items
 #rails g migration add_vendor_solution_right_to_briefs
 #rails g migration add_self_right_to_solutions
-rails g migration add_more_right_to_solutions
+#rails g migration add_more_right_to_solutions
+rails g migration add_notice_to_briefs

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120210064700) do
+ActiveRecord::Schema.define(:version => 20120210145107) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(:version => 20120210064700) do
     t.string   "item_right"
     t.string   "comment_right"
     t.string   "vendor_solution_right"
+    t.string   "notice"
   end
 
   add_index "briefs", ["cheil_id"], :name => "index_briefs_on_cheil_id"

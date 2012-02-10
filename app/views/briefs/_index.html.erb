@@ -13,7 +13,7 @@
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
         <td><%=brief.id%></td>
         <td>
-          <%if !brief.op.read?(@cur_user.id)%>
+          <%if brief.op_notice.include?(@cur_user.org_id)%>
             <span style="<%=unread_color%>">(新)</span>
           <%end%>
           <%=link_to brief.name,brief_path(brief)%>

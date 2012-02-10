@@ -15,9 +15,9 @@
     <button class="button" type="submit">
       保存
     </button>
-    <%if @back%>
+    <%if !@brief.new_record?%>
       <span class="text_button_padding">或</span>
-      <%= link_to '取消', @back,:class=>'text_button_padding link_button' %>
+      <%= link_to '取消', brief_path(@brief),:class=>'text_button_padding link_button' %>
     <%end%>
   </div>
 <%end%> 

@@ -77,7 +77,8 @@ class BriefsController < ApplicationController
     #check read right
     invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'read')
     #readed by current user
-    @brief.op.read_by(@cur_user.id)
+    @brief.op_notice.del(@cur_user.org_id)
+    @brief.save
     
     @attaches = @brief.attaches.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
     @items = @brief.items.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
@@ -90,7 +91,6 @@ class BriefsController < ApplicationController
     when CheilOrg
       render 'show_cheil'
     when VendorOrg
-      @solution = @brief.solutions.find_by_org_id(@cur_user.org_id)
       render 'show_vendor'
     end
   end
@@ -103,8 +103,7 @@ class BriefsController < ApplicationController
   # GET /briefs/1/edit
   def edit
     @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user.org_id)
-    @back = brief_path(@brief)
+    invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'update')
   end
 
   def attr_filter(attr_hash)
@@ -138,7 +137,7 @@ class BriefsController < ApplicationController
   # PUT /briefs/1.json
   def update
     @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user.org_id)
+    invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'update')
     
     attr_hash = attr_filter(params[:brief])
     attr_hash['read_by'] = @cur_user.id.to_s
@@ -147,7 +146,6 @@ class BriefsController < ApplicationController
     if @brief.update_attributes(attr_hash)
       redirect_to @brief, notice: 'Brief was successfully updated.' 
     else
-      @back = brief_path(@brief)
       render action: "edit" 
     end
   end
@@ -172,6 +170,7 @@ class BriefsController < ApplicationController
     brief.op_right.set('item',brief.cheil_id,'read','update')
     brief.op_right.set('comment',brief.cheil_id,'read','update')
     brief.op_right.set('vendor_solution',brief.cheil_id,'read','update')
+    brief.op_notice.add(brief.cheil_id)
     brief.save
 
     brief.attaches.each do |e| 

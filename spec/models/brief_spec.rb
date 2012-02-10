@@ -334,4 +334,21 @@ describe Brief do
     }
 
   end
+
+  describe 'op_notice' do
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op_notice.add(1)
+      b.save
+
+      b.reload
+      b.op_notice.include?(1).should == true
+
+      b.op_notice.add([1,2])
+      b.op_notice.include?(2).should == true
+
+      b.op_notice.del(2)
+      b.op_notice.include?(2).should == false
+    }
+  end
 end
