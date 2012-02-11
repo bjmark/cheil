@@ -1,0 +1,18 @@
+<%
+  # briefs/cheil/show
+  # @brief
+%>
+<%=render 'share/block',
+    :nav=>{:partial=>'briefs/cheil/nav',:locals=>{:brief=>@brief}},
+    :contents=>[
+      {:partial=>'briefs/cheil/links',:locals=>{:brief=>@brief}},
+      {:title=>brief_name(@brief),:partial=>'show',
+        :locals=>{:brief=>@brief}}]
+%>
+<%=attaches(@brief)%>
+<%=brief_items(@brief)%>
+<%=comments(@brief)%>
+<%
+  #render 'briefs/cheil/brief_solutions/show',
+  #:brief => @brief unless @brief.vendor_solutions.empty?
+%>

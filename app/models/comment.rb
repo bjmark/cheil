@@ -12,5 +12,9 @@ class Comment < ActiveRecord::Base
   def can_del_by?(a_user)
     user_id == a_user.id
   end
+
+  def op_right
+    @op_right ||= Cheil::OpRight.new(self) 
+  end
 end
 

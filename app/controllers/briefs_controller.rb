@@ -26,9 +26,9 @@ class BriefsController < ApplicationController
     @briefs = @cur_user.org.briefs.page(params[:page])
     case @cur_user.org
     when RpmOrg
-      render 'index_rpm'
+      @nav = :rpm
     when CheilOrg,VendorOrg
-      render 'index_cheil'
+      @nav = :cheil
     end
   end
 
@@ -74,16 +74,30 @@ class BriefsController < ApplicationController
   # GET /briefs/1
   def show
     @brief = Brief.find(params[:id])
+    
     #check read right
     invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'read')
-    #readed by current user
+    
+    #del my org_id from notice 
     @brief.op_notice.del(@cur_user.org_id)
     @brief.save
     
-    @attaches = @brief.attaches.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
-    @items = @brief.items.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
-    @designs = @brief.designs.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
-    @products = @brief.products.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+    if @brief.op_right.check('attach',@cur_user.org_id,'read')
+      #get those attaches i can read
+      @attaches = @brief.attaches.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+    end
+
+    if @brief.op_right.check('item',@cur_user.org_id,'read')
+      #get those items i can read
+      @items = @brief.items.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+      #@designs,@products is prepare for display
+      @designs = @brief.designs.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+      @products = @brief.products.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+    end
+
+    if @brief.op_right.check('comment',@cur_user.org_id,'read')
+      @comments = @brief.comments
+    end
 
     case @cur_user.org
     when RpmOrg
@@ -138,7 +152,7 @@ class BriefsController < ApplicationController
   def update
     @brief = Brief.find(params[:id])
     invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'update')
-    
+
     attr_hash = attr_filter(params[:brief])
     attr_hash['read_by'] = @cur_user.id.to_s
     attr_hash['updated_at'] = Time.now
@@ -186,7 +200,7 @@ class BriefsController < ApplicationController
     vs = brief.vendor_solutions.new(:org_id=>brief.cheil_id)
     vs.op_right.set('self',brief.cheil_id,'read','assign_item')
     vs.save
-    
+
     redirect_to(brief_path(brief),:notice=>'成功发送到cheil') 
   end
 

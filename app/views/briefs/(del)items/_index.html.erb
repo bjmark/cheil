@@ -1,0 +1,29 @@
+<%
+  #briefs/items/_index
+#locals=>brief
+%>
+<table class="table">
+  <tbody>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>数量</th>
+      <th>说明</th>
+      <th></th>
+    </tr>
+    <%=brief_items_kind(brief,brief.designs,'设计')%>
+    <%=brief_items_kind(brief,brief.products,'制作')%>
+  </tbody>
+</table>
+<%if brief.can_edit_by?(@cur_user.org_id)%>
+  <%= link_to '新建设计项', new_brief_item_path(:brief_id=>brief.id,:kind=>'design') %>
+  |
+  <%= link_to '新建制作项', new_brief_item_path(:brief_id=>brief.id,:kind=>'product') %>
+  |
+  <%= link_to '新建设计项(多)', new_many_brief_items_path(:brief_id=>brief.id,:kind=>'design') %>
+  |
+  <%= link_to '新建制作项(多)', new_many_brief_items_path(:brief_id=>brief.id,:kind=>'product') %>
+  |
+  <%= link_to '修改', edit_many_brief_items_path(:brief_id=>brief.id) %>
+<%end%>
+

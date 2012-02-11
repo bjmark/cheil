@@ -1,0 +1,14 @@
+<%
+  #partial => briefs/cheil/_nav
+#locals => brief,solution
+%>
+<li>
+<%=link_to '返回',briefs_path%>
+</li>
+<li <%=raw 'class="active"' if brief_path(brief) == request.fullpath%>>
+<%=link_to '需求',brief_path(brief)%>
+</li>
+<li <%=raw 'class="active"' if vendor_solution_path(solution) == request.fullpath%>>
+<%=link_to '方案',vendor_solution_path(solution)%>
+</li>
+

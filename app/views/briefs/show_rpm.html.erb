@@ -28,7 +28,7 @@
       |
       <%= link_to '新建制作项', new_many_brief_items_path(:brief_id=>@brief.id,:kind=>'product') %>
       |
-      <%= link_to '新建评论', new_comment_path(:brief_id=>@brief.id)%>
+      <%= link_to '新建评论', new_brief_comment_path(:brief_id=>@brief.id)%>
 
       <%unless @brief.send_to_cheil?%>
         |
@@ -49,9 +49,6 @@
 <%=render 'show'%>
 </div>
 
-<%#=render 'attaches_rpm' %>
-<%=render 'attaches' %>
-<%#=render 'items_rpm'%>
-<%=render 'items'%>
-
-<%=comments(@brief)%>
+<%=render 'attaches' unless @attaches.blank? %>
+<%=render 'items' unless @items.blank?%>
+<%=render 'comments' unless @comments.blank?%>

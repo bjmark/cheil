@@ -73,31 +73,56 @@ right structure as follwing
       hash[org_id].include?(right_type)
     end
 
-    def set(target,org_id,*rights)
-      org_id = org_id.to_i
+    def set(target,org_ids,*rights)
+      org_ids = [org_ids] unless org_ids.instance_of?(Array)
+      org_ids = org_ids.collect{|e| e.to_i}
+
       hash = read_from(target)
-      hash[org_id] = rights
+      
+      org_ids.each{|i| hash[i] = rights}
+
       write_to(target,hash)
     end
 
-    def add(target,org_id,*rights)
-      org_id = org_id.to_i
+    def add(target,org_ids,*rights)
+      org_ids = [org_ids] unless org_ids.instance_of?(Array)
+      org_ids = org_ids.collect{|e| e.to_i}
+
       hash = read_from(target)
-      if hash[org_id] 
-        hash[org_id] += rights-hash[org_id]
-      else
-        hash[org_id] = rights
+
+      org_ids.each do |i|
+        if hash[i] 
+          hash[i] += rights - hash[i]
+        else
+          hash[i] = rights
+        end
       end
+
       write_to(target,hash)
     end
 
-    def del(target,org_id,*rights)
-      org_id = org_id.to_i
+    def del(target,org_ids,*rights)
+      org_ids = [org_ids] unless org_ids.instance_of?(Array)
+      org_ids = org_ids.collect{|e| e.to_i}
+      
       hash = read_from(target)
-      if hash[org_id] 
-        hash[org_id] -= rights
-        write_to(target,hash)
+      
+      org_ids.each do |i|
+        if hash[i] 
+          hash[i] -= rights
+        end
       end
+
+      write_to(target,hash)
+    end
+
+    def who_has(target,right)
+      hash = read_from(target)
+      org_ids = []
+      hash.each do |k,v|
+        org_ids << k if v.include?(right) 
+      end
+      return org_ids
     end
   end
 

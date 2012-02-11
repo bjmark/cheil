@@ -1,0 +1,31 @@
+<%
+  #briefs/items/_kind
+#locals =>brief,items,kind_cn
+%>
+<%n=0
+items.each do |e|%>
+  <tr class="<%=['odd','even'][(n+=1)%2]%>">
+    <%n.upto(1)do %>
+      <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+    <%end%>
+    <%if e.op.read?(@cur_user.id)%>
+      <td><%= e.name  %></td>
+    <%else%>
+      <%e.op.read_by(@cur_user.id)%>
+      <td><span style="<%=unread_color%>"><%= e.name  %></span></td>
+    <%end%>
+    <td><%= e.quantity  %></td>
+    <td><%= e.note  %></td>
+    <td class="last">
+      <%if brief.can_edit_by?(@cur_user.org_id)%>
+        <%= link_to '修改',edit_brief_item_path(e)  %>
+        <%= link_to '删除',
+          brief_item_path(e), 
+          :confirm => 'Are you sure?', 
+          :method => :delete 
+        %> 
+      <%end%>
+    </td>
+  </tr>
+<%end%>
+

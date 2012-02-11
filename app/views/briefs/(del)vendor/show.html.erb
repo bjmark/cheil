@@ -1,0 +1,12 @@
+<%
+  #briefs/vendor/show 
+# @brief,@solution
+%>
+<%=render 'share/block',
+  :nav=>{:partial=>'briefs/vendor/nav',:locals=>{:brief=>@brief,:solution=>@solution}},
+  :title=>(@brief.cancel? ? @brief.name + '(已取消)':@brief.name),
+  :content=>{:partial=>'show',:locals=>{:brief=>@brief}}
+%>
+<%=attaches(@brief)%>
+<%=brief_items(@brief) unless (@brief.designs.empty? and @brief.products.empty?)%>
+

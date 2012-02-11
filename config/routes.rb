@@ -60,6 +60,7 @@ Cheil::Application.routes.draw do
   end
 
   resources :comments , :only=>[:new,:create,:destroy]
+  resources :brief_comments , :only=>[:new,:create,:destroy]
 
   resources :solutions do
     member do

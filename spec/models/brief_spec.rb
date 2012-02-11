@@ -333,6 +333,19 @@ describe Brief do
       b.op_right.check('comment',1,'update').should == true
     }
 
+    specify {
+      b = Brief.new(:name=>'abc')
+      b.op_right.set('comment',1,'read','update')
+      b.save
+
+      b.reload
+      b.op_right.add('comment',[2,3],'read')
+      b.save
+
+      b.reload
+      b.op_right.who_has('comment','read').sort.should == [1,2,3]
+    }
+
   end
 
   describe 'op_notice' do

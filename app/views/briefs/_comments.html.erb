@@ -1,0 +1,27 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title">评论</h2>
+    <div class="inner">
+      <ul class="list">
+        <%@comments.each do |e|%>
+          <li>
+          <span class="author"><%=e.user.name%></span>
+          <span class="date"><%=short_d(e.created_at)%></span>
+          <%= link_to '删除',
+            brief_comment_path(e), 
+            :confirm => '确定要删除吗?', 
+            :method => :delete if e.op_right.check('self',@cur_user.org_id,'delete')
+          %>
+          <div class="comment_content">
+            <%= simple_format(e.content)  %>
+          </div>
+          </li>
+        <%end%>
+      </ul>
+      <%if @brief.op_right.check('comment',@cur_user.org_id,'update')%>
+        <%= link_to '新建评论',new_brief_comment_path(:brief_id=>@brief.id) %>
+      <%end%>
+    </div>
+  </div>
+</div>
+

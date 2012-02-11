@@ -1,0 +1,21 @@
+<%
+  #share/comments/_index
+#owner
+%>
+<ul class="list">
+  <%owner.comments.each do |e|%>
+    <li>
+    <span class="author"><%=e.user.name%></span>
+    <span class="date"><%=short_d(e.created_at)%></span>
+    <%= link_to '删除',
+      comment_path(e), 
+      :confirm => 'Are you sure?', 
+      :method => :delete if e.can_del_by?(@cur_user)
+    %>
+    <div class="comment_content">
+      <%= simple_format(e.content)  %>
+    </div>
+    </li>
+  <%end%>
+</ul>
+<%= new_comment_link(owner,@cur_user) %>

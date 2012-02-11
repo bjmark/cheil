@@ -1,0 +1,38 @@
+<%content_for :rpm do%>
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="active first">
+      <%=link_to '全部',briefs_path(@brief) %>
+      </li>
+      <li>
+      <%= link_to '未发送', not_send_briefs_path%>
+      </li>
+      <li>
+      <%= link_to '检索', search_cond_briefs_path%>
+      </li>
+    </ul>
+  </div>
+<%end%>
+
+<%content_for :cheil do%>
+  <div class="secondary-navigation">
+    <ul class="wat-cf">
+      <li class="first">
+      <%=link_to '全部',briefs_path(@brief) %>
+      </li>
+      <li>
+      <%= link_to '检索', search_cond_briefs_path%>
+      </li>
+    </ul>
+  </div>
+<%end%>
+
+<div class="block">
+  <%=yield @nav%>
+  <div class="content">
+    <div class="inner">
+      <%=render 'index'%>
+    </div>
+  </div>
+</div>
+

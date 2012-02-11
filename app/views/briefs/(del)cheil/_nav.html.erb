@@ -1,0 +1,18 @@
+<%
+  #partial => briefs/cheil/_nav
+#locals => brief,
+%>
+<li class="first">
+<%=link_to '返回',briefs_path%>
+</li>
+<li <%=raw 'class="active"' if brief_path(brief) == request.fullpath%>>
+<%=link_to '需求',brief_path(brief)%>
+</li>
+<li <%=raw 'class="active"' if vendor_solutions_path == request.fullpath.split('?').first%>>
+<%=link_to 'Vendor方案',vendor_solutions_path(:brief_id=>brief.id)%>
+</li>
+<li <%=raw 'class="active"' if cheil_solution_path(brief.cheil_solution) == 
+  request.fullpath.split('?').first%>>
+<%=link_to 'Cheil 方案',cheil_solution_path(brief.cheil_solution)%>
+</li>
+

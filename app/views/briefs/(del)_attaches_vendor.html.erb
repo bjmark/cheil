@@ -1,0 +1,35 @@
+<%unless (attaches = @brief.attaches).empty?%>
+  <div class="block">
+    <div class="content">
+      <h2 class="title">附件</h2>
+      <div class="inner">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>文件名</th>
+              <th>创建时间</th>
+              <th>更新时间</th>
+              <th></th>
+            </tr>
+            <%n=1
+            attaches.each do |e|%>
+              <tr class="<%=['odd','even'][(n+=1)%2]%>">
+                <td>
+                  <%if !e.op.read?(@cur_user.id)%>
+                    <span style="<%=unread_color%>">(新)</span>
+                  <%end%>
+                  <%= e.attach_file_name  %>
+                </td>
+                <td><%=short_d(e.created_at)%></td>
+                <td><%=short_d(e.updated_at)%></td>
+                <td class="last">
+                  <%=link_to '下载',download_attach_path(e)%> 
+                </td>
+              </tr>
+            <%end%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<%end%>

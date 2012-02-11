@@ -11,15 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120210145107) do
-
-  create_table "admin_users", :force => true do |t|
-    t.string   "name"
-    t.string   "hashed_password"
-    t.string   "salt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 20120211043129) do
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -37,32 +29,6 @@ ActiveRecord::Schema.define(:version => 20120210145107) do
   end
 
   add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
-
-  create_table "brief_attaches", :force => true do |t|
-    t.integer  "brief_id"
-    t.string   "attach_file_name"
-    t.string   "attach_content_type"
-    t.integer  "attach_file_size"
-    t.datetime "attach_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "brief_comments", :force => true do |t|
-    t.string   "content"
-    t.integer  "brief_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "brief_vendors", :force => true do |t|
-    t.integer  "brief_id"
-    t.integer  "org_id"
-    t.string   "approved",   :limit => 1, :default => "n"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "briefs", :force => true do |t|
     t.string   "name"
@@ -94,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20120210145107) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "content"
+    t.string   "self_right"
   end
 
   add_index "comments", ["fk_id"], :name => "index_comments_on_fk_id"
