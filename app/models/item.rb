@@ -43,4 +43,8 @@ class Item < ActiveRecord::Base
   def op_right
     @op_right ||= Cheil::OpRight.new(self) 
   end
+
+  def op_notice
+    @op_notice ||= Cheil::OpNotice.new(self) 
+  end
 end

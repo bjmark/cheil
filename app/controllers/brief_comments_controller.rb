@@ -14,12 +14,22 @@ class BriefCommentsController < ApplicationController
     @comment = @brief.comments.new(params[:brief_comment])
     @comment.user_id = @cur_user.id
 
+    #get who can read this brief comment
     org_ids = @brief.op_right.who_has('comment','read')
-
     @comment.op_right.set('self',org_ids,'read')
+    
+    #the creator has delete right
     @comment.op_right.add('self',@cur_user.org_id,'delete')
 
+    #who should be notice
+    notice_org_ids = org_ids - [@cur_user.org_id]
+    @comment.op_notice.add(notice_org_ids) unless notice_org_ids.blank?
+
     if @comment.save
+      unless notice_org_ids.blank?
+        @brief.op_notice.add(notice_org_ids)
+        @brief.save
+      end
       redirect_to brief_path(@brief) 
     else
       render :action => 'new'

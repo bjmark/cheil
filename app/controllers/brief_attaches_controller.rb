@@ -22,8 +22,14 @@ class BriefAttachesController < ApplicationController
       end
     end
 
+    #who should be notified
+    notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
+    @attach.op_notice.add(notice_org_ids)
+
     if @attach.op.save_by(@cur_user.id)
-      @brief.op.touch(@cur_user.id)
+      #change extend to brief
+      @brief.op_notice.add(notice_org_ids)
+      @brief.save
       redirect_to brief_path(@brief)
     else
       render :action => 'new'
@@ -34,17 +40,25 @@ class BriefAttachesController < ApplicationController
     attach = BriefAttach.find(params[:id])
     invalid_op unless attach.op_right.check('self',@cur_user.org_id,'read')
 
-    attach.op.read_by(@cur_user.id)
-
     send_file attach.attach.path,
       :filename => attach.attach_file_name,
       :content_type => attach.attach_content_type
+    
+    #del the notice
+    attach.op_notice.del(@cur_user.org_id)
+    attach.save
   end
 
   def destroy
     attach = BriefAttach.find(params[:id])
     invalid_op unless attach.op_right.check('self',@cur_user.org_id,'delete')
-    attach.brief.op.touch(@cur_user.id)
+    
+    brief = attach.brief
+    notice_org_ids = attach.op_right.who_has('self','read') - [@cur_user.org_id]
+    
+    brief.op_notice.add(notice_org_ids)
+    brief.save
+    
     attach.destroy
 
     redirect_to brief_path(attach.brief)
@@ -62,8 +76,13 @@ class BriefAttachesController < ApplicationController
 
     attr = params[:brief_attach]
     if @attach.update_attributes(attr)
-      @attach.op.save_by(@cur_user.id)
-      @brief.op.touch(@cur_user.id)
+      notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
+      @attach.op_notice.add(notice_org_ids)
+      @attach.save
+
+      @brief.op_notice.add(notice_org_ids)
+      @brief.save
+
       redirect_to brief_path(@brief)
     else
       render action: "edit" 

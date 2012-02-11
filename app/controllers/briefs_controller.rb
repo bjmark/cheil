@@ -101,11 +101,12 @@ class BriefsController < ApplicationController
 
     case @cur_user.org
     when RpmOrg
-      render 'show_rpm'
+      @nav_link = :rpm
     when CheilOrg
-      render 'show_cheil'
+      @nav_link = :cheil
     when VendorOrg
-      render 'show_vendor'
+      @solution = @brief.vendor_solutions.where(:org_id=>@cur_user.org_id).first
+      @nav_link = :vendor
     end
   end
 
@@ -189,13 +190,22 @@ class BriefsController < ApplicationController
 
     brief.attaches.each do |e| 
       e.op_right.add('self',brief.cheil_id,'read','update','delete')
+      e.op_notice.add(brief.cheil_id)
       e.save
     end
 
     brief.items.each do |e| 
       e.op_right.add('self',brief.cheil_id,'read','update','delete')
+      e.op_notice.add(brief.cheil_id)
       e.save
     end
+
+    brief.comments.each do |e|
+      e.op_right.add('self',brief.cheil_id,'read')
+      e.op_notice.add(brief.cheil_id)
+      e.save
+    end
+
     #create a vendor_solution for this cheil,so he can do whatever a vendor can do
     vs = brief.vendor_solutions.new(:org_id=>brief.cheil_id)
     vs.op_right.set('self',brief.cheil_id,'read','assign_item')

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120211043129) do
+ActiveRecord::Schema.define(:version => 20120211111759) do
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20120211043129) do
     t.string   "checked",             :limit => 1, :default => "n"
     t.string   "read_by"
     t.string   "self_right"
+    t.string   "notice"
   end
 
   add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
@@ -61,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20120211043129) do
     t.datetime "updated_at"
     t.text     "content"
     t.string   "self_right"
+    t.string   "notice"
   end
 
   add_index "comments", ["fk_id"], :name => "index_comments_on_fk_id"
@@ -79,6 +81,7 @@ ActiveRecord::Schema.define(:version => 20120211043129) do
     t.string   "note"
     t.string   "read_by"
     t.string   "self_right"
+    t.string   "notice"
   end
 
   add_index "items", ["fk_id"], :name => "index_items_on_fk_id"

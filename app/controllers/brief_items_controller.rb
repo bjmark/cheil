@@ -41,25 +41,34 @@ class BriefItemsController < ApplicationController
   def update
     @item = BriefItem.find(params[:id])
     @brief = @item.brief
-    @brief.check_edit_right(@cur_user.org_id)     #check right
+
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
+    
+    notice_ids = @item.op_right.who_has('self','read') - [@cur_user.org_id]
+    @item.op_notice.add(notice_ids)
 
     set_attr(params[:brief_item])
 
-    if @item.op.save_by(@cur_user.id)
-      @brief.op.touch(@cur_user.id)
+    if @item.save
+      @brief.op_notice.add(notice_ids)
+      @brief.save
       redirect_to brief_path(@brief), notice: 'Item was successfully updated.'  
     else
       render :action => :edit
     end
   end
 
-  def destroay
+  def destroy
     item = BriefItem.find(params[:id])
     brief = item.brief
-    brief.check_edit_right(@cur_user.org_id)     #check right
+    invalid_op unless item.op_right.check('self',@cur_user.org_id,'delete')
 
+    notice_ids = item.op_right.who_has('self','read') - [@cur_user.org_id]
     item.destroy
-    brief.op.touch(@cur_user.id)
+
+    brief.op_notice.add(notice_ids)
+    brief.save
+
     redirect_to brief_path(brief)  
   end
 
@@ -73,10 +82,13 @@ class BriefItemsController < ApplicationController
 
   def create_many
     @brief = Brief.find(params[:brief_id]) 
-    @brief.check_edit_right(@cur_user.org_id)     #check right
 
     case
     when params[:save_many]
+      invalid_op unless @brief.op_right.check('item',@cur_user.org_id,'update')
+      org_ids = @brief.op_right.who_has('item','update')
+      notice_org_ids = org_ids - [@cur_user.org_id]
+
       n = 0
       saved_count = 0
       attr = params[:brief_item]
@@ -86,20 +98,19 @@ class BriefItemsController < ApplicationController
         item.quantity = attr["quantity_#{n}"]
         item.note = attr["note_#{n}"]
         item.kind = attr["kind_#{n}"]
+        item.op_right.set('self',org_ids,'read','update','delete')
+        item.op_notice.add(notice_org_ids)
 
-        if item.op.save_by(@cur_user.id)
-          item.op_right.set('self',@brief.rpm_id,'read','update','delete')
-          if(@brief.send_to_cheil?)
-            item.op_right.set('self',@brief.cheil_id,'read','update','delete')
-          end
-          item.save
+        if item.save
           saved_count += 1
         end
         n += 1
       end
       if saved_count > 0
         @brief.reload   #must reload,it should be a bug of activerecord.relative to brief.items.new? 
-        @brief.op.touch(@cur_user.id)
+        #@brief.op.touch(@cur_user.id)
+        @brief.op_notice.add(notice_org_ids)
+        @brief.save
       end
       redirect_to brief_path(params[:brief_id])
     when (params[:add_5_design] or params[:add_5_product])
@@ -115,7 +126,7 @@ class BriefItemsController < ApplicationController
 
   def edit_many
     @brief = Brief.find(params[:brief_id]) 
-    @brief.check_edit_right(@cur_user.org_id)     #check right
+    invalid_op unless @brief.op_right.check('item',@cur_user.org_id,'update')
 
     items = @brief.items
     designs = []
@@ -132,13 +143,14 @@ class BriefItemsController < ApplicationController
 
   def update_many
     brief = Brief.find(params[:brief_id]) 
-    brief.check_edit_right(@cur_user.org_id)     #check right
+    invalid_op unless brief.op_right.check('item',@cur_user.org_id,'update')
     items = params[:brief_item]
-    
+
     ids = []
     items.keys.each{|e| ids << $1 if e =~ /name_(\d+)/}
-      
+
     updated_count = 0
+    brief_notice_ids = []
 
     ids.each do |id|
       if item = brief.items.where(:id=>id).first
@@ -146,14 +158,20 @@ class BriefItemsController < ApplicationController
         item.quantity = items["quantity_#{id}"]
         item.note = items["note_#{id}"]
         item.kind = items["kind_#{id}"]
-        if item.op.save_by(@cur_user.id)
+        
+        item_notice_ids = item.op_right.who_has('self','read') - [@cur_user.org_id]
+        item.op_notice.add(item_notice_ids)
+
+        brief_notice_ids += item_notice_ids - brief_notice_ids
+        if item.save
           updated_count += 1
         end
       end
     end
 
     if updated_count > 0
-      brief.op.touch(@cur_user.id)
+      brief.op_notice.add(brief_notice_ids)
+      brief.save
     end
 
     redirect_to brief_path(params[:brief_id])

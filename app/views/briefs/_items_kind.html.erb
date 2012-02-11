@@ -5,9 +5,9 @@ items.each do |e|%>
       <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
     <%end%>
     <td>
-      <%if !e.op.read?(@cur_user.id)%>
+      <%if e.op_notice.include?(@cur_user.org_id)%>
         <span style="<%=unread_color%>">(新)</span>
-        <%e.op.read_by(@cur_user.id)%>
+        <%e.op_notice.del(@cur_user.org_id);e.save%>
       <%end%>
       <%= e.name  %>
     </td>

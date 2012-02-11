@@ -12,6 +12,10 @@
             :confirm => '确定要删除吗?', 
             :method => :delete if e.op_right.check('self',@cur_user.org_id,'delete')
           %>
+          <%if e.op_notice.include?(@cur_user.org_id)%>
+            <span style="<%=unread_color%>">(新)</span>
+            <%e.op_notice.del(@cur_user.org_id);e.save%>
+          <%end%>
           <div class="comment_content">
             <%= simple_format(e.content)  %>
           </div>
