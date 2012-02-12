@@ -39,9 +39,9 @@ class BriefsController < ApplicationController
   def search_cond
     case @cur_user.org
     when RpmOrg
-      render 'search_cond_rpm'
+      @nav = :rpm
     when CheilOrg,VendorOrg
-      render 'search_cond_cheil'
+      @nav = :cheil
     end
   end
 
@@ -65,9 +65,11 @@ class BriefsController < ApplicationController
     
     case @cur_user.org
     when RpmOrg
-      render 'search_res_rpm'
+      #render 'search_res_rpm'
+      @nav = :rpm
     when CheilOrg,VendorOrg
-      render 'search_res_cheil'
+      #render 'search_res_cheil'
+      @nav = :cheil
     end
   end
 
@@ -177,8 +179,11 @@ class BriefsController < ApplicationController
   #put /briefs/1/send_to_cheil
   def send_to_cheil
     brief = Brief.find(params[:id])
-    raise SecurityError if brief.rpm_id != @cur_user.org_id
-    brief.send_to_cheil!
+    invalid_op if brief.rpm_id != @cur_user.org_id
+
+    brief.cheil_id = brief.rpm_org.cheil_org.id
+    brief.status = 1 #方案中
+    #brief.send_to_cheil!
 
     brief.op_right.add('self',brief.cheil_id,'read','update')
     brief.op_right.set('attach',brief.cheil_id,'read','update')
@@ -188,6 +193,9 @@ class BriefsController < ApplicationController
     brief.op_notice.add(brief.cheil_id)
     brief.save
 
+    #creat a cheil solution
+    brief.create_cheil_solution(:org_id=>brief.cheil_id)
+    
     brief.attaches.each do |e| 
       e.op_right.add('self',brief.cheil_id,'read','update','delete')
       e.op_notice.add(brief.cheil_id)

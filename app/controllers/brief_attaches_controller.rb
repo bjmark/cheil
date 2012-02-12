@@ -10,23 +10,19 @@ class BriefAttachesController < ApplicationController
     @brief = Brief.find(params[:brief_attach][:fk_id])
     invalid_op unless @brief.op_right.check('attach',@cur_user.org_id,'update')
 
-    @attach = @brief.attaches.new(params[:brief_attach])
-    @attach.op_right.set('self',@brief.rpm_id,'read','update','delete')
-    if @brief.send_to_cheil?
-      #set the rights for the cheil
-      @attach.op_right.set('self',@brief.cheil_id,'read','update','delete')
-      
-      #all vendor who has a solution for this brief can see the new attach
-      @brief.vendor_solutions.each do|e|
-        @attach.op_right.set('self',e.org_id,'read')
-      end
-    end
+    update_ids = @brief.op_right.who_has('attach','update')
+    read_ids = @brief.op_right.who_has('attach','read')
 
+    @attach = @brief.attaches.new(params[:brief_attach])
+    
+    @attach.op_right.add('self',update_ids,'read','update','delete')
+    @attach.op_right.add('self',read_ids,'read')
+    
     #who should be notified
     notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
     @attach.op_notice.add(notice_org_ids)
 
-    if @attach.op.save_by(@cur_user.id)
+    if @attach.save
       #change extend to brief
       @brief.op_notice.add(notice_org_ids)
       @brief.save

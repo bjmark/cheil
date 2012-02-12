@@ -2,7 +2,7 @@ class VendorSolutionsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
-    cheil = [:index,:show,:edit_rate,:update_rate,:create,:destroy,:send_to_rpm,:finish,:unfinish]
+    cheil = [:index,:show,:edit_rate,:update_rate,:destroy,:send_to_rpm,:finish,:unfinish,:new_many,:create_many]
     vendor = [:show,:edit_rate,:update_rate]
 
     ok=case @cur_user.org
@@ -16,6 +16,9 @@ class VendorSolutionsController < ApplicationController
   def index
     @brief = Brief.find(params[:brief_id])
     invalid_op unless @brief.op_right.check('vendor_solution',@cur_user.org_id,'read')
+
+    @brief_items = @brief.items
+    @vendor_solutions = @brief.vendor_solutions
   end
 
   def show
@@ -38,7 +41,15 @@ class VendorSolutionsController < ApplicationController
       end
   end
 
-  def create
+  def new_many
+    #已被选中的vendors
+    @brief = Brief.find(params[:brief_id])
+    vs_ids = @brief.vendor_solutions.collect{|e| e.org_id}
+    #所有org去除已被选中的vendor
+    @vendors = VendorOrg.all.reject{|e|vs_ids.include?(e.id)}
+  end
+
+  def create_many
     brief = Brief.find(params[:brief_id])
     #brief.check_create_solution_right(@cur_user.org_id)
     invalid_op unless brief.op_right.check('vendor_solution',@cur_user.org_id,'update')
@@ -46,11 +57,11 @@ class VendorSolutionsController < ApplicationController
     #get selected vendor org_id
     vendor_ids = []
     params.each {|k,v| vendor_ids << v if k=~/vendor\d+/}
-    
+
     #create a vendor_solution from each selected vendor
     vendor_ids.each do |org_id|
-      vs = brief.vendor_solutions.new(:org_id=>org_id,:read_by=>@cur_user.id.to_s)
-      
+      vs = brief.vendor_solutions.new(:org_id=>org_id)
+
       #the cheil has read and delete and assign_item right for the new vendor_solution
       vs.op_right.set('self',brief.cheil_id,'read','delete','assign_item')
       vs.op_right.set('attach',brief.cheil_id,'read')
@@ -64,17 +75,22 @@ class VendorSolutionsController < ApplicationController
       vs.op_right.set('comment',org_id,'read','update')
       vs.save
 
-      #the vendor can read the brief
+      #the vendor can read the brief and its attach
       brief.op_right.set('self',org_id,'read')
-      brief.save
+      brief.op_right.set('attach',org_id,'read')
+
+      #notify the vendor it has new brief
+      brief.op_notice.add(org_id)
 
       #the vendor can read all brief attaches
       brief.attaches.each do |e|
         e.op_right.set('self',org_id,'read')
+        e.op_notice.add(org_id)
         e.save
       end
     end
 
+    brief.save
     redirect_to vendor_solutions_path(:brief_id=>brief.id) 
   end
 

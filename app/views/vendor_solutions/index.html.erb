@@ -23,17 +23,16 @@
           </tr>
           <%
             n=1
-            brief_items_size = @brief.items.length
-            @brief.vendor_solutions.each do |e|%>
+            @vendor_solutions.each do |e|%>
               <tr class="<%=['odd','even'][(n+=1)%2]%>">
                 <td>
                   <%= e.org.name %>
                 </td>
                 <td class="last">
-                  <%if !e.op.read?(@cur_user.id) and e.org_id != @cur_user.org_id%>
+                  <%if e.op_notice.include?(@cur_user.org_id)%>
                     <span style="<%="#{unread_color}"%>">(新)</span>
                   <%end%>
-                  <%= link_to "vendor 方案(#{e.designs.length+e.products.length}/#{brief_items_size})",vendor_solution_path(e)  %>
+                  <%= link_to "vendor 方案(#{e.designs.length+e.products.length}/#{@brief_items.size})",vendor_solution_path(e)  %>
                   <%if e.op_right.check('self',@cur_user.org_id,'assign_item')%>
                     |
                     <%=link_to '指派的子项',solution_items_path(:solution_id=>e.id)  %>
@@ -48,7 +47,7 @@
           </tbody>
         </table>
         <%if @brief.op_right.check('vendor_solution',@cur_user.org_id,'update')%>
-          <%=link_to '选择Vendor',vendor_orgs_path(:brief_id=>@brief.id)%>
+          <%=link_to '选择Vendor',new_many_vendor_solutions_path(:brief_id=>@brief.id)%>
         <%end%>
       </div>
     </div>

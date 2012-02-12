@@ -97,3 +97,4 @@
 #rails g migration add_notice_to_comments
 #rails g migration add_notice_to_attaches
 #rails g migration add_notice_to_items
+rails g migration add_notice_to_solutions

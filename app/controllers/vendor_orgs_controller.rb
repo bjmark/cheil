@@ -13,20 +13,8 @@ class VendorOrgsController < ApplicationController
 
   # GET /vendor_orgs
   def index
-    case
-    when params[:brief_id]
-      #已被选中的vendors
-      @brief = Brief.find(params[:brief_id])
-      bv = @brief.vendor_solutions
-      #所有org去除已被选中的vendor
-      @vendors = VendorOrg.all.reject do |e| 
-        bv.find{|t| t.org_id == e.id}
-      end
-      render 'vendor_orgs/sel/index' 
-    else
-      @vendor_orgs = VendorOrg.all
-      flash[:dest] = vendor_orgs_path
-    end
+    @vendor_orgs = VendorOrg.all
+    flash[:dest] = vendor_orgs_path
   end
 
   # GET /vendor_orgs/1

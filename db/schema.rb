@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120211111759) do
+ActiveRecord::Schema.define(:version => 20120212015236) do
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(:version => 20120211111759) do
     t.string   "attach_right"
     t.string   "item_right"
     t.string   "comment_right"
+    t.string   "notice"
   end
 
   add_index "solutions", ["brief_id"], :name => "index_solutions_on_brief_id"

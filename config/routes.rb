@@ -89,6 +89,10 @@ Cheil::Application.routes.draw do
       get :edit_rate
       put :update_rate
     end
+    collection do
+      get :new_many
+      post:create_many
+    end
   end
 
   resources :vendor_orgs

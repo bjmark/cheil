@@ -55,13 +55,15 @@ class Brief < ActiveRecord::Base
     self.cheil_id > 0
   end
 
+=begin
   def send_to_cheil!
     self.cheil_org = rpm_org.cheil_org
     self.status = 1
     save
     self.create_cheil_solution(:org_id=>self.cheil_id)
   end
-
+=end
+=begin
   def check_comment_right(org_id)
     can_commented_by?(org_id) or raise SecurityError
   end
@@ -103,6 +105,7 @@ class Brief < ActiveRecord::Base
   def consult_by?(org_id)
     solutions.find_by_org_id(org_id)
   end
+=end
 
   def op
     @op ||= Cheil::Op.new(self) 

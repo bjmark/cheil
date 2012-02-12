@@ -1,0 +1,25 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title"><%=@brief.name%>,选择vendor</h2>
+    <div class="inner">
+      <%= form_tag(create_many_vendor_solutions_path(:brief_id=>@brief.id),:class=>'form') do -%>
+        <div class="group">
+          <%@vendors.each do |e|%>
+            <div>
+              <%= check_box_tag "vendor#{e.id}",e.id,false,:class=>'checkbox'%>
+              <%= label_tag "vendor#{e.id}",e.name,:class=>'checkbox' %>
+            </div>
+          <%end%>
+        </div>
+        <div class="group navform wat-cf">
+          <button class="button" type="submit">
+            提交
+          </button>
+          <span class="text_button_padding">或</span>
+          <%= link_to '取消',vendor_solutions_path(:brief_id=>@brief.id),:class=>'text_button_padding link_button' %>
+        </div>
+      <%end%> 
+    </div>
+  </div>
+</div>
+
