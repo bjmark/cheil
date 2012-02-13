@@ -1,12 +1,14 @@
 class SolutionItemsController < ApplicationController
   before_filter :cur_user 
 
+=begin
   def index
-    if params[:solution_id]
-      @solution = Solution.find(params[:solution_id])
-      @brief = @solution.brief
+    if params[:vendor_solution_id]
+      @vendor_solution = VendorSolution.find(params[:vendor_solution_id])
+      @brief = @vendor_solution.brief
     end
   end
+=end
 
   def new
     @solution = Solution.find(params[:solution_id])
@@ -96,19 +98,32 @@ class SolutionItemsController < ApplicationController
   def create
     case
       #add a brief_item to vendor_solution
-    when (params[:solution_id] and params[:item_id])
-      solution = VendorSolution.find(params[:solution_id])
+    when (params[:vendor_solution_id] and params[:brief_item_id])
+      vendor_solution = VendorSolution.find(params[:vendor_solution_id])
       #raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
-      invalid_op unless solution.op_right.check('self',@cur_user.org_id,'assign_item')
+      invalid_op unless vendor_solution.op_right.check('item',@cur_user.org_id,'assign_brief_item')
 
-      item = BriefItem.find(params[:item_id])
-      item.add_to_solution(solution)
+      if vendor_solution.items.where(:parent_id=>params[:brief_item_id]).blank?
+        brief_item = BriefItem.find(params[:brief_item_id])
+        #brief_item.add_to_solution(vendor_solution)
+        item = vendor_solution.items.new(:parent_id=>brief_item.id)
+        item.op_right.add('self',@cur_user.org_id,'read','delete')
+        item.op_right.add('self',vendor_solution.org_id,'read','price')
 
-      #the solution owner can read this brief_item
-      item.op_right.set('self',solution.org_id,'read')
-      item.save
+        #notify the vendor for this item
+        item.op_notice.add(vendor_solution.org_id)
+        item.save
 
-      redirect_to(solution_items_path(:solution_id=>solution.id)) and return
+        #the solution owner can read this brief_item
+        brief_item.op_right.add('self',vendor_solution.org_id,'read')
+        brief_item.save
+
+        #notify the vendor for relate brief
+        brief = vendor_solution.brief
+        brief.op_notice.add(vendor_solution.org_id)
+        brief.save
+      end
+      redirect_to(solution_items_path(:vendor_solution_id=>vendor_solution.id)) and return
     end
 
     #create a solution_item
@@ -147,12 +162,12 @@ class SolutionItemsController < ApplicationController
 
   def destroy
     case
-    when (params[:id] and params[:solution_id])
-      solution = VendorSolution.find(params[:solution_id])
-      raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
+    when (params[:id] and params[:vendor_solution_id])
       item = Item.find(params[:id])
-      item.del_from_solution(params[:solution_id])
-      redirect_to(solution_items_path(:solution_id=>solution.id)) and return
+      invalid_op unless item.op_right.check('self',@cur_user.org_id,'delete')
+      item.destroy
+
+      redirect_to(solution_items_path(:vendor_solution_id=>params[:vendor_solution_id])) and return
     when params[:id]
       item = Item.find(params[:id])
       item.check_edit_right(@cur_user.org_id)

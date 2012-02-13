@@ -2,7 +2,8 @@ class VendorSolutionsController < ApplicationController
   before_filter :cur_user , :check_right
 
   def check_right
-    cheil = [:index,:show,:edit_rate,:update_rate,:destroy,:send_to_rpm,:finish,:unfinish,:new_many,:create_many]
+    cheil = [:index,:show,:edit_rate,:update_rate,:destroy,:send_to_rpm,
+      :finish,:unfinish,:new_many,:create_many,:pick_brief_items,:add_brief_item,:del_brief_item]
     vendor = [:show,:edit_rate,:update_rate]
 
     ok=case @cur_user.org
@@ -21,10 +22,56 @@ class VendorSolutionsController < ApplicationController
     @vendor_solutions = @brief.vendor_solutions
   end
 
+  def pick_brief_items 
+    @vendor_solution = VendorSolution.find(params[:id])
+    @brief = @vendor_solution.brief
+  end
+
+  def add_brief_item
+    vendor_solution = VendorSolution.find(params[:id])
+    invalid_op unless vendor_solution.op_right.check('item',@cur_user.org_id,'assign_brief_item')
+
+    if vendor_solution.items.where(:parent_id=>params[:brief_item_id]).blank?
+      brief_item = BriefItem.find(params[:brief_item_id])
+      #brief_item.add_to_solution(vendor_solution)
+      item = vendor_solution.items.new(:parent_id=>brief_item.id)
+      item.op_right.add('self',@cur_user.org_id,'read','delete')
+      item.op_right.add('self',vendor_solution.org_id,'read','price')
+
+      #notify the vendor for this item
+      item.op_notice.add(vendor_solution.org_id)
+      item.save
+
+      #the solution owner can read this brief_item
+      brief_item.op_right.add('self',vendor_solution.org_id,'read')
+      brief_item.save
+
+      #notify the vendor for relate brief
+      brief = vendor_solution.brief
+      brief.op_notice.add(vendor_solution.org_id)
+      brief.save
+    end
+    redirect_to pick_brief_items_vendor_solution_path(vendor_solution)
+  end
+
+  def del_brief_item
+    vendor_solution = VendorSolution.find(params[:id])
+    item = vendor_solution.items.where(:parent_id=>params[:brief_item_id]).first
+    if item
+      invalid_op unless item.op_right.check('self',@cur_user.org_id,'delete')
+      item.destroy
+
+      brief_item = BriefItem.find(params[:brief_item_id])
+      brief_item.op_right.del('self',vendor_solution.org_id,'read')
+      brief_item.save
+    end
+    redirect_to pick_brief_items_vendor_solution_path(vendor_solution)
+  end
+
   def show
     @solution = VendorSolution.find(params[:id])
     invalid_op unless @solution.op_right.check('self',@cur_user.org_id,'read')
-    
+
     @brief = @solution.brief
     flash[:dest] = solution_path(@solution)
 
@@ -106,7 +153,7 @@ class VendorSolutionsController < ApplicationController
     vs = VendorSolution.find(params[:id])
 
     invalid_op unless vs.op_right.check('self',@cur_user.org_id,'delete')
-    
+
     brief = vs.brief
     org_id = vs.org_id
 

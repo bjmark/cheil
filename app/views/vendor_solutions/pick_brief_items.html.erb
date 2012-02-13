@@ -8,7 +8,7 @@
     <h2 class="title">指派子项</h2>
     <div class="inner">
       <%unless @brief.items.empty?%>
-        <%=@solution.org.name%>
+        <%=@vendor_solution.org.name%>
         <table class="table brief_items">
           <tbody>
             <tr>
@@ -18,14 +18,12 @@
               <th>说明</th>
               <th></th>
             </tr>
-            <%=render 'index_items_kind',
-              :solution=>@solution,
-              :items=>@brief.designs,
+            <%=render 'pick_brief_items_kind',
+              :brief_items=>@brief.designs,
               :kind_cn=>'设计',
             %>
-            <%=render 'index_items_kind',
-              :solution=>@solution,
-              :items=>@brief.products,
+            <%=render 'pick_brief_items_kind',
+              :brief_items=>@brief.products,
               :kind_cn=>'制作',
             %>
           </tbody>

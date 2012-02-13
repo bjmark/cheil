@@ -1,25 +1,25 @@
 <%
-#items,solution,kind_cn
+#brief_items,kind_cn
 %>
-<%unless items.empty?%>
+<%unless brief_items.empty?%>
   <%n=0
-  items.each do |e|%>
+  brief_items.each do |e|%>
     <tr class="<%=['odd','even'][(n+=1)%2]%>">
       <%n.upto(1)do %>
-        <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+        <td colspan="1" rowspan="<%=brief_items.length%>"><%=kind_cn%></td>
       <%end%>
       <td><%= e.name  %></td>
       <td><%= e.quantity  %></td>
       <td><%= e.note  %></td>
       <td class="last">
         (<%=e.solution_items.size%>)
-        <%if e.belongs_to?(solution)%>
+        <%if e.belongs_to?(@vendor_solution)%>
           <%= link_to '取消指派',
-            solution_item_path(e,:solution_id=>solution.id),
+            del_brief_item_vendor_solution_path(@vendor_solution,:brief_item_id=>e.id),
             :method=>:delete%>
           <%else%>
             <%= link_to '指派',
-              solution_items_path(:solution_id=>solution.id,:item_id=>e.id),:method=>:post%>
+              add_brief_item_vendor_solution_path(@vendor_solution,:brief_item_id=>e.id),:method=>:post%>
         <%end%>
       </td>
     </tr>

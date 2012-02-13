@@ -87,7 +87,10 @@ Cheil::Application.routes.draw do
   resources :vendor_solutions do
     member do
       get :edit_rate
+      get :pick_brief_items
       put :update_rate
+      post :add_brief_item
+      delete :del_brief_item
     end
     collection do
       get :new_many

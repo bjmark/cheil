@@ -34,7 +34,7 @@
                   <%end%>
                   <%= link_to "vendor 方案(#{e.designs.length+e.products.length}/#{@brief_items.size})",vendor_solution_path(e)  %>
                   |
-                  <%=link_to '指派的子项',solution_items_path(:solution_id=>e.id)  %>
+                  <%=link_to '指派的子项',pick_brief_items_vendor_solution_path(e)  %>
                   <%if e.op_right.check('self',@cur_user.org_id,'delete')%>
                     |
                     <%= link_to '删除', vendor_solution_path(e),:confirm => '确定删除吗?', :method => :delete %>
