@@ -3,16 +3,17 @@ class BriefItemsController < ApplicationController
   before_filter :cur_user 
 
   #brief_items/new?brief_id=1&kind=design      new a item for a brief
+=begin
   def new
     @brief = Brief.find(params[:brief_id]) 
     @item = @brief.items.new
     @item.kind = params[:kind].blank? ? 'design' : params[:kind]
   end
-
+=end
   def edit
     @item = BriefItem.find(params[:id])
     @brief = @item.brief
-    @brief.check_edit_right(@cur_user.org_id)     #check right
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
   end
 
 
@@ -22,22 +23,23 @@ class BriefItemsController < ApplicationController
     @item.note = attr[:note]
     @item.kind = attr[:kind]
   end
-
+=begin
   def create
     @brief = Brief.find(params[:brief_id]) 
-    @brief.check_edit_right(@cur_user.org_id)     #check right
+    invalid_op unless @brief.op_right.check('item',@cur_user.org_id,'update')
+
     @item = @brief.items.new
 
     set_attr(params[:brief_item])
 
-    if @item.op.save_by(@cur_user.id)
-      @brief.op.touch(@cur_user.id)
+    if @item.save
+
       redirect_to brief_path(@brief), notice: 'Item was successfully created.'  
     else
       render :action => :new
     end
   end
-
+=end
   def update
     @item = BriefItem.find(params[:id])
     @brief = @item.brief

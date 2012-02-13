@@ -97,4 +97,6 @@
 #rails g migration add_notice_to_comments
 #rails g migration add_notice_to_attaches
 #rails g migration add_notice_to_items
-rails g migration add_notice_to_solutions
+#rails g migration add_notice_to_solutions
+#rails generate controller solution_attaches
+rails generate controller solution_comments

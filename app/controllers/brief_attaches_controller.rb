@@ -57,7 +57,7 @@ class BriefAttachesController < ApplicationController
     
     attach.destroy
 
-    redirect_to brief_path(attach.brief)
+    redirect_to brief_path(brief)
   end
 
   def edit

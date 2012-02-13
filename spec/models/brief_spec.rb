@@ -159,88 +159,6 @@ describe Brief do
     }
   end
 
-  describe '#send_to_cheil!' do
-    it 'send to cheil' do
-      rpm_org.cheil_org = cheil_org
-      brief.rpm_org = rpm_org
-      brief.send_to_cheil!
-      brief.cheil_id.should == cheil_org.id
-      brief.cheil_solution.org_id.should == cheil_org.id
-    end
-  end
-
-  def send_brief
-    rpm_org.cheil_org = cheil_org
-    brief.rpm_org = rpm_org
-    brief.send_to_cheil!
-  end
-
-  describe '#owned_by?' do
-    before {
-      send_brief
-    }
-
-    specify {
-      brief.owned_by?(rpm_org.id).should be_true
-    }
-
-    specify {
-      brief.owned_by?(cheil_org.id).should be_false
-    }
-  end
-
-  describe '#received_by?' do
-    before {
-      send_brief
-    }
-
-    specify {
-      brief.received_by?(cheil_org.id).should be_true
-    }
-  end
-
-  describe 'check_comment_right(org_id) and can_commented_by?(org_id)' do
-    specify{
-      send_brief
-      brief.can_commented_by?(rpm_org.id).should be_true
-      brief.can_commented_by?(cheil_org.id).should be_true
-      brief.can_commented_by?(vendor_org.id).should be_false
-
-      brief.check_comment_right(rpm_org.id).should be_true
-      brief.check_comment_right(cheil_org.id).should be_true
-      expect {
-        brief.check_comment_right(vendor_org.id)
-      }.to raise_exception(SecurityError)
-    }
-  end
-
-  describe 'can_read_by?(org_id) and check_read_right(org_id)' do
-    specify{
-      send_brief
-      brief.can_read_by?(rpm_org.id).should be_true
-      brief.can_read_by?(cheil_org.id).should be_true
-      brief.can_read_by?(vendor_org.id).should be_false
-
-      brief.check_read_right(rpm_org.id).should be_true
-      brief.check_read_right(cheil_org.id).should be_true
-      expect {
-        brief.check_read_right(vendor_org.id)
-      }.to raise_exception(SecurityError)
-
-      brief.vendor_solutions << VendorSolution.new(:org_id=>vendor_org.id)
-      brief.can_read_by?(vendor_org.id).should be_true
-      brief.check_read_right(vendor_org.id).should be_true
-    }
-
-  end
-
-  describe '#consult_by?(g)' do
-    specify {
-      brief.vendor_solutions << VendorSolution.new(:org_id=>vendor_org.id)
-      brief.consult_by?(vendor_org.id).should be_true
-    }
-  end
-
 =begin
   scope :search_name, lambda {|word| word.blank? ? where('') : where('name like ?',"%#{word}%")}
   scope :deadline_great_than, lambda {|d| d.nil? ? where('') : where('deadline > ?',d)}
@@ -286,66 +204,37 @@ describe Brief do
   end
 
   describe 'op_right' do
-    specify {
-      b = Brief.new(:name=>'abc')
-      b.op_right.set('self',1,'read','delete')
-      b.save
+    context 'set' do
+      specify {
+        b = Brief.new(:name=>'abc')
+        b.op_right.set('self',1,'read','delete')
 
-      b.reload
-      b.op_right.check('self',1,'read').should == true
-    }
+        b.op_right.check('self',1,'read').should == true
+      }
+    end
 
-    specify {
-      b = Brief.new(:name=>'abc')
-      b.op_right.set('attach',1,'read','update')
-      b.save
+    context 'add' do 
+      specify {
+        b = Brief.new(:name=>'abc')
+        b.op_right.add('attach',1,'read','update')
 
-      b.reload
-      b.op_right.check('attach',1,'read').should == true
-      b.op_right.check('attach',1,'delete').should == false
-    }
+        b.op_right.check('attach',1,'read').should == true
+        b.op_right.check('attach',1,'delete').should == false
+      }
+    end
 
-    specify {
-      b = Brief.new(:name=>'abc')
-      b.op_right.set('item',1)
-      b.save
+    context 'del' do 
+      specify {
+        b = Brief.new(:name=>'abc')
+        b.op_right.add('item',1,'read','update')
+        b.op_right.add('item',1,'read')
 
-      b.reload
-      b.op_right.add('item',1,'read')
-      b.save
+        b.op_right.del('item',1,'read','update')
 
-      b.reload
-      b.op_right.check('item',1,'read').should == true
-      b.op_right.check('item',1,'delete').should == false
-    }
-
-    specify {
-      b = Brief.new(:name=>'abc')
-      b.op_right.set('comment',1,'read','update')
-      b.save
-
-      b.reload
-      b.op_right.del('comment',1,'read')
-      b.save
-
-      b.reload
-      b.op_right.check('comment',1,'read').should == false
-      b.op_right.check('comment',1,'update').should == true
-    }
-
-    specify {
-      b = Brief.new(:name=>'abc')
-      b.op_right.set('comment',1,'read','update')
-      b.save
-
-      b.reload
-      b.op_right.add('comment',[2,3],'read')
-      b.save
-
-      b.reload
-      b.op_right.who_has('comment','read').sort.should == [1,2,3]
-    }
-
+        b.op_right.check('item',1,'read').should == true
+        b.op_right.check('item',1,'update').should == false
+      }
+    end
   end
 
   describe 'op_notice' do

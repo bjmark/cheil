@@ -1,0 +1,2 @@
+module SolutionAttachesHelper
+end

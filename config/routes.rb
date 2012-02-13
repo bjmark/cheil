@@ -15,7 +15,7 @@ Cheil::Application.routes.draw do
     end
   end
 
-  resources :attaches do
+  resources :solution_attaches do
     member do 
       get :download
       put :check
@@ -30,13 +30,13 @@ Cheil::Application.routes.draw do
     end
   end
 =end
-  resources :brief_items 
-
-  scope :path => '/brief_items',:controller => :brief_items do
-    get 'new/many' => :new_many, :as=>'new_many_brief_items'
-    post 'create/many' => :create_many, :as=>'create_many_brief_items'
-    get 'edit/many' => :edit_many, :as=>'edit_many_brief_items'
-    put 'update/many' => :update_many, :as=>'update_many_brief_items'
+  resources :brief_items do
+    collection do 
+      get 'new_many'
+      post 'create_many'
+      get 'edit_many'
+      put 'update_many'
+    end
   end
 
   resources :solution_items do 
@@ -59,7 +59,7 @@ Cheil::Application.routes.draw do
     put 'update/many' => :update_many, :as=>'update_many_solution_items'
   end
 
-  resources :comments , :only=>[:new,:create,:destroy]
+  resources :solution_comments , :only=>[:new,:create,:destroy]
   resources :brief_comments , :only=>[:new,:create,:destroy]
 
   resources :solutions do

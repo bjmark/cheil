@@ -23,10 +23,16 @@ class VendorSolutionsController < ApplicationController
 
   def show
     @solution = VendorSolution.find(params[:id])
-    @solution.check_read_right(@cur_user.org_id)
+    invalid_op unless @solution.op_right.check('self',@cur_user.org_id,'read')
+    
+    @brief = @solution.brief
     flash[:dest] = solution_path(@solution)
 
-    @solution.op.read_by(@cur_user.id)
+    #@solution.op.read_by(@cur_user.id)
+    if @solution.op_notice.include?(@cur_user.org_id)
+      @solution.op_notice.del(@cur_user.org_id)
+      @solution.save
+    end
 
     @money = @solution.money
     @payments = Payment.where(
@@ -35,7 +41,7 @@ class VendorSolutionsController < ApplicationController
 
       case @cur_user.org
       when CheilOrg          #current user is a cheil user
-        render 'vendor_solutions/cheil/show'
+        #render 'vendor_solutions/cheil/show'
       when VendorOrg
         render 'vendor_solutions/vendor/show'
       end
@@ -46,7 +52,8 @@ class VendorSolutionsController < ApplicationController
     @brief = Brief.find(params[:brief_id])
     vs_ids = @brief.vendor_solutions.collect{|e| e.org_id}
     #所有org去除已被选中的vendor
-    @vendors = VendorOrg.all.reject{|e|vs_ids.include?(e.id)}
+    @vendors = [@brief.cheil_org] + VendorOrg.all
+    @vendors = @vendors.reject{|e|vs_ids.include?(e.id)}
   end
 
   def create_many
@@ -63,28 +70,29 @@ class VendorSolutionsController < ApplicationController
       vs = brief.vendor_solutions.new(:org_id=>org_id)
 
       #the cheil has read and delete and assign_item right for the new vendor_solution
-      vs.op_right.set('self',brief.cheil_id,'read','delete','assign_item')
-      vs.op_right.set('attach',brief.cheil_id,'read')
-      vs.op_right.set('item',brief.cheil_id,'read')
-      vs.op_right.set('comment',brief.cheil_id,'read','update')
+      vs.op_right.add('self',brief.cheil_id,'read','delete')
+      vs.op_right.add('attach',brief.cheil_id,'read')
+      vs.op_right.add('item',brief.cheil_id,'read','assign_brief_item')
+      vs.op_right.add('comment',brief.cheil_id,'read','update')
 
       #the vendor itself has read right for the new vendor_solution
-      vs.op_right.set('self',org_id,'read')
-      vs.op_right.set('attach',org_id,'read','update')
-      vs.op_right.set('item',org_id,'read','update')
-      vs.op_right.set('comment',org_id,'read','update')
+      vs.op_right.add('self',org_id,'read')
+      vs.op_right.add('attach',org_id,'read','update')
+      vs.op_right.add('item',org_id,'read','create_tran','create_other')
+      vs.op_right.add('comment',org_id,'read','update')
       vs.save
 
       #the vendor can read the brief and its attach
-      brief.op_right.set('self',org_id,'read')
-      brief.op_right.set('attach',org_id,'read')
+      brief.op_right.add('self',org_id,'read')
+      brief.op_right.add('attach',org_id,'read')
+      brief.op_right.add('item',org_id,'read')
 
       #notify the vendor it has new brief
       brief.op_notice.add(org_id)
 
       #the vendor can read all brief attaches
       brief.attaches.each do |e|
-        e.op_right.set('self',org_id,'read')
+        e.op_right.add('self',org_id,'read')
         e.op_notice.add(org_id)
         e.save
       end
@@ -95,10 +103,30 @@ class VendorSolutionsController < ApplicationController
   end
 
   def destroy
-    s = VendorSolution.find(params[:id])
-    brief = s.brief
-    s.check_destroy_right(@cur_user.org_id)
-    s.destroy
+    vs = VendorSolution.find(params[:id])
+
+    invalid_op unless vs.op_right.check('self',@cur_user.org_id,'delete')
+    
+    brief = vs.brief
+    org_id = vs.org_id
+
+    if brief.cheil_id != org_id
+      brief.op_right.del('self',org_id,'read') 
+      brief.op_right.del('attach',org_id,'read')
+      brief.op_right.del('item',org_id,'read')
+      brief.save
+
+      brief.attaches.each do |e|
+        e.op_right.del('self',org_id,'read')
+        e.save
+      end
+
+      brief.items.each do |e|
+        e.op_right.del('self',org_id,'read') 
+        e.save
+      end
+    end
+    vs.destroy
 
     redirect_to vendor_solutions_path(:brief_id=>brief.id) 
   end

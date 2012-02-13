@@ -215,10 +215,11 @@ class BriefsController < ApplicationController
     end
 
     #create a vendor_solution for this cheil,so he can do whatever a vendor can do
+=begin
     vs = brief.vendor_solutions.new(:org_id=>brief.cheil_id)
     vs.op_right.set('self',brief.cheil_id,'read','assign_item')
     vs.save
-
+=end
     redirect_to(brief_path(brief),:notice=>'成功发送到cheil') 
   end
 

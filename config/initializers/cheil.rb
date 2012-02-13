@@ -92,7 +92,7 @@ right structure as follwing
 
       org_ids.each do |i|
         if hash[i] 
-          hash[i] += rights - hash[i]
+          hash[i] += rights 
         else
           hash[i] = rights
         end
@@ -101,15 +101,39 @@ right structure as follwing
       write_to(target,hash)
     end
 
+    # del_help([1,2,2,3],[1,2]) = [2,3]
+    def del_help(a,b)
+      h = {}
+      a.each do |e|
+        if h[e] 
+          h[e] +=1
+        else
+          h[e] = 1
+        end
+      end
+
+      b.each do |i|
+        h[i] -= 1 if h[i]
+      end
+
+      c = []
+
+      h.each do |k,v|
+        c += [k] * v
+      end
+      
+      return c
+    end
+
     def del(target,org_ids,*rights)
       org_ids = [org_ids] unless org_ids.instance_of?(Array)
       org_ids = org_ids.collect{|e| e.to_i}
-      
+
       hash = read_from(target)
-      
+
       org_ids.each do |i|
         if hash[i] 
-          hash[i] -= rights
+          hash[i] = del_help(hash[i],rights)
         end
       end
 
