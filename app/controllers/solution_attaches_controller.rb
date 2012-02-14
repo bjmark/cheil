@@ -7,25 +7,32 @@ class SolutionAttachesController < ApplicationController
   end
 
   def create
-    @solution = VendorSolution.find(params[:vendor_solution_attach][:fk_id])
+    @solution = VendorSolution.find(params[:solution_attach][:fk_id])
     invalid_op unless @solution.op_right.check('attach',@cur_user.org_id,'update')
 
-    update_ids = @solution.op_right.who_has('attach','update')
+    update_ids = @solution.org_id
     read_ids = @solution.op_right.who_has('attach','read')
 
-    @attach = @solution.attaches.new(params[:vendor_solution_attach])
+    @attach = @solution.attaches.new(params[:solution_attach])
 
     @attach.op_right.add('self',update_ids,'read','update','delete')
     @attach.op_right.add('self',read_ids,'read')
+    @attach.op_right.add('self',read_ids,'read')
+
+    brief = @solution.brief
+    @attach.op_right.add('self',brief.cheil_id,'check')
 
     #who should be notified
     notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
     @attach.op_notice.add(notice_org_ids)
 
     if @attach.save
-      #change extend to brief
       @solution.op_notice.add(notice_org_ids)
       @solution.save
+
+      brief.op_notice.add(notice_org_ids)
+      brief.save
+
       redirect_to vendor_solution_path(@solution)
     else
       render :action => 'new'
@@ -55,6 +62,10 @@ class SolutionAttachesController < ApplicationController
     solution.op_notice.add(notice_org_ids)
     solution.save
 
+    brief = solution.brief
+    brief.op_notice.add(notice_org_ids)
+    brief.save
+
     attach.destroy
 
     redirect_to vendor_solution_path(solution)
@@ -70,7 +81,7 @@ class SolutionAttachesController < ApplicationController
     @solution = @attach.solution
     invalid_op unless @attach.op_right.check('self',@cur_user.org_id,'update')
 
-    attr = params[:vendor_solution_attach]
+    attr = params[:solution_attach]
     if @attach.update_attributes(attr)
       notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
       @attach.op_notice.add(notice_org_ids)
@@ -78,6 +89,10 @@ class SolutionAttachesController < ApplicationController
 
       @solution.op_notice.add(notice_org_ids)
       @solution.save
+
+      brief = @solution.brief
+      brief.op_notice.add(notice_org_ids)
+      brief.save
 
       redirect_to vendor_solution_path(@solution)
     else
@@ -91,12 +106,24 @@ class SolutionAttachesController < ApplicationController
       value = yield
     end
 
-    attach = VendorSolutionAttach.find(params[:id])
+    attach = SolutionAttach.find(params[:id])
     #attach.can_checked_by?(@cur_user.org_id)
     attach.op_right.check('self',@cur_user.org_id,'check')
     attach.checked = value
+    
+    #notice_org_ids = attach.op_right.who_has('self','read') - [@cur_user.org_id]
+    #attach.op_notice.add(notice_org_ids)
+    
     attach.save
+=begin
+    solution = attach.solution
+    solution.op_notice.add(notice_org_ids)
+    solution.save
 
+    brief = solution.brief
+    brief.op_notice.add(notice_org_ids)
+    brief.save
+=end
     if params[:dest]
       redirect_to params[:dest]
     else

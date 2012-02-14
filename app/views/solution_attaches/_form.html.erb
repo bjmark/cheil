@@ -1,0 +1,16 @@
+<%= form_for(@attach,:html=>{:class=>'form'}) do |f| %>
+  <div class="group">
+    <%= f.label :attach,'附件',:class=>'label' %>
+    <%= f.file_field :attach,:class=>'file_field' %>
+    <%= f.hidden_field :fk_id %>
+  </div>
+
+  <div class="group navform wat-cf">
+    <button class="button" type="submit">
+      提交
+    </button>
+    <span class="text_button_padding">或</span>
+    <%= link_to '取消', vendor_solution_path(@solution),:class=>'text_button_padding link_button' %>
+  </div>
+<% end %>
+

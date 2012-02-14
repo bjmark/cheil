@@ -73,9 +73,10 @@ class VendorSolutionsController < ApplicationController
     invalid_op unless @solution.op_right.check('self',@cur_user.org_id,'read')
 
     @brief = @solution.brief
+    @attaches = @solution.attaches
+
     flash[:dest] = solution_path(@solution)
 
-    #@solution.op.read_by(@cur_user.id)
     if @solution.op_notice.include?(@cur_user.org_id)
       @solution.op_notice.del(@cur_user.org_id)
       @solution.save
@@ -89,8 +90,9 @@ class VendorSolutionsController < ApplicationController
       case @cur_user.org
       when CheilOrg          #current user is a cheil user
         #render 'vendor_solutions/cheil/show'
+        @nav_link = :cheil
       when VendorOrg
-        render 'vendor_solutions/vendor/show'
+        @nav_link = :vendor
       end
   end
 
