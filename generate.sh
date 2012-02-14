@@ -99,4 +99,5 @@
 #rails g migration add_notice_to_items
 #rails g migration add_notice_to_solutions
 #rails generate controller solution_attaches
-rails generate controller solution_comments
+#rails generate controller solution_comments
+rails g migration add_tax_rate_to_items

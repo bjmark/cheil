@@ -35,7 +35,7 @@ class VendorSolutionsController < ApplicationController
       brief_item = BriefItem.find(params[:brief_item_id])
       #brief_item.add_to_solution(vendor_solution)
       item = vendor_solution.items.new(:parent_id=>brief_item.id)
-      item.op_right.add('self',@cur_user.org_id,'read','delete')
+      item.op_right.add('self',@cur_user.org_id,'read','unassign','check')
       item.op_right.add('self',vendor_solution.org_id,'read','price')
 
       #notify the vendor for this item
@@ -58,7 +58,7 @@ class VendorSolutionsController < ApplicationController
     vendor_solution = VendorSolution.find(params[:id])
     item = vendor_solution.items.where(:parent_id=>params[:brief_item_id]).first
     if item
-      invalid_op unless item.op_right.check('self',@cur_user.org_id,'delete')
+      invalid_op unless item.op_right.check('self',@cur_user.org_id,'unassign')
       item.destroy
 
       brief_item = BriefItem.find(params[:brief_item_id])
@@ -74,6 +74,7 @@ class VendorSolutionsController < ApplicationController
 
     @brief = @solution.brief
     @attaches = @solution.attaches
+    @items = @solution.items
 
     flash[:dest] = solution_path(@solution)
 

@@ -5,6 +5,7 @@
       <th>名称</th>
       <th>数量</th>
       <th>说明</th>
+      <th>单价</th>
       <th>类型</th>
     </tr>
     <%@item_count.times do |n|%>
@@ -13,6 +14,7 @@
         <td><%=text_field_tag (s="name_#{n}"),params[s]%></td>
         <td><%=text_field_tag (s="quantity_#{n}"),params[s]%></td>
         <td><%=text_field_tag (s="note_#{n}"),params[s]%></td>
+        <td><%=text_field_tag (s="price_#{n}"),params[s]%></td>
         <td>
           <select name="<%="kind_#{n}"%>" size="1">
             <option value="tran" label="tran" <%=item_kind_selected(n,'tran',@kind_default)%>>

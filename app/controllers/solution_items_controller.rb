@@ -18,23 +18,25 @@ class SolutionItemsController < ApplicationController
   end
 
   def edit
-    @item = Item.find(params[:id])
-    @item.check_edit_right(@cur_user.org_id)
+    @item = SolutionItem.find(params[:id])
+    #@item.check_edit_right(@cur_user.org_id)
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
     @solution = @item.solution
   end
 
   def edit_price
-    @solution_item = SolutionItem.find(params[:id])
-    @solution_item.check_edit_right(@cur_user.org_id)
+    @item = SolutionItem.find(params[:id])
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'price')
   end
 
   def update_price
     @item = Item.find(params[:id])
-    @item.check_edit_right(@cur_user.org_id)
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'price')
 
     attr = params[:solution_item]
     @item.note = attr[:note]
     @item.price = attr[:price]
+    @item.tax_rate = attr[:tax_rate]
 
     @item.save
     @item.solution.op.touch(@cur_user.id)
@@ -179,7 +181,7 @@ class SolutionItemsController < ApplicationController
       raise SecurityError
     end
   end
-
+=begin
   def set_checked(value)
     item = Item.find(params[:id])
     raise SecurityError unless item.solution.brief.received_by?(@cur_user.org_id)
@@ -187,10 +189,11 @@ class SolutionItemsController < ApplicationController
     item.save
     redirect_to vendor_solution_path(item.solution)
   end
-
+=end
   def check
     item = SolutionItem.find(params[:id])
-    raise SecurityError unless item.solution.brief.received_by?(@cur_user.org_id)
+    invalid_op unless item.op_right.check('self',@cur_user.org_id,'check')
+    
     value = 'y'
     if block_given? 
       value = yield
@@ -217,23 +220,38 @@ class SolutionItemsController < ApplicationController
 
   def create_many
     @solution = VendorSolution.find(params[:solution_id]) 
-    @solution.check_edit_right(@cur_user.org_id)     #check right
+    @solution.op_right.check('item',@cur_user.org_id,'create_tran')
 
     case
     when params[:save_many]
       n = 0
       saved_count = 0
+      read_ids = @solution.op_right.who_has('item','read') - [@cur_user.org_id]
+
       while params["name_#{n}"]
         attr = {}
-        %w{name quantity note kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
+        %w{name quantity note price kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
         item = @solution.items.new(attr)
-        if item.op.save_by(@cur_user.id)
+        
+        item.op_right.add('self',@cur_user.org_id,'read','update','delete')
+        
+        item.op_right.add('self',read_ids ,'read')
+        item.op_right.add('self',@solution.brief.cheil_id,'check')
+        
+        item.op_notice.add(read_ids)
+
+        if item.save
           saved_count += 1
         end
         n += 1
       end
       if saved_count > 0
-        @solution.op.touch(@cur_user.id)
+        @solution.op_notice.add(read_ids)
+        @solution.save
+
+        brief = @solution.brief
+        brief.op_notice.add(read_ids)
+        brief.save
       end
       redirect_to vendor_solution_path(params[:solution_id])
     when (params[:add_5_tran] or params[:add_5_other])
@@ -277,6 +295,7 @@ class SolutionItemsController < ApplicationController
         item.name = items["name_#{id}"]
         item.quantity = items["quantity_#{id}"]
         item.note = items["note_#{id}"]
+        item.price = items["price_#{id}"]
         item.kind = items["kind_#{id}"]
         if item.op.save_by(@cur_user.id)
           updated_count += 1

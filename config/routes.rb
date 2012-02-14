@@ -22,14 +22,7 @@ Cheil::Application.routes.draw do
       put :uncheck
     end
   end
-=begin
-  resources(:items,:except=>[:show]) do
-    member do
-      put :check
-      put :uncheck
-    end
-  end
-=end
+
   resources :brief_items do
     collection do 
       get 'new_many'
@@ -43,21 +36,36 @@ Cheil::Application.routes.draw do
     member do
       put :check
       put :uncheck
+
+      get :edit_price
+      put :update_price
+    end
+    collection do
+      get :edit_price_many
+      put :update_price_many
+      
+      get :new_many
+      post :create_many
+      
+      get :edit_many
+      put :update_many
     end
   end
 
+=begin
   scope :path => '/solution_items',:controller => :solution_items do
-    get ':id/edit/price' => :edit_price, :as=>'edit_price_solution_item'
-    put ':id/update/price' => :update_price, :as=>'update_price_solution_item'
+    #get ':id/edit/price' => :edit_price, :as=>'edit_price_solution_item'
+    #put ':id/update/price' => :update_price, :as=>'update_price_solution_item'
 
-    get 'edit/price/many' => :edit_price_many, :as=>'edit_price_many_solution_items'
-    put 'update/price/many' => :update_price_many, :as=>'update_price_many_solution_items'
+    #get 'edit/price/many' => :edit_price_many, :as=>'edit_price_many_solution_items'
+    #put 'update/price/many' => :update_price_many, :as=>'update_price_many_solution_items'
 
-    get 'new/many' => :new_many, :as=>'new_many_solution_items'
-    post 'create/many' => :create_many, :as=>'create_many_solution_items'
-    get 'edit/many' => :edit_many, :as=>'edit_many_solution_items'
-    put 'update/many' => :update_many, :as=>'update_many_solution_items'
+    #get 'new/many' => :new_many, :as=>'new_many_solution_items'
+    #post 'create/many' => :create_many, :as=>'create_many_solution_items'
+    #get 'edit/many' => :edit_many, :as=>'edit_many_solution_items'
+    #put 'update/many' => :update_many, :as=>'update_many_solution_items'
   end
+=end
 
   resources :solution_comments , :only=>[:new,:create,:destroy]
   resources :brief_comments , :only=>[:new,:create,:destroy]

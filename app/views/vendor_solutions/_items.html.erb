@@ -1,0 +1,57 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title">子项</h2>
+    <div class="inner">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th></th>
+            <th>名称</th>
+            <th>数量</th>
+            <th>说明</th>
+            <th>单价</th>
+            <th>合计</th>
+            <th>税率</th>
+            <th>税额</th>
+            <th>税后合计</th>
+            <th></th>
+          </tr>
+          <%designs=@solution.designs%>
+          <%=render 'items_kind',
+            :items=>designs,
+            :kind_cn=>'设计' unless designs.empty?
+          %>
+          <%products=@solution.products%>
+          <%=render 'items_kind',
+            :items=>products,
+            :kind_cn=>'制作' unless products.empty?
+          %>
+          <%trans=@solution.trans%>
+          <%=render 'items_kind',
+            :items=>trans,
+            :kind_cn=>'运输' unless trans.empty?
+          %>
+          <%others=@solution.others%>
+          <%=render 'items_kind',
+            :items=>others,
+            :kind_cn=>'其他' unless others.empty?
+          %>
+        </tbody>
+      </table>
+      <%=render 'items_total',:solution=>@solution,:total=>@solution.total%>
+      <%if @solution.org_id == @cur_user.org_id%>
+        <%= link_to '新建运输项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'tran') %>
+        |
+        <%= link_to '新建其他项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'other') %>
+        |
+        <%= link_to '修改', edit_many_solution_items_path(:solution_id=>@solution.id) %>
+        |
+        <%= link_to '报价', edit_price_many_solution_items_path(:solution_id=>@solution.id) %>
+        |
+        <%= link_to '修改税率', edit_rate_vendor_solution_path(@solution) %>
+        <br/>
+      <%end%>
+    </div>
+  </div>
+</div>
+

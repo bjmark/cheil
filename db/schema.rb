@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120212015236) do
+ActiveRecord::Schema.define(:version => 20120214095638) do
+
+  create_table "admin_users", :force => true do |t|
+    t.string   "name"
+    t.string   "hashed_password"
+    t.string   "salt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "attaches", :force => true do |t|
     t.string   "type"
@@ -30,6 +38,32 @@ ActiveRecord::Schema.define(:version => 20120212015236) do
   end
 
   add_index "attaches", ["fk_id"], :name => "index_attaches_on_fk_id"
+
+  create_table "brief_attaches", :force => true do |t|
+    t.integer  "brief_id"
+    t.string   "attach_file_name"
+    t.string   "attach_content_type"
+    t.integer  "attach_file_size"
+    t.datetime "attach_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "brief_comments", :force => true do |t|
+    t.string   "content"
+    t.integer  "brief_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "brief_vendors", :force => true do |t|
+    t.integer  "brief_id"
+    t.integer  "org_id"
+    t.string   "approved",   :limit => 1, :default => "n"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "briefs", :force => true do |t|
     t.string   "name"
@@ -72,8 +106,8 @@ ActiveRecord::Schema.define(:version => 20120212015236) do
     t.string   "quantity"
     t.string   "price"
     t.string   "kind"
-    t.integer  "parent_id",               :default => 0
-    t.string   "checked",    :limit => 1, :default => "n"
+    t.integer  "parent_id",                 :default => 0
+    t.string   "checked",      :limit => 1, :default => "n"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type"
@@ -82,6 +116,10 @@ ActiveRecord::Schema.define(:version => 20120212015236) do
     t.string   "read_by"
     t.string   "self_right"
     t.string   "notice"
+    t.string   "tax_rate"
+    t.string   "tax"
+    t.string   "total_up"
+    t.string   "total_up_tax"
   end
 
   add_index "items", ["fk_id"], :name => "index_items_on_fk_id"

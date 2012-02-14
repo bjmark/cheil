@@ -5,6 +5,7 @@
       <th>名称</th>
       <th>数量</th>
       <th>说明</th>
+      <th>单价</th>
       <th>类型</th>
     </tr>
     <%n=0
@@ -14,6 +15,7 @@
         <td><%=text_field_tag (s="solution_item[name_#{e.id}]"),e.name%></td>
         <td><%=text_field_tag (s="solution_item[quantity_#{e.id}]"),e.quantity%></td>
         <td><%=text_field_tag (s="solution_item[note_#{e.id}]"),e.note%></td>
+        <td><%=text_field_tag (s="solution_item[price_#{e.id}]"),e.price%></td>
         <td>
           <select name="<%="solution_item[kind_#{e.id}]"%>" size="1">
             <option value="tran" label="tran" <%='selected' if e.kind == 'tran'%>>
