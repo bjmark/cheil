@@ -179,6 +179,12 @@ right structure as follwing
     def include?(org_id)
       read.include?(org_id.to_s)
     end
+
+    def changed_by(_org_id)
+      ids = @obj.op_right.who_has('self','read') - [_org_id]
+      self.add(ids) unless ids.blank?
+      return ids
+    end
   end
 
   def Cheil.test(s)

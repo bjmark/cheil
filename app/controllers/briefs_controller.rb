@@ -1,6 +1,6 @@
 #encoding=utf-8
 class BriefsController < ApplicationController
-  before_filter :cur_user , :check_right
+  before_filter :cur_user 
 
   def check_right
     share = [:index,:show,:search_cond,:search_res]
@@ -65,10 +65,8 @@ class BriefsController < ApplicationController
     
     case @cur_user.org
     when RpmOrg
-      #render 'search_res_rpm'
       @nav = :rpm
     when CheilOrg,VendorOrg
-      #render 'search_res_cheil'
       @nav = :cheil
     end
   end
@@ -134,16 +132,18 @@ class BriefsController < ApplicationController
 
   # POST /briefs
   def create
+    invalid_op unless @cur_user.org.instance_of?(RpmOrg)
+
     @brief = Brief.new(attr_filter(params[:brief]))
     @brief.rpm_id = @cur_user.org_id
     @brief.user_id = @cur_user.id
 
-    @brief.op_right.set('self',@cur_user.org_id,'read','update','delete')
-    @brief.op_right.set('attach',@cur_user.org_id,'read','update')
-    @brief.op_right.set('item',@cur_user.org_id,'read','update')
-    @brief.op_right.set('comment',@cur_user.org_id,'read','update')
+    @brief.op_right.add('self',@cur_user.org_id,'read','update','delete')
+    @brief.op_right.add('attach',@cur_user.org_id,'read','update')
+    @brief.op_right.add('item',@cur_user.org_id,'read','update')
+    @brief.op_right.add('comment',@cur_user.org_id,'read','update')
 
-    if @brief.op.save_by(@cur_user.id)
+    if @brief.save
       redirect_to brief_path(@brief) 
     else
       render action: "new" 
@@ -157,10 +157,11 @@ class BriefsController < ApplicationController
     invalid_op unless @brief.op_right.check('self',@cur_user.org_id,'update')
 
     attr_hash = attr_filter(params[:brief])
-    attr_hash['read_by'] = @cur_user.id.to_s
     attr_hash['updated_at'] = Time.now
 
     if @brief.update_attributes(attr_hash)
+      @brief.op_notice.changed_by(@cur_user.org_id)
+      @brief.save
       redirect_to @brief, notice: 'Brief was successfully updated.' 
     else
       render action: "edit" 
@@ -170,9 +171,11 @@ class BriefsController < ApplicationController
   # DELETE /briefs/1
   # DELETE /briefs/1.json
   def destroy
-    @brief = Brief.find(params[:id])
-    @brief.check_destroy_right(@cur_user.org_id)
-    @brief.destroy
+    brief = Brief.find(params[:id])
+
+    invalid_op unless brief.op_right.check('self',@cur_user.org_id,'delete')
+    
+    brief.destroy
     redirect_to briefs_url,notice: 'Brief was successfully deleted.' 
   end
 
@@ -186,10 +189,11 @@ class BriefsController < ApplicationController
     #brief.send_to_cheil!
 
     brief.op_right.add('self',brief.cheil_id,'read','update')
-    brief.op_right.set('attach',brief.cheil_id,'read','update')
-    brief.op_right.set('item',brief.cheil_id,'read','update')
-    brief.op_right.set('comment',brief.cheil_id,'read','update')
-    brief.op_right.set('vendor_solution',brief.cheil_id,'read','update')
+    brief.op_right.add('attach',brief.cheil_id,'read','update')
+    brief.op_right.add('item',brief.cheil_id,'read','update')
+    brief.op_right.add('comment',brief.cheil_id,'read','update')
+    brief.op_right.add('vendor_solution',brief.cheil_id,'read','update')
+    brief.op_right.add('cheil_solution',brief.cheil_id,'read')
     brief.op_notice.add(brief.cheil_id)
     brief.save
 
@@ -214,12 +218,6 @@ class BriefsController < ApplicationController
       e.save
     end
 
-    #create a vendor_solution for this cheil,so he can do whatever a vendor can do
-=begin
-    vs = brief.vendor_solutions.new(:org_id=>brief.cheil_id)
-    vs.op_right.set('self',brief.cheil_id,'read','assign_item')
-    vs.save
-=end
     redirect_to(brief_path(brief),:notice=>'成功发送到cheil') 
   end
 
@@ -228,14 +226,17 @@ class BriefsController < ApplicationController
   end
 
   def cancel
-    @brief = Brief.find(params[:id])
-    @brief.check_edit_right(@cur_user.org_id)
+    brief = Brief.find(params[:id])
+    invalid_op if brief.rpm_id != @cur_user.org_id
+
     if block_given?
-      @brief.cancel = yield
+      brief.cancel = yield
     else
-      @brief.cancel = 'y'
+      brief.cancel = 'y'
     end
-    @brief.op.save_by(@cur_user.id)
-    redirect_to(brief_path(@brief)) 
+    brief.op_notice.changed_by(@cur_user.org_id)
+    brief.save
+
+    redirect_to(brief_path(brief)) 
   end
 end

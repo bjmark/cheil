@@ -1,3 +1,13 @@
+=begin
+self:read,update,delete,check
+
+cheil
+self:read,check
+
+vendor
+self:read,update,delete
+=end
+
 class SolutionAttach < Attach
   belongs_to :solution,:foreign_key => 'fk_id'
 

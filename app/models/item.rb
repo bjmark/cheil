@@ -36,6 +36,7 @@ class Item < ActiveRecord::Base
     a_solution.items.find{|e| e.id == id or e.parent_id == id}
   end
 
+
   def op
     @op ||= Cheil::Op.new(self) 
   end

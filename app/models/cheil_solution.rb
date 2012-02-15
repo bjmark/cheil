@@ -1,4 +1,10 @@
 #encoding=utf-8
+=begin
+self:read
+
+cheil
+self:read
+=end
 class CheilSolution < Solution
 
   def check_read_right(_org_id)

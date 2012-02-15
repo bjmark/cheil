@@ -1,5 +1,33 @@
 #encoding=utf-8
 #require 'cheil'
+=begin
+self:read,delete,lock
+attach:read,update
+item:read,update
+comment:read,update
+vendor_solution:read,update
+cheil_solution:read
+
+rpm
+self:read,delete
+attach:read,update
+item:read,update
+coment:read,update
+cheil_solution:read
+
+cheil
+self:read,delete,lock
+attach:read,update
+item:read,update
+coment:read,update
+vendor_solution:read,update
+cheil:solution:read
+
+vendor
+self:read
+attach:read
+item:read
+=end
 
 class Brief < ActiveRecord::Base
   STATUS = {
@@ -38,74 +66,14 @@ class Brief < ActiveRecord::Base
     @designs or (@designs = items.find_all_by_kind('design'))
   end
 
-  #def designs=(d)
-  #  @designs = d
-  #end
-
   def products(reload=false)
     @products = nil if reload
     @products or (@products = items.find_all_by_kind('product'))
   end
 
-  #def products=(p)
-  #  @products = p
-  #end
-
-  def send_to_cheil?
+    def send_to_cheil?
     self.cheil_id > 0
   end
-
-=begin
-  def send_to_cheil!
-    self.cheil_org = rpm_org.cheil_org
-    self.status = 1
-    save
-    self.create_cheil_solution(:org_id=>self.cheil_id)
-  end
-=end
-=begin
-  def check_comment_right(org_id)
-    can_commented_by?(org_id) or raise SecurityError
-  end
-
-  def can_commented_by?(org_id)
-    owned_by?(org_id) or received_by?(org_id)
-  end
-
-  def check_read_right(org_id)
-    can_read_by?(org_id) or raise SecurityError
-  end
-
-  def check_edit_right(org_id)
-    can_edit_by?(org_id) or raise SecurityError
-  end
-
-  alias check_destroy_right check_edit_right
-
-  def check_create_solution_right(org_id)
-    received_by?(org_id) or raise SecurityError
-  end
-
-  def can_read_by?(org_id)
-    can_edit_by?(org_id) or received_by?(org_id) or consult_by?(org_id)
-  end
-
-  def can_edit_by?(org_id)
-    owned_by?(org_id) or received_by?(org_id)
-  end
-
-  def owned_by?(org_id)
-    org_id == rpm_id
-  end
-
-  def received_by?(org_id)
-    cheil_id == org_id
-  end
-
-  def consult_by?(org_id)
-    solutions.find_by_org_id(org_id)
-  end
-=end
 
   def op
     @op ||= Cheil::Op.new(self) 
@@ -128,5 +96,6 @@ class Brief < ActiveRecord::Base
     return '未发送' unless send_to_cheil?
     STATUS[self.status]
   end
+
 end
 

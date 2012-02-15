@@ -2,26 +2,40 @@ class SolutionItemsController < ApplicationController
   before_filter :cur_user 
 
 =begin
-  def index
-    if params[:vendor_solution_id]
-      @vendor_solution = VendorSolution.find(params[:vendor_solution_id])
-      @brief = @vendor_solution.brief
-    end
-  end
-=end
-
   def new
     @solution = Solution.find(params[:solution_id])
     @solution.check_edit_right(@cur_user.org_id)
     @item = @solution.items.new
     @item.kind = params[:kind]
   end
+=end
 
   def edit
     @item = SolutionItem.find(params[:id])
     #@item.check_edit_right(@cur_user.org_id)
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
     @solution = @item.solution
+  end
+
+  def update
+    @item = Item.find(params[:id])
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
+
+    attr = params[:solution_item]
+
+    @item.name = attr[:name]
+    @item.quantity = attr[:quantity]
+    @item.note = attr[:note]
+    @item.price = attr[:price]
+    @item.kind = attr[:kind]
+
+
+    if @item.op.save_by(@cur_user.id)
+      @item.solution.op.touch(@cur_user.id)
+      redirect_to vendor_solution_path(@item.solution), notice: 'Item was successfully updated.' 
+    else
+      render action: "edit" 
+    end
   end
 
   def edit_price
@@ -38,15 +52,15 @@ class SolutionItemsController < ApplicationController
     @item.price = attr[:price]
     @item.tax_rate = attr[:tax_rate]
 
-    @item.save
-    @item.solution.op.touch(@cur_user.id)
+    @item.cal_save
+    @item.changed_by(@cur_user.org_id)
 
     redirect_to vendor_solution_path(@item.solution)  
   end
 
   def edit_price_many
     @solution = VendorSolution.find(params[:solution_id])
-    @solution.check_edit_right(@cur_user.org_id)
+    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'price_design')
 
     items = @solution.items
     designs = []
@@ -63,7 +77,7 @@ class SolutionItemsController < ApplicationController
 
   def update_price_many
     solution = VendorSolution.find(params[:solution_id])
-    solution.check_edit_right(@cur_user.org_id)
+    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'price_design')
 
     items = params[:solution_item]
 
@@ -76,14 +90,10 @@ class SolutionItemsController < ApplicationController
       if item = solution.items.where(:id=>id).first
         item.note = items["note_#{id}"]
         item.price = items["price_#{id}"]
-        if item.op.save_by(@cur_user.id)
-          updated_count += 1
+        if item.save
+          item.changed_by(@cur_user.org_id)
         end
       end
-    end
-
-    if updated_count > 0
-      solution.op.touch(@cur_user.id)
     end
 
     redirect_to vendor_solution_path(params[:solution_id])
@@ -146,20 +156,6 @@ class SolutionItemsController < ApplicationController
     end
   end
 
-  def update
-    @item = Item.find(params[:id])
-    @item.check_edit_right(@cur_user.org_id)
-
-    attr = params[:solution_item]
-    set_attr(attr)
-
-    if @item.op.save_by(@cur_user.id)
-      @item.solution.op.touch(@cur_user.id)
-      redirect_to vendor_solution_path(@item.solution), notice: 'Item was successfully updated.' 
-    else
-      render action: "edit" 
-    end
-  end
 
 
   def destroy
@@ -193,7 +189,7 @@ class SolutionItemsController < ApplicationController
   def check
     item = SolutionItem.find(params[:id])
     invalid_op unless item.op_right.check('self',@cur_user.org_id,'check')
-    
+
     value = 'y'
     if block_given? 
       value = yield
@@ -232,12 +228,12 @@ class SolutionItemsController < ApplicationController
         attr = {}
         %w{name quantity note price kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
         item = @solution.items.new(attr)
-        
+
         item.op_right.add('self',@cur_user.org_id,'read','update','delete')
-        
+
         item.op_right.add('self',read_ids ,'read')
         item.op_right.add('self',@solution.brief.cheil_id,'check')
-        
+
         item.op_notice.add(read_ids)
 
         if item.save

@@ -42,6 +42,10 @@ class VendorSolutionsController < ApplicationController
       item.op_notice.add(vendor_solution.org_id)
       item.save
 
+      #notify the vendor for this brief item
+      brief_item.op_notice.add(vendor_solution.org_id)
+      brief_item.save
+
       #the solution owner can read this brief_item
       brief_item.op_right.add('self',vendor_solution.org_id,'read')
       brief_item.save
@@ -128,7 +132,7 @@ class VendorSolutionsController < ApplicationController
       #the vendor itself has read right for the new vendor_solution
       vs.op_right.add('self',org_id,'read')
       vs.op_right.add('attach',org_id,'read','update')
-      vs.op_right.add('item',org_id,'read','create_tran','create_other')
+      vs.op_right.add('item',org_id,'read','create_tran','create_other','price_design','price_product')
       vs.op_right.add('comment',org_id,'read','update')
       vs.save
 

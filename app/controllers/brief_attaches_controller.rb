@@ -19,8 +19,7 @@ class BriefAttachesController < ApplicationController
     @attach.op_right.add('self',read_ids,'read')
     
     #who should be notified
-    notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
-    @attach.op_notice.add(notice_org_ids)
+    notice_org_ids = @attach.op_notice.changed_by(@cur_user.org_id)
 
     if @attach.save
       #change extend to brief
@@ -72,8 +71,7 @@ class BriefAttachesController < ApplicationController
 
     attr = params[:brief_attach]
     if @attach.update_attributes(attr)
-      notice_org_ids = @attach.op_right.who_has('self','read') - [@cur_user.org_id]
-      @attach.op_notice.add(notice_org_ids)
+      notice_org_ids = @attach.op_notice.changed_by(@cur_user.org_id)
       @attach.save
 
       @brief.op_notice.add(notice_org_ids)

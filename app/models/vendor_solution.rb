@@ -1,31 +1,22 @@
+=begin
+self:read,delete
+attach:read,update
+item:read,check,create_tran_other,price_design_product,assign_brief_item
+comment:read,update
+
+cheil
+self:read,delete
+attach:read,check
+item:read,check
+comment:read,update
+
+vendor
+self:read
+attach:read,update
+item:read,create_tran_other,price_design_product
+comment:read:update
+=end
 class VendorSolution < Solution
-
-  def check_read_right(_org_id)
-    can_read_by?(_org_id) or raise SecurityError
-  end
-
-  alias :check_comment_right :check_read_right
-
-  def can_read_by?(_org_id)
-    can_edit_by?(_org_id) or assigned_by?(_org_id)
-  end
-
-  alias :can_commented_by? :can_read_by?
-
-  alias :can_edit_by? :owned_by?
-  
-  def check_edit_right(_org_id)
-    can_edit_by?(_org_id) or raise SecurityError
-  end
-
-  def assigned_by?(_org_id)
-    brief.received_by?(_org_id)
-  end
-
-  def check_destroy_right(_org_id)
-    brief.received_by?(_org_id) or raise SecurityError
-  end
-
   def total
     kinds = [:design,:product,:tran,:other]
     total_hash = {}

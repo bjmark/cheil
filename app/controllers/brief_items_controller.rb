@@ -2,54 +2,24 @@
 class BriefItemsController < ApplicationController
   before_filter :cur_user 
 
-  #brief_items/new?brief_id=1&kind=design      new a item for a brief
-=begin
-  def new
-    @brief = Brief.find(params[:brief_id]) 
-    @item = @brief.items.new
-    @item.kind = params[:kind].blank? ? 'design' : params[:kind]
-  end
-=end
   def edit
     @item = BriefItem.find(params[:id])
-    @brief = @item.brief
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
+    @brief = @item.brief
   end
 
+  def update
+    @item = BriefItem.find(params[:id])
+    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
+    @brief = @item.brief
+    
+    notice_ids = @item.op_notice.changed_by(@cur_user.org_id)
 
-  def set_attr(attr)
+    attr = params[:brief_item]
     @item.name = attr[:name]
     @item.quantity = attr[:quantity]
     @item.note = attr[:note]
     @item.kind = attr[:kind]
-  end
-=begin
-  def create
-    @brief = Brief.find(params[:brief_id]) 
-    invalid_op unless @brief.op_right.check('item',@cur_user.org_id,'update')
-
-    @item = @brief.items.new
-
-    set_attr(params[:brief_item])
-
-    if @item.save
-
-      redirect_to brief_path(@brief), notice: 'Item was successfully created.'  
-    else
-      render :action => :new
-    end
-  end
-=end
-  def update
-    @item = BriefItem.find(params[:id])
-    @brief = @item.brief
-
-    invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
-    
-    notice_ids = @item.op_right.who_has('self','read') - [@cur_user.org_id]
-    @item.op_notice.add(notice_ids)
-
-    set_attr(params[:brief_item])
 
     if @item.save
       @brief.op_notice.add(notice_ids)
@@ -100,7 +70,8 @@ class BriefItemsController < ApplicationController
         item.quantity = attr["quantity_#{n}"]
         item.note = attr["note_#{n}"]
         item.kind = attr["kind_#{n}"]
-        item.op_right.set('self',org_ids,'read','update','delete')
+        
+        item.op_right.add('self',org_ids,'read','update','delete')
         item.op_notice.add(notice_org_ids)
 
         if item.save
@@ -110,7 +81,6 @@ class BriefItemsController < ApplicationController
       end
       if saved_count > 0
         @brief.reload   #must reload,it should be a bug of activerecord.relative to brief.items.new? 
-        #@brief.op.touch(@cur_user.id)
         @brief.op_notice.add(notice_org_ids)
         @brief.save
       end
@@ -161,8 +131,7 @@ class BriefItemsController < ApplicationController
         item.note = items["note_#{id}"]
         item.kind = items["kind_#{id}"]
         
-        item_notice_ids = item.op_right.who_has('self','read') - [@cur_user.org_id]
-        item.op_notice.add(item_notice_ids)
+        item_notice_ids = item.op_notice.changed_by(@cur_user.org_id)
 
         brief_notice_ids += item_notice_ids - brief_notice_ids
         if item.save
