@@ -39,6 +39,7 @@ describe BriefItemsController do
 
         get :edit,:id => design1.id
         assigns(:brief).id.should == brief1.id
+        response.should render_template('edit')
       end
     end
   end
@@ -66,6 +67,8 @@ describe BriefItemsController do
       item.quantity.should == '10'
       item.note.should == 'abc'
       item.kind.should == 'design'
+
+      response.should redirect_to(brief_path(brief1))
     end
 
     it "should notify cheil and vendor,but not rpm" do
@@ -113,6 +116,8 @@ describe BriefItemsController do
       delete :destroy,:id=>prod.id
       
       BriefItem.where(:id=>prod_id).should be_blank
+
+      response.should redirect_to(brief_path(brief1))
     end
   end
 
@@ -149,6 +154,8 @@ describe BriefItemsController do
         expect {
           post :create_many,:save_many => 'abc',:brief_id => brief1.id,:brief_item => attr
         }.to change { brief1.reload.items.size }.from(0).to(2)
+
+        response.should redirect_to(brief_path(brief1))
       end
 
       it "cheil should has read update delete right for the new items" do
@@ -191,6 +198,8 @@ describe BriefItemsController do
         post :create_many,:add_5_design => 'add_5_design',:brief_id => brief1.id,:brief_item => attr
 
         assigns[:kind_default].should == 'design'
+
+        response.should render_template('new_many')
       end
 
       it "item_count should be 8" do
@@ -254,6 +263,8 @@ describe BriefItemsController do
       brief1.reload.op_notice.include?(cheil.id).should be_true
       brief1.op_notice.include?(vendor.id).should be_true
       brief1.op_notice.include?(vendor2.id).should be_true
+
+      response.should redirect_to(brief_path(brief1))
     end
   end
 end

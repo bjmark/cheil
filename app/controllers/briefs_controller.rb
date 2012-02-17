@@ -91,8 +91,8 @@ class BriefsController < ApplicationController
       #get those items i can read
       @items = @brief.items.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
       #@designs,@products is prepare for display
-      @designs = @brief.designs.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
-      @products = @brief.products.find_all{|e| e.op_right.check('self',@cur_user.org_id,'read') }
+      @designs = @items.find_all{|e| e.kind =='design' }
+      @products = @items.find_all{|e| e.kind == 'product' }
     end
 
     if @brief.op_right.check('comment',@cur_user.org_id,'read')
