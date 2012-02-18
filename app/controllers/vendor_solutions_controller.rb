@@ -29,13 +29,13 @@ class VendorSolutionsController < ApplicationController
 
   def add_brief_item
     vendor_solution = VendorSolution.find(params[:id])
-    invalid_op unless vendor_solution.op_right.check('item',@cur_user.org_id,'assign_brief_item')
+    invalid_op unless vendor_solution.op_right.check('item',@cur_user.org_id,'add_brief_item')
 
     if vendor_solution.items.where(:parent_id=>params[:brief_item_id]).blank?
       brief_item = BriefItem.find(params[:brief_item_id])
       #brief_item.add_to_solution(vendor_solution)
       item = vendor_solution.items.new(:parent_id=>brief_item.id)
-      item.op_right.add('self',@cur_user.org_id,'read','unassign','check')
+      item.op_right.add('self',@cur_user.org_id,'read','del_brief_item','check')
       item.op_right.add('self',vendor_solution.org_id,'read','price')
 
       #notify the vendor for this item
@@ -44,7 +44,6 @@ class VendorSolutionsController < ApplicationController
 
       #notify the vendor for this brief item
       brief_item.op_notice.add(vendor_solution.org_id)
-      brief_item.save
 
       #the solution owner can read this brief_item
       brief_item.op_right.add('self',vendor_solution.org_id,'read')
@@ -62,7 +61,7 @@ class VendorSolutionsController < ApplicationController
     vendor_solution = VendorSolution.find(params[:id])
     item = vendor_solution.items.where(:parent_id=>params[:brief_item_id]).first
     if item
-      invalid_op unless item.op_right.check('self',@cur_user.org_id,'unassign')
+      invalid_op unless item.op_right.check('self',@cur_user.org_id,'del_brief_item')
       item.destroy
 
       brief_item = BriefItem.find(params[:brief_item_id])
@@ -126,13 +125,13 @@ class VendorSolutionsController < ApplicationController
       #the cheil has read and delete and assign_item right for the new vendor_solution
       vs.op_right.add('self',brief.cheil_id,'read','delete')
       vs.op_right.add('attach',brief.cheil_id,'read')
-      vs.op_right.add('item',brief.cheil_id,'read','assign_brief_item')
+      vs.op_right.add('item',brief.cheil_id,'read','add_brief_item')
       vs.op_right.add('comment',brief.cheil_id,'read','update')
 
       #the vendor itself has read right for the new vendor_solution
       vs.op_right.add('self',org_id,'read')
       vs.op_right.add('attach',org_id,'read','update')
-      vs.op_right.add('item',org_id,'read','create_tran','create_other','price_design','price_product')
+      vs.op_right.add('item',org_id,'read','create_tran_other','price_design_product')
       vs.op_right.add('comment',org_id,'read','update')
       vs.save
 

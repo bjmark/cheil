@@ -1,13 +1,13 @@
 =begin
 self:read,delete
 attach:read,update
-item:read,check,create_tran_other,price_design_product,assign_brief_item
+item:read,check,create_tran_other,price_design_product,add_brief_item
 comment:read,update
 
 cheil
 self:read,delete
-attach:read,check
-item:read,check
+attach:read
+item:read,add_brief_item
 comment:read,update
 
 vendor
