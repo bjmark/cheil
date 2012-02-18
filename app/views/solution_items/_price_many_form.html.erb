@@ -6,27 +6,29 @@
       <th>数量</th>
       <th>说明</th>
       <th>价格</th>
+      <th>税率</th>
       <th>类型</th>
     </tr>
     <%n=0
-      @items.each do |e|%>
-        <tr>
-          <td><%=n+=1%></td>
-          <td><%=e.name%></td>
-          <td><%=e.quantity%></td>
-          <td><%=text_field_tag (s="solution_item[note_#{e.id}]"),e.note%></td>
-          <td><%=text_field_tag (s="solution_item[price_#{e.id}]"),e.price%></td>
-          <td>
-            <%='设计'if e.kind == 'design'%>
-            <%='制作' if e.kind == 'product'%>
-          </td>
-        </tr>
-      <%end%>
-    </table>
-    <%=button_tag(:type=>:submit,:id=>'b1',:name=>'save_many') do%>
-      <%='保存'%>
+    @items.each do |e|%>
+      <tr>
+        <td><%=n+=1%></td>
+        <td><%=e.name%></td>
+        <td><%=e.quantity%></td>
+        <td><%=text_field_tag (s="solution_item[note_#{e.id}]"),e.note%></td>
+        <td><%=text_field_tag (s="solution_item[price_#{e.id}]"),e.price%></td>
+        <td><%=text_field_tag (s="solution_item[tax_rate_#{e.id}]"),e.tax_rate%></td>
+        <td>
+          <%='设计'if e.kind == 'design'%>
+          <%='制作' if e.kind == 'product'%>
+        </td>
+      </tr>
     <%end%>
-    &nbsp;&nbsp;
-    <%=link_to '取消',vendor_solution_path(@solution)%>
+  </table>
+  <%=button_tag(:type=>:submit,:id=>'b1',:name=>'save_many') do%>
+    <%='保存'%>
   <%end%>
+  &nbsp;&nbsp;
+  <%=link_to '取消',vendor_solution_path(@solution)%>
+<%end%>
 

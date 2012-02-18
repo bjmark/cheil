@@ -44,23 +44,32 @@ class SolutionItemsController < ApplicationController
   end
 
   def update_price
-    @item = Item.find(params[:id])
+    @item = SolutionItem.find(params[:id])
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'price')
 
     attr = params[:solution_item]
     @item.note = attr[:note]
     @item.price = attr[:price]
     @item.tax_rate = attr[:tax_rate]
+    
+    notice_ids = @item.op_notice.changed_by(@cur_user.org_id)
 
     @item.cal_save
-    @item.changed_by(@cur_user.org_id)
 
-    redirect_to vendor_solution_path(@item.solution)  
+    solution = @item.solution
+    solution.op_notice.add(notice_ids)
+    solution.save
+
+    brief = solution.brief
+    brief.op_notice.add(notice_ids)
+    brief.save
+
+    redirect_to vendor_solution_path(solution)  
   end
 
   def edit_price_many
     @solution = VendorSolution.find(params[:solution_id])
-    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'price_design')
+    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'price_design_product')
 
     items = @solution.items
     designs = []
@@ -77,25 +86,32 @@ class SolutionItemsController < ApplicationController
 
   def update_price_many
     solution = VendorSolution.find(params[:solution_id])
-    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'price_design')
+    invalid_op unless solution.op_right.check('item',@cur_user.org_id,'price_design_product')
 
     items = params[:solution_item]
 
     ids = []
     items.keys.each{|e| ids << $1 if e =~ /price_(\d+)/}
 
-    updated_count = 0
+    brief = solution.brief
 
     ids.each do |id|
-      if item = solution.items.where(:id=>id).first
+      if !(item = solution.items.where(:id=>id).first).blank?
         item.note = items["note_#{id}"]
         item.price = items["price_#{id}"]
-        if item.save
-          item.changed_by(@cur_user.org_id)
-        end
+        item.tax_rate = items["tax_rate_#{id}"]
+        
+        notice_ids = item.op_notice.changed_by(@cur_user.org_id)
+        
+        solution.op_notice.add(notice_ids)
+        brief.op_notice.add(notice_ids)
+        
+        item.cal_save
       end
     end
 
+    solution.save
+    brief.save
     redirect_to vendor_solution_path(params[:solution_id])
   end
 
@@ -156,8 +172,6 @@ class SolutionItemsController < ApplicationController
     end
   end
 
-
-
   def destroy
     case
     when (params[:id] and params[:vendor_solution_id])
@@ -216,17 +230,17 @@ class SolutionItemsController < ApplicationController
 
   def create_many
     @solution = VendorSolution.find(params[:solution_id]) 
-    @solution.op_right.check('item',@cur_user.org_id,'create_tran')
+    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'create_tran_other')
 
     case
     when params[:save_many]
-      n = 0
-      saved_count = 0
       read_ids = @solution.op_right.who_has('item','read') - [@cur_user.org_id]
 
-      while params["name_#{n}"]
+      n = -1 ; saved_count = 0
+      while params["name_#{n+=1}"]
+        next if params["name_#{n}"].blank?
         attr = {}
-        %w{name quantity note price kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
+        %w{name quantity note price tax_rate kind}.each {|e| attr[e] = params["#{e}_#{n}"]}
         item = @solution.items.new(attr)
 
         item.op_right.add('self',@cur_user.org_id,'read','update','delete')
@@ -236,10 +250,7 @@ class SolutionItemsController < ApplicationController
 
         item.op_notice.add(read_ids)
 
-        if item.save
-          saved_count += 1
-        end
-        n += 1
+        saved_count += 1 if item.cal_save
       end
       if saved_count > 0
         @solution.op_notice.add(read_ids)

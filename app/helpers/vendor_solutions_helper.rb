@@ -1,6 +1,6 @@
 #coding=utf-8
 module VendorSolutionsHelper
-
+=begin
   def fang_an(e,brief_items_size)
     s = []
     unless e.op.read?(@cur_user.id)
@@ -44,4 +44,5 @@ module VendorSolutionsHelper
 
     link.join(' | ')
   end
+=end
 end
