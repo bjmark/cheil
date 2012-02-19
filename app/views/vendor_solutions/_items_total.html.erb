@@ -1,50 +1,50 @@
-<% if total[:all] > 0%>
+<% if total['all_total_up'] > 0%>
   <table class="table">
     <tbody>
       <tr>
         <th></th>
         <th>总计</th>
-        <th>税率</th>
+        <th>税额</th>
         <th>税后总计</th>
       </tr>
       <%n=0%>
-      <%if total[:design] > 0%>
+      <%if total['design_total_up'] > 0%>
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>设计</td>
-          <td><%=total[:design]%></th>
-          <td><%=percentage(solution.design_rate)%></td>
-          <td><%=total[:design_r]%></td>
+          <td><%=total['design_total_up']%></th>
+          <td><%=total['design_tax']%></td>
+          <td><%=total['design_total_up_tax']%></td>
         </tr>
       <%end%>
-      <%if total[:product] > 0%>
+      <%if total['product_total_up'] > 0%>
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>制作</td>
-          <td><%=total[:product]%></th>
-          <td><%=percentage(solution.product_rate)%></td>
-          <td><%=total[:product_r]%></td>
+          <td><%=total['product_total_up']%></th>
+          <td><%=total['product_tax']%></td>
+          <td><%=total['product_total_up_tax']%></td>
         </tr>
       <%end%>
-      <%if total[:tran] > 0%>
+      <%if total['tran_total_up'] > 0%>
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>运输</td>
-          <td><%=total[:tran]%></th>
-          <td><%=percentage(solution.tran_rate)%></td>
-          <td><%=total[:tran_r]%></td>
+          <td><%=total['tran_total_up']%></th>
+          <td><%=total['tran_tax']%></td>
+          <td><%=total['tran_total_up_tax']%></td>
         </tr>
       <%end%>
-      <%if total[:other] > 0%>
+      <%if total['other_total_up'] > 0%>
         <tr class="<%=['odd','even'][(n+=1)%2]%>">
           <td>其他</td>
-          <td><%=total[:other]%></th>
-          <td><%=percentage(solution.other_rate)%></td>
-          <td><%=total[:other_r]%></td>
+          <td><%=total['other_total_up']%></th>
+          <td><%=total['other_tax']%></td>
+          <td><%=total['other_total_up_tax']%></td>
         </tr>
       <%end%>
       <tr class="<%=['odd','even'][(n+=1)%2]%>">
         <td>全部累计</td>
-        <td><%=total[:all]%></th>
-        <td></td>
-        <td><%=total[:all_r]%></td>
+        <td><%=total['all_total_up']%></th>
+        <td><%=total['all_tax']%></td>
+        <td><%=total['all_total_up_tax']%></td>
       </tr>
     </tbody>
   </table>

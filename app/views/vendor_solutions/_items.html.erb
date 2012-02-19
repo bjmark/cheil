@@ -38,8 +38,8 @@
           %>
         </tbody>
       </table>
-      <%=render 'items_total',:solution=>@solution,:total=>@solution.total%>
       <%if @solution.org_id == @cur_user.org_id%>
+        <p>
         <%= link_to '新建运输项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'tran') %>
         |
         <%= link_to '新建其他项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'other') %>
@@ -47,10 +47,9 @@
         <%= link_to '修改', edit_many_solution_items_path(:solution_id=>@solution.id) %>
         |
         <%= link_to '报价', edit_price_many_solution_items_path(:solution_id=>@solution.id) %>
-        |
-        <%= link_to '修改税率', edit_rate_vendor_solution_path(@solution) %>
-        <br/>
+        </p>
       <%end%>
+      <%=render 'items_total',:solution=>@solution,:total=>@solution.total%>
     </div>
   </div>
 </div>

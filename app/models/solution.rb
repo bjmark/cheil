@@ -3,11 +3,10 @@ class Solution < ActiveRecord::Base
   belongs_to :org
   has_many :items,:class_name=>'SolutionItem',:foreign_key=>'fk_id'
   has_many :attaches,:class_name=>'SolutionAttach',:foreign_key => 'fk_id'
-  has_many :comments,
-    :class_name=>'SolutionComment',:foreign_key=>'fk_id',:order=>'id desc'
+  has_many :comments,:class_name=>'SolutionComment',:foreign_key=>'fk_id',:order=>'id desc'
 
   has_many :payments,:order=>'org_id'
-
+=begin
   def check_approve_right(_org_id)
     raise SecurityError
   end
@@ -35,23 +34,22 @@ class Solution < ActiveRecord::Base
   def products_from_brief
     items_from_brief.find_all{|e| e.kind == 'product'}
   end
+=end
 
   def designs
-    ids = designs_from_brief.collect{|e| e.id}
-    items.where(:parent_id=>ids)
+    items.find_all{|e| e.kind == 'design'}
   end
 
   def products
-    ids = products_from_brief.collect{|e| e.id}
-    items.where(:parent_id=>ids)
+    items.find_all{|e| e.kind == 'product'}
   end
 
   def trans
-    items.where(:kind=>'tran')
+    items.find_all{|e| e.kind == 'tran'}
   end
 
   def others
-    items.where(:kind=>'other')
+    items.find_all{|e| e.kind == 'other'}
   end
 
   def op

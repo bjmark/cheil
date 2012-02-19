@@ -18,26 +18,38 @@ comment:read:update
 =end
 class VendorSolution < Solution
   def total
-    kinds = [:design,:product,:tran,:other]
-    total_hash = {}
-    sum_all = 0
-    sum_all_r = 0
+    kinds = %w{design product tran other}
+    
+    hash = {}
+    
+    sum_all_total_up = 0
+    sum_all_tax = 0
+    sum_all_total_up_tax = 0
 
     kinds.each do |k|
-      sum = 0 
-      send("#{k}s".to_sym).each{|e| sum += e.total}
-      total_hash[k] = sum
+      sum_total_up = 0
+      sum_tax = 0
+      sum_total_up_tax =0 
 
-      sum_r = (sum * (send("#{k}_rate").to_f + 1)).to_i 
-      total_hash["#{k}_r".to_sym] = sum_r
+      send("#{k}s".to_sym).each do |e| 
+        sum_total_up += e.total_up.to_i
+        sum_tax += e.tax.to_i
+        sum_total_up_tax += e.total_up_tax.to_i
+      end
+      hash["#{k}_total_up"] = sum_total_up
+      hash["#{k}_tax"] = sum_tax
+      hash["#{k}_total_up_tax"]  = sum_total_up_tax
 
-      sum_all += sum
-      sum_all_r += sum_r
+      sum_all_total_up += sum_total_up
+      sum_all_tax += sum_tax
+      sum_all_total_up_tax += sum_total_up_tax
     end
 
-    total_hash[:all] = sum_all
-    total_hash[:all_r] = sum_all_r
-    return total_hash
+    hash['all_total_up'] = sum_all_total_up
+    hash['all_tax'] = sum_all_tax
+    hash['all_total_up_tax'] = sum_all_total_up_tax
+
+    return hash
   end
 
   def money
@@ -47,7 +59,7 @@ class VendorSolution < Solution
 
     %w{design product tran other}.each do |k|
       amount_k = 0
-      send("#{k}s").checked.each{|i| amount_k += i.total}
+      send("#{k}s").find_all{|e| e.checked == 'y'}.each{|i| amount_k += i.total}
       amount += amount_k * (1 + send("#{k}_rate").to_f)
     end
     {:amount=>amount,:paid=>paid,:balance=>amount-paid}

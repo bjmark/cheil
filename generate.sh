@@ -101,4 +101,5 @@
 #rails generate controller solution_attaches
 #rails generate controller solution_comments
 #rails g migration add_tax_rate_to_items
-rails g migration add_cheil_solution_right_to_briefs
+#rails g migration add_cheil_solution_right_to_briefs
+#rails g migration add_many_tax_to_solutions

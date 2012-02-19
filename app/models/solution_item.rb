@@ -31,7 +31,7 @@ class SolutionItem < Item
     return brief_item.kind if has_parent?
     read_attribute(:kind)
   end
-
+=begin
   def changed_by(org_id)
     notice_ids = self.op_right.who_has('self','read') - [org_id]
     return if notice_ids.blank?
@@ -47,7 +47,7 @@ class SolutionItem < Item
     brie.op_notice.add(notice_ids)
     brie.save
   end
-
+=end
   #计算并保存
   def cal_save
     total_up_f = quantity.to_f * price.to_f
