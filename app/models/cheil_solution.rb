@@ -6,7 +6,7 @@ cheil
 self:read
 =end
 class CheilSolution < Solution
-
+=begin
   def check_read_right(_org_id)
     can_read_by?(_org_id) or raise SecurityError
   end
@@ -33,7 +33,7 @@ class CheilSolution < Solution
   def can_del_by?(_org_id)
     false
   end
-
+=end
   def check_approve_right(_org_id)
     can_approved_by?(_org_id) or raise SecurityError
   end

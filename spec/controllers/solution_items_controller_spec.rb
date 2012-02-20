@@ -188,4 +188,24 @@ describe SolutionItemsController do
       response.should redirect_to(vendor_solution_path(solution))
     end
   end
+
+  describe 'edit_many' do
+    specify do
+      set_current_user(vendor_user)
+      solution = brief1.vendor_solutions.create(:org_id=>vendor.id)
+      d1 = solution.items.create(:name=>'d1',:kind=>'design')
+
+      tran1 = solution.items.new(:name=>'tran1',:kind=>'tran')
+      tran1.op_right.add('self',vendor.id,'update')
+      tran1.save
+      
+      other1 = solution.items.new(:name=>'other1',:kind=>'other')
+      other1.op_right.add('self',vendor.id,'update')
+      other1.save
+
+      get :edit_many,:solution_id=>solution.id
+
+      assigns[:items].should == [tran1,other1]
+    end
+  end
 end

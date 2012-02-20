@@ -12,7 +12,6 @@ class SolutionItemsController < ApplicationController
 
   def edit
     @item = SolutionItem.find(params[:id])
-    #@item.check_edit_right(@cur_user.org_id)
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
     @solution = @item.solution
   end
@@ -272,15 +271,15 @@ class SolutionItemsController < ApplicationController
 
   def edit_many
     @solution = VendorSolution.find(params[:solution_id]) 
-    @solution.check_edit_right(@cur_user.org_id)     #check right
 
     items = @solution.items
     trans = []
     others = []
     items.each do |e|
+      next unless e.op_right.check('self',@cur_user.org_id,'update')
       case e.kind
-      when 'tran' then trans << e
-      when 'other' then others << e
+      when 'tran' then trans << e 
+      when 'other' then others << e 
       end
     end
 
