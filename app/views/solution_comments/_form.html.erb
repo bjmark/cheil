@@ -1,0 +1,19 @@
+<%= form_for(@comment,:html=>{:class=>'form'}) do |f| %>
+  <div class="group">
+    <%= f.label :content,'内容',:class=>'label' %>
+    <%= f.text_area :content,:size=>'60x3',:class=>'text_area' %>
+    <%= f.hidden_field :fk_id %>
+  </div>
+  <div class="group navform wat-cf">
+    <button class="button" type="submit">
+      提交
+    </button>
+    <span class="text_button_padding">或</span>
+    <%if @solution.instance_of?(VendorSolution)%>
+      <%= link_to '取消', vendor_solution_path(@solution),:class=>'text_button_padding link_button' %>
+    <%end%>
+    <%if @solution.instance_of?(CheilSolution)%>
+      <%= link_to '取消', cheil_solution_path(@solution),:class=>'text_button_padding link_button' %>
+    <%end%>
+  </div>
+<% end %>

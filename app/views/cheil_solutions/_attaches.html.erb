@@ -1,0 +1,36 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title">附件</h2>
+    <div class="inner">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>文件名</th>
+            <th>创建时间</th>
+            <th>更新时间</th>
+            <th></th>
+          </tr>
+          <%n=1
+          @attaches.each do |e|%>
+            <tr class="<%=['odd','even'][(n+=1)%2]%>">
+              <td>
+                <%if e.op_notice.include?(@cur_user.org_id)%>
+                  <span style="<%=unread_color%>">(新)</span>
+                <%end%>
+                <%= e.attach_file_name  %>
+              </td>
+              <td><%=short_d(e.created_at)%></td>
+              <td><%=short_d(e.updated_at)%></td>
+              <td class="last">
+                <%=link_to '下载',download_solution_attach_path(e)%> 
+                <%if e.op_right.check('self',@cur_user.org_id,'check')%>
+                  <%=link_to '不选',uncheck_solution_attach_path(e),:confirm => '确定吗?', :method => :put %>
+                <%end%>
+              </td>
+            </tr>
+          <%end%>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -78,6 +78,7 @@ class VendorSolutionsController < ApplicationController
     @brief = @solution.brief
     @attaches = @solution.attaches
     @items = @solution.items
+    @comments = @solution.comments
 
     flash[:dest] = solution_path(@solution)
 
