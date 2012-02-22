@@ -208,4 +208,102 @@ describe SolutionItemsController do
       assigns[:items].should == [tran1,other1]
     end
   end
+
+  describe 'update_many' do
+    specify do
+      set_current_user(vendor_user)
+
+      solution = brief1.vendor_solutions.create(:org_id=>vendor.id)
+      d1 = solution.items.create(:name=>'d1',:kind=>'design')
+
+      tran1 = solution.items.new(:name=>'tran1',:kind=>'tran')
+      tran1.op_right.add('self',vendor.id,'read','update')
+      tran1.op_right.add('self',cheil.id,'read')
+      tran1.save
+
+      other1 = solution.items.new(:name=>'other1',:kind=>'other')
+      other1.op_right.add('self',vendor.id,'read','update')
+      other1.op_right.add('self',cheil.id,'read')
+      other1.save
+
+      solution_item = {
+        "name_#{tran1.id}" => 'tran1-1',
+        "quantity_#{tran1.id}" => '10',
+        "note_#{tran1.id}" => 'note_1-1',
+        "price_#{tran1.id}" => '10',
+        "tax_rate_#{tran1.id}" => '0.03',
+        "kind_#{tran1.id}" => 'tran',
+
+        "name_#{other1.id}" => 'other1-1',
+        "quantity_#{other1.id}" => '20',
+        "note_#{other1.id}" => 'note_1-1',
+        "price_#{other1.id}" => '15',
+        "tax_rate_#{other1.id}" => '0.1',
+        "kind_#{other1.id}" => 'other'
+      }
+
+      put :update_many,:solution_id=>solution.id,:solution_item=>solution_item
+
+      other1.reload.name.should == 'other1-1'
+      other1.quantity.should == '20'
+      other1.note.should == 'note_1-1'
+      other1.price.should == '15'
+      other1.tax_rate.should == '0.1'
+      other1.total_up.should == '300'
+      other1.tax.should == '30'
+      other1.kind.should == 'other'
+
+      other1.op_notice.include?(cheil.id).should be_true
+      
+      solution.reload.op_notice.include?(cheil.id).should be_true
+      solution.op_notice.read.should == [cheil.id.to_s]
+      
+      brief1.reload.op_notice.read.should == [cheil.id.to_s]
+    end
+  end
+
+  describe 'destroy' do
+    specify do
+      set_current_user(vendor_user)
+
+      solution = brief1.vendor_solutions.create(:org_id=>vendor.id)
+
+      tran1 = solution.items.new(:name=>'tran1',:kind=>'tran')
+      tran1.op_right.add('self',vendor.id,'read','delete')
+      tran1.op_right.add('self',cheil.id,'read')
+      tran1.save
+
+      tran1_id = tran1.id
+
+      delete :destroy,:id=>tran1.id
+
+      BriefItem.where(:id=>tran1_id).should be_blank
+
+      solution.reload.op_notice.include?(cheil.id).should be_true
+      brief1.reload.op_notice.include?(cheil.id).should be_true
+
+      response.should redirect_to(vendor_solution_path(solution))
+    end
+  end
+
+  describe 'check' do
+    specify do 
+      set_current_user(cheil_user)
+
+      solution = brief1.vendor_solutions.create(:org_id=>vendor.id)
+
+      tran1 = solution.items.new(:name=>'tran1',:kind=>'tran')
+      tran1.op_right.add('self',cheil.id,'read','check')
+      tran1.op_right.add('self',vendor.id,'read')
+      tran1.save
+
+      put :check,:id=>tran1.id
+
+      tran1.reload.checked.should == 'y'
+      solution.reload.op_notice.include?(vendor.id).should be_true
+      brief1.reload.op_notice.include?(vendor.id).should be_true
+
+      response.should redirect_to(vendor_solution_path(solution))
+    end
+  end
 end
