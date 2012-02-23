@@ -17,6 +17,18 @@ item:read,create_tran_other,price_design_product
 comment:read:update
 =end
 class VendorSolution < Solution
+  def cal
+    design_sum = 0
+    product_sum = 0
+    tran_sum = 0
+    other_sum =0 
+
+    items.each do |e|
+      a = send("#{e.kind}_sum")
+      send("#{e.kind}_sum=",a + e.total_up.to_i)
+    end
+  end
+
   def total
     kinds = %w{design product tran other}
     

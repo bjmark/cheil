@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120215073103) do
+ActiveRecord::Schema.define(:version => 20120223024915) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -170,11 +170,11 @@ ActiveRecord::Schema.define(:version => 20120215073103) do
     t.datetime "sent_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "design_rate",                :default => "0"
-    t.string   "product_rate",               :default => "0"
-    t.string   "tran_rate",                  :default => "0"
-    t.string   "other_rate",                 :default => "0"
-    t.string   "is_approved",   :limit => 1, :default => "n"
+    t.string   "design_rate",                        :default => "0"
+    t.string   "product_rate",                       :default => "0"
+    t.string   "tran_rate",                          :default => "0"
+    t.string   "other_rate",                         :default => "0"
+    t.string   "is_approved",           :limit => 1, :default => "n"
     t.datetime "approved_at"
     t.string   "read_by"
     t.datetime "finish_at"
@@ -183,6 +183,36 @@ ActiveRecord::Schema.define(:version => 20120215073103) do
     t.string   "item_right"
     t.string   "comment_right"
     t.string   "notice"
+    t.integer  "design_sum",                         :default => 0
+    t.integer  "product_sum",                        :default => 0
+    t.integer  "tran_sum",                           :default => 0
+    t.integer  "other_sum",                          :default => 0
+    t.integer  "design_tax_sum",                     :default => 0
+    t.integer  "product_tax_sum",                    :default => 0
+    t.integer  "tran_tax_sum",                       :default => 0
+    t.integer  "other_tax_sum",                      :default => 0
+    t.integer  "design_and_tax_sum",                 :default => 0
+    t.integer  "product_and_sum",                    :default => 0
+    t.integer  "tran_and_tax_sum",                   :default => 0
+    t.integer  "other_and_tax_sum",                  :default => 0
+    t.integer  "all_sum",                            :default => 0
+    t.integer  "all_tax_sum",                        :default => 0
+    t.integer  "all_and_tax_sum",                    :default => 0
+    t.integer  "design_c_sum",                       :default => 0
+    t.integer  "product_c_sum",                      :default => 0
+    t.integer  "tran_c_sum",                         :default => 0
+    t.integer  "other_c_sum",                        :default => 0
+    t.integer  "design_c_tax_sum",                   :default => 0
+    t.integer  "product_c_tax_sum",                  :default => 0
+    t.integer  "tran_c_tax_sum",                     :default => 0
+    t.integer  "other_c_tax_sum",                    :default => 0
+    t.integer  "design_c_and_tax_sum",               :default => 0
+    t.integer  "product_c_and_tax_sum",              :default => 0
+    t.integer  "tran_c_and_tax_sum",                 :default => 0
+    t.integer  "other_c_and_tax_sum",                :default => 0
+    t.integer  "all_c_sum",                          :default => 0
+    t.integer  "all_c_tax_sum",                      :default => 0
+    t.integer  "all_c_and_tax_sum",                  :default => 0
   end
 
   add_index "solutions", ["brief_id"], :name => "index_solutions_on_brief_id"
