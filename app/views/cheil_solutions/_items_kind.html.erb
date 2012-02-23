@@ -1,0 +1,29 @@
+<%n=0
+items.each do |e|%>
+  <tr class="<%=['odd','even'][(n+=1)%2]%>">
+    <%n.upto(1)do %>
+      <td colspan="1" rowspan="<%=items.length%>"><%=kind_cn%></td>
+    <%end%>
+    <td>
+      <%if e.op_notice.include?(@cur_user.org_id)%>
+        <span style="<%=unread_color%>">(新)</span>
+        <%e.op_notice.del(@cur_user.org_id);e.save%>
+      <%end%>
+      <%= e.name  %>
+    </td>
+    <td><%= e.quantity  %></td>
+    <td><%= e.note  %></td>
+    <td><%= e.price  %></td>
+    <td><%= e.total_up %></td>
+    <td><%=percentage(e.tax_rate)%></td>
+    <td><%= e.tax %></td>
+    <td><%= e.total_up_tax %></td>
+    <td><%= e.solution.org.name %></td>
+    <td class="last">
+      <%if e.op_right.check('self',@cur_user.org_id,'check')%>
+        <%=link_to('不选',uncheck_solution_item_path(e),{:method => :put})%>
+      <%end%>
+    </td>
+  </tr>
+<%end%>
+

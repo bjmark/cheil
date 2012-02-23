@@ -6,34 +6,7 @@ cheil
 self:read
 =end
 class CheilSolution < Solution
-=begin
-  def check_read_right(_org_id)
-    can_read_by?(_org_id) or raise SecurityError
-  end
 
-  alias :check_comment_right :check_read_right
-
-  def can_read_by?(_org_id)
-    can_edit_by?(_org_id) or brief.owned_by?(_org_id)
-  end
-
-  alias :can_commented_by? :can_read_by?
-
-  def check_edit_right(_org_id)
-    can_edit_by?(_org_id) or raise SecurityError
-  end
-
-  alias :can_edit_by? :owned_by? 
-
-
-  def check_destroy_right(_org_id)
-    raise SecurityError
-  end
-
-  def can_del_by?(_org_id)
-    false
-  end
-=end
   def check_approve_right(_org_id)
     can_approved_by?(_org_id) or raise SecurityError
   end
@@ -64,7 +37,7 @@ class CheilSolution < Solution
 
     @checked_designs = []
     brief.vendor_solutions.each do |vs|
-      @checked_designs += vs.designs.find_all_by_checked('y')
+      @checked_designs += vs.designs.find_all{|e| e.checked == 'y' }
     end
 
     return @checked_designs
@@ -76,7 +49,7 @@ class CheilSolution < Solution
 
     @checked_products = []
     brief.vendor_solutions.each do |vs|
-      @checked_products += vs.products.find_all_by_checked('y')
+      @checked_products += vs.products.find_all{|e|e.checked == 'y'}
     end
 
     return @checked_products
@@ -88,7 +61,7 @@ class CheilSolution < Solution
 
     @checked_trans = []
     brief.vendor_solutions.each do |vs|
-      @checked_trans += vs.trans.find_all_by_checked('y')
+      @checked_trans += vs.trans.find_all{|e| e.checked == 'y'}
     end
 
     return @checked_trans
@@ -100,7 +73,7 @@ class CheilSolution < Solution
 
     @checked_others = []
     brief.vendor_solutions.each do |vs|
-      @checked_others += vs.others.find_all_by_checked('y')
+      @checked_others += vs.others.find_all{|e| e.checked == 'y' }
     end
 
     return @checked_others

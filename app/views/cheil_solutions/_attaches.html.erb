@@ -24,7 +24,7 @@
               <td class="last">
                 <%=link_to '下载',download_solution_attach_path(e)%> 
                 <%if e.op_right.check('self',@cur_user.org_id,'check')%>
-                  <%=link_to '不选',uncheck_solution_attach_path(e),:confirm => '确定吗?', :method => :put %>
+                  <%=link_to '不选',uncheck_solution_attach_path(e,:dest=>cheil_solution_path(@solution)),:confirm => '确定吗?', :method => :put %>
                 <%end%>
               </td>
             </tr>

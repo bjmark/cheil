@@ -3,9 +3,9 @@ class CheilSolutionsController < ApplicationController
 
   def show
     @solution = CheilSolution.find(params[:id])
-    #@solution.check_read_right(@cur_user.org_id)
+    
     invalid_op unless @solution.op_right.check('self',@cur_user.org_id,'read')
-    #@solution.op.read_by(@cur_user.id)
+
     if @solution.op_notice.include?(@cur_user.org_id)
       @solution.op_notice.del(@cur_user.org_id)
       @solutin.save
@@ -15,12 +15,13 @@ class CheilSolutionsController < ApplicationController
 
     @brief = @solution.brief
     @attaches = @solution.checked_attaches
+    @items = @solution.checked_items
 
     case @cur_user.org
     when RpmOrg
       render 'show_rpm'
     when CheilOrg       
-      render 'cheil_solutions/cheil/show'
+    #  render 'cheil_solutions/cheil/show'
     end
   end
 

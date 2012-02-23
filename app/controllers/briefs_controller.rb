@@ -198,7 +198,9 @@ class BriefsController < ApplicationController
     brief.save
 
     #creat a cheil solution
-    brief.create_cheil_solution(:org_id=>brief.cheil_id)
+    cheil_solution = CheilSolution.new(:org_id=>brief.cheil_id,:brief_id=>brief.id)
+    cheil_solution.op_right.add('self',brief.cheil_id,'read')
+    cheil_solution.save
     
     brief.attaches.each do |e| 
       e.op_right.add('self',brief.cheil_id,'read','update','delete')

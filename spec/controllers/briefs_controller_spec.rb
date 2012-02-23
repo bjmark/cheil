@@ -195,6 +195,7 @@ describe BriefsController do
       brief1.op_notice.include?(cheil.id).should be_true
 
       brief1.cheil_solution.should_not be_blank
+      brief1.cheil_solution.op_right.check('self',brief1.cheil_id,'read').should be_true
 
       brief1.items do |e|
         e.op_right.check('self',cheil.id,'read').should be_true
