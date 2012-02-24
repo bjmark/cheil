@@ -11,7 +11,7 @@ class AddManyTotalUpToSolutions < ActiveRecord::Migration
     add_column :solutions,:other_tax_sum,:integer,:default => 0
 
     add_column :solutions,:design_and_tax_sum,:integer,:default => 0
-    add_column :solutions,:product_and_sum,:integer,:default => 0
+    add_column :solutions,:product_and_tax_sum,:integer,:default => 0
     add_column :solutions,:tran_and_tax_sum,:integer,:default => 0
     add_column :solutions,:other_and_tax_sum,:integer,:default => 0
 

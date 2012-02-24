@@ -49,7 +49,7 @@
         <%= link_to '报价', edit_price_many_solution_items_path(:solution_id=>@solution.id) %>
         </p>
       <%end%>
-      <%=render 'items_total',:solution=>@solution,:total=>@solution.total%>
+      <%=render 'items_total' if @solution.all_sum > 0%>
     </div>
   </div>
 </div>

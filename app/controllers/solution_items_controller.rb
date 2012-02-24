@@ -1,7 +1,7 @@
 #encoding=utf-8
 class SolutionItemsController < ApplicationController
   before_filter :cur_user 
-
+=begin
   def edit
     @item = SolutionItem.find(params[:id])
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
@@ -28,7 +28,7 @@ class SolutionItemsController < ApplicationController
       render action: "edit" 
     end
   end
-
+=end
   def edit_price
     @item = SolutionItem.find(params[:id])
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'price')
@@ -49,6 +49,7 @@ class SolutionItemsController < ApplicationController
 
     solution = @item.solution
     solution.op_notice.add(notice_ids)
+    solution.cal
     solution.save
 
     brief = solution.brief

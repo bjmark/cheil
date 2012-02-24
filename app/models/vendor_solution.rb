@@ -18,22 +18,52 @@ comment:read:update
 =end
 class VendorSolution < Solution
   def cal
-    design_sum = 0
-    product_sum = 0
-    tran_sum = 0
-    other_sum =0 
+    self.design_sum = self.product_sum = self.tran_sum = self.other_sum = 0 
+    self.design_tax_sum = self.product_tax_sum = self.tran_tax_sum = self.other_tax_sum = 0 
+    self.design_and_tax_sum = self.product_and_tax_sum = self.tran_and_tax_sum = self.other_and_tax_sum = 0 
+    self.all_sum = self.all_tax_sum = self.all_and_tax_sum = 0 
+
+    self.design_c_sum = self.product_c_sum = self.tran_c_sum = self.other_c_sum = 0 
+    self.design_c_tax_sum = self.product_c_tax_sum = self.tran_c_tax_sum = self.other_c_tax_sum = 0 
+    self.design_c_and_tax_sum = self.product_c_and_tax_sum = self.tran_c_and_tax_sum = self.other_c_and_tax_sum = 0 
+    self.all_c_sum = self.all_c_tax_sum = self.all_c_and_tax_sum = 0 
 
     items.each do |e|
       a = send("#{e.kind}_sum")
       send("#{e.kind}_sum=",a + e.total_up.to_i)
+
+      a = send("#{e.kind}_tax_sum")
+      send("#{e.kind}_tax_sum=",a + e.tax.to_i)
+
+      a = send("#{e.kind}_and_tax_sum")
+      send("#{e.kind}_and_tax_sum=",a + e.total_up_tax.to_i)
+
+      self.all_sum += e.total_up.to_i
+      self.all_tax_sum += e.tax.to_i 
+      self.all_and_tax_sum += (e.total_up.to_i + e.tax.to_i) 
+
+      if e.checked == 'y'
+        a = send("#{e.kind}_c_sum")
+        send("#{e.kind}_c_sum=",a + e.total_up.to_i)
+
+        a = send("#{e.kind}_c_tax_sum")
+        send("#{e.kind}_c_tax_sum=",a + e.tax.to_i)
+
+        a = send("#{e.kind}_c_and_tax_sum")
+        send("#{e.kind}_c_and_tax_sum=",a + e.total_up_tax.to_i)
+
+        self.all_c_sum += e.total_up.to_i
+        self.all_c_tax_sum += e.tax.to_i 
+        self.all_c_and_tax_sum += (e.total_up.to_i + e.tax.to_i) 
+      end
     end
   end
 
   def total
     kinds = %w{design product tran other}
-    
+
     hash = {}
-    
+
     sum_all_total_up = 0
     sum_all_tax = 0
     sum_all_total_up_tax = 0
