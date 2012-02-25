@@ -1,0 +1,51 @@
+<strong>选中合计</strong>
+<table class="table">
+  <tbody>
+    <tr>
+      <th></th>
+      <th>总计</th>
+      <th>税额</th>
+      <th>税后总计</th>
+    </tr>
+    <%n=0%>
+    <%if @solution.design_c_sum > 0%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>设计</td>
+        <td><%=@solution.design_c_sum%></th>
+        <td><%=@solution.design_c_tax_sum%></td>
+        <td><%=@solution.design_c_and_tax_sum%></td>
+      </tr>
+    <%end%>
+    <%if @solution.product_c_sum > 0%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>制作</td>
+        <td><%=@solution.product_c_sum%></th>
+        <td><%=@solution.product_c_tax_sum%></td>
+        <td><%=@solution.product_c_and_tax_sum%></td>
+      </tr>
+    <%end%>
+    <%if @solution.tran_c_sum > 0%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>运输</td>
+        <td><%=@solution.tran_c_sum%></th>
+        <td><%=@solution.tran_c_tax_sum%></td>
+        <td><%=@solution.tran_c_and_tax_sum%></td>
+      </tr>
+    <%end%>
+    <%if @solution.other_c_sum > 0%>
+      <tr class="<%=['odd','even'][(n+=1)%2]%>">
+        <td>其他</td>
+        <td><%=@solution.other_c_sum%></th>
+        <td><%=@solution.other_c_tax_sum%></td>
+        <td><%=@solution.other_c_and_tax_sum%></td>
+      </tr>
+    <%end%>
+    <tr class="<%=['odd','even'][(n+=1)%2]%>">
+      <td>全部累计</td>
+      <td><%=@solution.all_c_sum%></th>
+      <td><%=@solution.all_c_tax_sum%></td>
+      <td><%=@solution.all_c_and_tax_sum%></td>
+    </tr>
+  </tbody>
+</table>
+

@@ -1,3 +1,23 @@
+<%content_for :link do%>
+  <div class="content">
+    <h2 class="title"><%="#{@brief.name}(#{@solution.org.name})"%></h2>
+    <div class="inner">
+      <%sep = ''%>
+      <%if @solution.op_right.check('attach',@cur_user.org_id,'update')%>
+        <%= link_to '新建附件', new_solution_attach_path(:solution_id=>@solution.id)%>
+        <% sep = ' | '%>
+      <%end%>
+      <%if @solution.op_right.check('item',@cur_user.org_id,'create_tran_other')%>
+        <%= link_to "#{sep}新建运输项", new_solution_item_path(:solution_id=>@solution.id,:kind=>'tran')%>
+        <%= link_to ' | 新建其他项', new_solution_item_path(:solution_id=>@solution.id,:kind=>'other')%>
+      <%end%>
+      <%if @solution.op_right.check('comment',@cur_user.org_id,'update')%> 
+        <%= link_to "#{sep}新建评论", new_solution_comment_path(:solution_id=>@solution.id)%>
+      <%end%>
+    </div>
+  </div>
+<%end%>
+
 <%content_for :cheil do%>
   <div class="block">
     <div class="secondary-navigation">
@@ -10,25 +30,7 @@
         </li>
       </ul>
     </div>
-    <div class="content">
-      <h2 class="title"><%="#{@brief.name}(#{@solution.org.name})"%></h2>
-      <div class="inner">
-        <%n = 0%>
-        <%if @solution.op_right.check('attach',@cur_user.org_id,'update')%>
-          <%= link_to '新建附件', new_solution_attach_path(:solution_id=>@solution.id)%>
-          <% n += 1%>
-        <%end%>
-        <%if @solution.op_right.check('item',@cur_user.org_id,'create_tran')%>
-          <%= link_to (n > 0 ? ' | ' : '') + '新建运输项', new_solution_item_path(:solution_id=>@solution.id,:kind=>'tran')%>
-        <%end%>
-        <%if @solution.op_right.check('item',@cur_user.org_id,'create_other')%>
-          <%= link_to (n > 0 ? ' | ' : '') + '新建其他项', new_solution_item_path(:solution_id=>@solution.id,:kind=>'other')%>
-        <%end%>
-        <%if @solution.op_right.check('comment',@cur_user.org_id,'update')%> 
-          <%= link_to (n > 0 ? ' | ' : '') + '新建评论', new_solution_comment_path(:solution_id=>@solution.id)%>
-        <%end%>
-      </div>
-    </div>
+    <%=yield :link%>
   </div>
 <%end%>
 <%content_for :vendor do%>
@@ -46,19 +48,7 @@
         </li>
       </ul>
     </div>
-    <div class="content">
-      <h2 class="title"><%="#{@brief.name}(#{@solution.org.name})"%></h2>
-      <div class="inner">
-        <br/>
-        <%= link_to '新建附件', new_solution_attach_path(:solution_id=>@solution.id)%>
-        |
-        <%= link_to '新建运输项', new_solution_item_path(:solution_id=>@solution.id,:kind=>'tran')%>
-        |
-        <%= link_to '新建其他项', new_solution_item_path(:solution_id=>@solution.id,:kind=>'other')%>
-        |
-        <%= link_to '新建评论', new_solution_comment_path(:solution_id=>@solution.id)%>
-      </div>
-    </div>
+    <%=yield :link%>
   </div>
 <%end%>
 <%=yield @nav_link%>

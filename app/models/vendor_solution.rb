@@ -58,7 +58,7 @@ class VendorSolution < Solution
       end
     end
   end
-
+=begin
   def total
     kinds = %w{design product tran other}
 
@@ -93,7 +93,7 @@ class VendorSolution < Solution
 
     return hash
   end
-
+=end
   def money
     amount = 0
     paid = 0

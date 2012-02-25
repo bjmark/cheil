@@ -17,6 +17,10 @@
     <%= f.text_field :price,:class=>'text_field' %>
   </div>
   <div class="group">
+    <%= f.label :tax_rate,'税率',:class=>'label' %>
+    <%= f.text_field :tax_rate,:class=>'text_field' %>
+  </div>
+  <div class="group">
     <div>
       <%= f.radio_button :kind,'tran',:class=>'checkbox' %>
       <%=f.label :kind,'运输项',:class=>'radio'%>

@@ -50,6 +50,7 @@
         </p>
       <%end%>
       <%=render 'items_total' if @solution.all_sum > 0%>
+      <%=render 'items_checked_total' if @solution.all_c_sum > 0%>
     </div>
   </div>
 </div>

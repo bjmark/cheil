@@ -10,7 +10,7 @@ items.each do |e|%>
         <%e.op_notice.del(@cur_user.org_id);e.save%>
       <%end%>
       <%if e.checked == 'y'%>
-        <span style="<%=unread_color%>">(选中)</span>
+        <span style="<%=unread_color%>">*</span>
       <%end%>
       <%= e.name  %>
     </td>
@@ -33,9 +33,9 @@ items.each do |e|%>
       <%end%>
       <%if e.op_right.check('self',@cur_user.org_id,'check')%>
         <%if e.checked != 'y'%>
-          <%=link_to('选中',check_solution_item_path(e),{:method => :put})%>
+          <%=link_to('选中',check_solution_item_path(e),{:confirm => '确定选中吗?',:method => :put})%>
         <%else%>
-          <%=link_to('不选',uncheck_solution_item_path(e),{:method => :put})%>
+          <%=link_to('不选',uncheck_solution_item_path(e),{:confirm => '确定不选吗?',:method => :put})%>
         <%end%>
       <%end%>
     </td>

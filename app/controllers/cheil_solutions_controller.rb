@@ -16,6 +16,7 @@ class CheilSolutionsController < ApplicationController
     @brief = @solution.brief
     @attaches = @solution.checked_attaches
     @items = @solution.checked_items
+    @comments = @solution.comments
 
     case @cur_user.org
     when RpmOrg

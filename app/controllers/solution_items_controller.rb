@@ -1,7 +1,7 @@
 #encoding=utf-8
 class SolutionItemsController < ApplicationController
   before_filter :cur_user 
-=begin
+
   def edit
     @item = SolutionItem.find(params[:id])
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
@@ -9,7 +9,7 @@ class SolutionItemsController < ApplicationController
   end
 
   def update
-    @item = Item.find(params[:id])
+    @item = SolutionItem.find(params[:id])
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'update')
 
     attr = params[:solution_item]
@@ -18,17 +18,27 @@ class SolutionItemsController < ApplicationController
     @item.quantity = attr[:quantity]
     @item.note = attr[:note]
     @item.price = attr[:price]
+    @item.tax_rate = attr[:tax_rate]
     @item.kind = attr[:kind]
 
+    notice_ids = @item.op_notice.changed_by(@cur_user.org_id)
 
-    if @item.op.save_by(@cur_user.id)
-      @item.solution.op.touch(@cur_user.id)
+    if @item.cal_save
+      solution = @item.solution
+      solution.op_notice.add(notice_ids)
+      solution.cal
+      solution.save
+
+      brief = solution.brief
+      brief.op_notice.add(notice_ids)
+      brief.save
+
       redirect_to vendor_solution_path(@item.solution), notice: 'Item was successfully updated.' 
     else
       render action: "edit" 
     end
   end
-=end
+
   def edit_price
     @item = SolutionItem.find(params[:id])
     invalid_op unless @item.op_right.check('self',@cur_user.org_id,'price')
@@ -42,7 +52,7 @@ class SolutionItemsController < ApplicationController
     @item.note = attr[:note]
     @item.price = attr[:price]
     @item.tax_rate = attr[:tax_rate]
-    
+
     notice_ids = @item.op_notice.changed_by(@cur_user.org_id)
 
     @item.cal_save
@@ -92,16 +102,17 @@ class SolutionItemsController < ApplicationController
         item.note = items["note_#{id}"]
         item.price = items["price_#{id}"]
         item.tax_rate = items["tax_rate_#{id}"]
-        
+
         notice_ids = item.op_notice.changed_by(@cur_user.org_id)
-        
+
         solution.op_notice.add(notice_ids)
         brief.op_notice.add(notice_ids)
-        
+
         item.cal_save
       end
     end
 
+    solution.cal
     solution.save
     brief.save
     redirect_to vendor_solution_path(params[:solution_id])
@@ -115,66 +126,16 @@ class SolutionItemsController < ApplicationController
     @item.kind = attr[:kind]
   end
 
-=begin
-  def create
-    case
-      #add a brief_item to vendor_solution
-    when (params[:vendor_solution_id] and params[:brief_item_id])
-      vendor_solution = VendorSolution.find(params[:vendor_solution_id])
-      #raise SecurityError unless solution.brief.received_by?(@cur_user.org_id)
-      invalid_op unless vendor_solution.op_right.check('item',@cur_user.org_id,'assign_brief_item')
-
-      if vendor_solution.items.where(:parent_id=>params[:brief_item_id]).blank?
-        brief_item = BriefItem.find(params[:brief_item_id])
-        #brief_item.add_to_solution(vendor_solution)
-        item = vendor_solution.items.new(:parent_id=>brief_item.id)
-        item.op_right.add('self',@cur_user.org_id,'read','delete')
-        item.op_right.add('self',vendor_solution.org_id,'read','price')
-
-        #notify the vendor for this item
-        item.op_notice.add(vendor_solution.org_id)
-        item.save
-
-        #the solution owner can read this brief_item
-        brief_item.op_right.add('self',vendor_solution.org_id,'read')
-        brief_item.save
-
-        #notify the vendor for relate brief
-        brief = vendor_solution.brief
-        brief.op_notice.add(vendor_solution.org_id)
-        brief.save
-      end
-      redirect_to(solution_items_path(:vendor_solution_id=>vendor_solution.id)) and return
-    end
-
-    #create a solution_item
-    attr = params[:solution_item]
-    solution = Solution.find(attr[:fk_id])
-    solution.check_edit_right(@cur_user.org_id)
-
-    @item = solution.items.new
-    set_attr(attr)
-
-    solution.op.touch(@cur_user.id)
-
-    if @item.op.save_by(@cur_user.id)
-      solution.op.touch(@cur_user.id)
-      redirect_to vendor_solution_path(solution), notice: 'Item was successfully created.' 
-    else
-      render action: "new" 
-    end
-  end
-=end
-
   def destroy #tested
     item = SolutionItem.find(params[:id])
     invalid_op unless item.op_right.check('self',@cur_user.org_id,'delete')
-    
+
     notice_ids = item.op_notice.changed_by(@cur_user.org_id)
     item.destroy
 
     solution = item.solution
     solution.op_notice.add(notice_ids)
+    solution.cal
     solution.save
 
     brief = solution.brief
@@ -198,6 +159,7 @@ class SolutionItemsController < ApplicationController
 
     solution = item.solution
     solution.op_notice.add(notice_ids)
+    solution.cal
     solution.save
 
     brief = solution.brief
@@ -247,6 +209,7 @@ class SolutionItemsController < ApplicationController
       end
       if saved_count > 0
         @solution.op_notice.add(read_ids)
+        @solution.cal
         @solution.save
 
         brief = @solution.brief
@@ -304,6 +267,7 @@ class SolutionItemsController < ApplicationController
       end
     end
 
+    solution.cal
     solution.save
     brief.save
 

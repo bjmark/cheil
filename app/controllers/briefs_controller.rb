@@ -200,6 +200,7 @@ class BriefsController < ApplicationController
     #creat a cheil solution
     cheil_solution = CheilSolution.new(:org_id=>brief.cheil_id,:brief_id=>brief.id)
     cheil_solution.op_right.add('self',brief.cheil_id,'read')
+    cheil_solution.op_right.add('comment',[brief.cheil_id,brief.rpm_id],'read','update')
     cheil_solution.save
     
     brief.attaches.each do |e| 
