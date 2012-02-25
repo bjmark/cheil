@@ -30,7 +30,7 @@ rpm.each do |k,v|
   r = RpmOrg.create(:name=>k)
   r.users.create(:name=>v,:password=>'123')
 
-  c = r.create_cheil_org(:name=>k)
+  c = r.create_cheil_org(:name=>"Cheil #{k}")
   c.users.create(:name=>v.gsub(/rpm_/,'cheil_'),:password=>'123')
 end
 

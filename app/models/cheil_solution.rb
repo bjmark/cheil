@@ -6,6 +6,16 @@ cheil
 self:read
 =end
 class CheilSolution < Solution
+  def cal
+    self.design_c_sum = self.product_c_sum = self.tran_c_sum = self.other_c_sum = 0
+
+    self.brief.vendor_solutions.each do|e|
+      self.design_c_sum += e.design_c_sum
+      self.product_c_sum += e.product_c_sum
+      self.tran_c_sum += e.tran_c_sum
+      self.other_c_sum += e.other_c_sum
+    end
+  end
 
   def check_approve_right(_org_id)
     can_approved_by?(_org_id) or raise SecurityError

@@ -9,7 +9,7 @@ describe VendorSolution do
     let(:p1){ brief1.items.create(:name=>'p1',:quantity=>'100',:kind=>'product') }
     let(:p2){ brief1.items.create(:name=>'p2',:quantity=>'200',:kind=>'product') }
 
-    let(:vendor_solution1){ vendor_solution1 = brief1.vendor_solutions.create }
+    let(:vendor_solution1){ brief1.vendor_solutions.create }
 
     before do
       vendor_solution1.items.new(:parent_id=>d1.id,:price=>'10',:tax_rate=>'0.03',:checked=>'y').cal_save

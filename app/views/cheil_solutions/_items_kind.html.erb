@@ -21,7 +21,7 @@ items.each do |e|%>
     <td><%= e.solution.org.name %></td>
     <td class="last">
       <%if e.op_right.check('self',@cur_user.org_id,'check')%>
-        <%=link_to('不选',uncheck_solution_item_path(e),{:method => :put})%>
+        <%=link_to('不选',uncheck_solution_item_path(e,:dest=>cheil_solution_path(@solution)),{:method => :put})%>
       <%end%>
     </td>
   </tr>
