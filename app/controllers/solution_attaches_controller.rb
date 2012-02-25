@@ -107,10 +107,14 @@ class SolutionAttachesController < ApplicationController
     end
 
     attach = SolutionAttach.find(params[:id])
-    #attach.can_checked_by?(@cur_user.org_id)
     attach.op_right.check('self',@cur_user.org_id,'check')
     attach.checked = value
-    
+    case value
+    when 'y'
+      attach.op_right.disable('self','update','delete')
+    when 'n'
+      attach.op_right.enable('self','update','delete')
+    end
     #notice_org_ids = attach.op_right.who_has('self','read') - [@cur_user.org_id]
     #attach.op_notice.add(notice_org_ids)
     

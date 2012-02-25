@@ -8,12 +8,29 @@ self:read
 class CheilSolution < Solution
   def cal
     self.design_c_sum = self.product_c_sum = self.tran_c_sum = self.other_c_sum = 0
+    self.design_c_tax_sum = self.product_c_tax_sum = self.tran_c_tax_sum = self.other_c_tax_sum = 0
+    self.design_c_and_tax_sum = self.product_c_and_tax_sum = self.tran_c_and_tax_sum = self.other_c_and_tax_sum = 0
+    self.all_c_sum = self.all_c_tax_sum = self.all_c_and_tax_sum = 0
 
     self.brief.vendor_solutions.each do|e|
       self.design_c_sum += e.design_c_sum
       self.product_c_sum += e.product_c_sum
       self.tran_c_sum += e.tran_c_sum
       self.other_c_sum += e.other_c_sum
+
+      self.design_c_tax_sum += e.design_c_tax_sum 
+      self.product_c_tax_sum += e.product_c_tax_sum 
+      self.tran_c_tax_sum += e.tran_c_tax_sum 
+      self.other_c_tax_sum += e.other_c_tax_sum 
+
+      self.design_c_and_tax_sum += e.design_c_and_tax_sum 
+      self.product_c_and_tax_sum += e.product_c_and_tax_sum 
+      self.tran_c_and_tax_sum += e.tran_c_and_tax_sum 
+      self.other_c_and_tax_sum += e.other_c_and_tax_sum 
+
+      self.all_c_sum += e.all_c_sum
+      self.all_c_tax_sum += e.all_c_tax_sum
+      self.all_c_and_tax_sum += e.all_c_and_tax_sum
     end
   end
 

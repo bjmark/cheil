@@ -73,7 +73,7 @@ class SolutionItemsController < ApplicationController
     @solution = VendorSolution.find(params[:solution_id])
     invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'price_design_product')
 
-    items = @solution.items
+    items = @solution.items.find_all{|e| e.op_right.check('self',@cur_user.org_id,'price')}
     designs = []
     products = []
     items.each do |e|
@@ -98,7 +98,7 @@ class SolutionItemsController < ApplicationController
     brief = solution.brief
 
     ids.each do |id|
-      if !(item = solution.items.where(:id=>id).first).blank?
+      if !(item = solution.items.where(:id=>id).first).blank? and item.op_right.check('self',@cur_user.org_id,'price')
         item.note = items["note_#{id}"]
         item.price = items["price_#{id}"]
         item.tax_rate = items["tax_rate_#{id}"]
@@ -155,6 +155,12 @@ class SolutionItemsController < ApplicationController
     end
     item.checked = value
     notice_ids = item.op_notice.changed_by(@cur_user.org_id)
+    case value
+    when 'y'
+      item.op_right.disable('self','update','delete','price')
+    when 'n'
+      item.op_right.enable('self','update','delete','price')
+    end
     item.save
 
     solution = item.solution
@@ -165,6 +171,10 @@ class SolutionItemsController < ApplicationController
     brief = solution.brief
     brief.op_notice.add(notice_ids)
     brief.save
+
+    cheil_solution = brief.cheil_solution
+    cheil_solution.cal
+    cheil_solution.save
 
     if params[:dest]
       redirect_to params[:dest]

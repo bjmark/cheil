@@ -102,4 +102,5 @@
 #rails generate controller solution_comments
 #rails g migration add_tax_rate_to_items
 #rails g migration add_cheil_solution_right_to_briefs
-rails g migration add_many_total_up_to_solutions
+#rails g migration add_many_total_up_to_solutions
+rails g migration add_many_status_time_to_briefs

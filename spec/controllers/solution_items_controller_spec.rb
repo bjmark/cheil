@@ -86,9 +86,10 @@ describe SolutionItemsController do
   describe 'update_price' do
     specify do
       set_current_user(vendor_user)
+      brief_item = brief1.items.create(:name=>'d1',:kind=>'design',:quantity=>'10')
       solution = brief1.vendor_solutions.create(:org_id=>vendor.id)
 
-      item = solution.items.new(:name=>'d1',:quantity=>'10')
+      item = solution.items.new(:parent_id=>brief_item.id)
       item.op_right.add('self',vendor.id,'price')
       item.op_right.add('self',[cheil.id,vendor.id],'read')
       item.save
@@ -294,12 +295,15 @@ describe SolutionItemsController do
 
       tran1 = solution.items.new(:name=>'tran1',:kind=>'tran')
       tran1.op_right.add('self',cheil.id,'read','check')
-      tran1.op_right.add('self',vendor.id,'read')
+      tran1.op_right.add('self',vendor.id,'read','update','delete')
       tran1.save
 
       put :check,:id=>tran1.id
 
       tran1.reload.checked.should == 'y'
+      tran1.op_right.check('self',vendor.id,'update').should be_false
+      tran1.op_right.check('self',vendor.id,'delete').should be_false
+
       solution.reload.op_notice.include?(vendor.id).should be_true
       brief1.reload.op_notice.include?(vendor.id).should be_true
 

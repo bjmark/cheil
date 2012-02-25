@@ -31,10 +31,21 @@ item:read
 
 class Brief < ActiveRecord::Base
   STATUS = {
-    1 => '方案中',
-    2 => '待审定',
-    3 => '执行中',
-    4 => '完成'
+    10 => '方案中',
+    20 => '待审定',
+    30 => '执行中',
+    40 => '物流',
+    50 => '结算',
+    60 => '完成'
+  }
+
+  STATUS_NAME = {
+    '方案中' => 10,
+    '待审定' => 20,
+    '执行中' => 30,
+    '物流' => 40,
+    '结算' => 50,
+    '完成' => 60
   }
 
   belongs_to :rpm_org,:foreign_key => :rpm_id
@@ -71,7 +82,7 @@ class Brief < ActiveRecord::Base
     @products or (@products = items.find_all_by_kind('product'))
   end
 
-    def send_to_cheil?
+  def send_to_cheil?
     self.cheil_id > 0
   end
 

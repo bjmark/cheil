@@ -27,7 +27,6 @@ class CheilSolutionsController < ApplicationController
   end
 
   def set_status(solution,status_code)
-    solution.check_edit_right(@cur_user.org.id)
     brief = solution.brief
     brief.status = status_code
     brief.save
@@ -35,6 +34,7 @@ class CheilSolutionsController < ApplicationController
 
   def send_to_rpm
     solution = CheilSolution.find(params[:id])
+    invalid_op if solution.org_id != @cur_user.org_id
     set_status(solution,2)
     redirect_to cheil_solution_path(solution)
   end

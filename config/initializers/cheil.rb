@@ -148,6 +148,25 @@ right structure as follwing
       end
       return org_ids
     end
+
+    def disable(target,*rights)
+      hash = read_from(target)
+      hash.values.each do |a|
+        a.collect!{|r| rights.include?(r) ? "-#{r}" : r}
+      end
+      write_to(target,hash)
+    end
+
+    def enable(target,*rights)
+      hash = read_from(target)
+      rights2 = rights.collect{|e| "-#{e}"}
+
+      hash.values.each do |a|
+        a.collect!{|r| rights2.include?(r) ? r[1..r.length-1] : r}
+      end
+      write_to(target,hash)
+    end
+
   end
 
   class OpNotice

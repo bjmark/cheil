@@ -235,6 +235,22 @@ describe Brief do
         b.op_right.check('item',1,'update').should == false
       }
     end
+    context 'disable and enable' do
+      specify do
+        b = Brief.new(:name=>'abc')
+        b.op_right.add('self',[1,2],'read','update','delete')
+        b.op_right.disable('self','update','delete')
+
+        b.op_right.read_from('self')[1].should == ['read','-update','-delete']
+        b.op_right.read_from('self')[2].should == ['read','-update','-delete']
+        b.op_right.check('self',1,'read').should be_true
+        b.op_right.check('self',1,'update').should be_false
+
+        b.op_right.enable('self','update')
+        b.op_right.read_from('self')[1].should == ['read','update','-delete']
+        b.op_right.read_from('self')[2].should == ['read','update','-delete']
+      end
+    end
   end
 
   describe 'op_notice' do
