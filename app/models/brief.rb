@@ -39,15 +39,6 @@ class Brief < ActiveRecord::Base
     60 => '完成'
   }
 
-  STATUS_NAME = {
-    '方案中' => 10,
-    '待审定' => 20,
-    '执行中' => 30,
-    '物流' => 40,
-    '结算' => 50,
-    '完成' => 60
-  }
-
   belongs_to :rpm_org,:foreign_key => :rpm_id
   belongs_to :cheil_org,:foreign_key => :cheil_id
   belongs_to :user

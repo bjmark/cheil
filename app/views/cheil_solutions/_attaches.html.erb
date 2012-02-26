@@ -6,6 +6,7 @@
         <tbody>
           <tr>
             <th>文件名</th>
+            <th>vendor</th>
             <th>创建时间</th>
             <th>更新时间</th>
             <th></th>
@@ -19,6 +20,7 @@
                 <%end%>
                 <%= e.attach_file_name  %>
               </td>
+              <td><%=e.solution.org.name%></td>
               <td><%=short_d(e.created_at)%></td>
               <td><%=short_d(e.updated_at)%></td>
               <td class="last">

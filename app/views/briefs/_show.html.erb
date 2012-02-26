@@ -5,10 +5,28 @@
       <%=simple_format(@brief.req)%>
     </div>
     状态 : <span style=" color:rgb(227,102,39)"><%=@brief.cur_status%></span><br/>
-    <span>创建者 : <%=@brief.rpm_org.name%></span><br/>
-    <span>创建时间 : <%=short_d(@brief.created_at)%></span><br/>
-    <span>更新时间 : <%=short_d(@brief.updated_at)%></span><br/>
+    <span>创建者 : <%=@brief.rpm_org.name%></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>创建时间 : <%=short_d(@brief.created_at)%></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>更新时间 : <%=short_d(@brief.updated_at)%></span><br>
     <span>期限 : <%=@brief.deadline%></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <%if @brief.send_to_cheil?%>
+      <span>Cheil : <%=@brief.cheil_org.name%></span>
+    <%end%>
+    <br>
+    <%if @brief.status%>
+      <%Brief::STATUS.each do|k,v|%>
+        <%if k <= @brief.status%>
+          <%if !short_d(@brief.send("status_#{k}")).blank?%>
+            <span><%=v%> : <%=short_d(@brief.send("status_#{k}"))%></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+          <%end%>
+          <%if k == 30%>
+            <br> 
+          <%end%>
+        <%end%>
+      <%end%>
+    <%end%>
   </div>
 </div>
 

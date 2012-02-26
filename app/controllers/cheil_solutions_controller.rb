@@ -11,7 +11,6 @@ class CheilSolutionsController < ApplicationController
       @solutin.save
     end
 
-    @payments = Payment.where(:solution_id=>@solution.id).all
 
     @brief = @solution.brief
     @attaches = @solution.checked_attaches
@@ -20,34 +19,62 @@ class CheilSolutionsController < ApplicationController
 
     case @cur_user.org
     when RpmOrg
-      render 'show_rpm'
+      @nav_link = :rpm
     when CheilOrg       
-    #  render 'cheil_solutions/cheil/show'
+      @nav_link = :cheil
     end
   end
 
-  def set_status(solution,status_code)
+  def set_status
+    solution = CheilSolution.find(params[:id])
+    invalid_op if solution.org_id != @cur_user.org_id
+
+    code = params[:code].to_i
+    invalid_op unless [40,50].include?(code)
+
     brief = solution.brief
-    brief.status = status_code
+    brief.status = code 
+    brief.send("status_#{code}=",Time.now)
+    brief.op_notice.add(brief.rpm_id)
     brief.save
+
+    redirect_to cheil_solution_path(solution)
   end
 
   def send_to_rpm
     solution = CheilSolution.find(params[:id])
     invalid_op if solution.org_id != @cur_user.org_id
-    set_status(solution,2)
+
+    brief = solution.brief
+    solution.op_right.add('self',brief.rpm_id,'read')
+    solution.save
+
+    brief.status = 20 #待审定
+    brief.status_20 = Time.now
+    brief.op_notice.add(brief.rpm_id)
+    brief.save
+
     redirect_to cheil_solution_path(solution)
   end
 
   def approve
     solution = CheilSolution.find(params[:id])
-    solution.check_approve_right(@cur_user.org_id)
+    brief = solution.brief
+    #solution.check_approve_right(@cur_user.org_id)
+    invalid_op if brief.rpm_id != @cur_user.org_id
+
     solution.is_approved = ((block_given? and yield) or 'y')
     solution.approved_at = Time.now
     solution.save
 
-    brief = solution.brief
-    brief.status = solution.is_approved == 'y' ? 3 : 2
+    if solution.is_approved == 'y'
+      brief.status = 30 #执行中
+      brief.status_30 = Time.now
+    else
+      brief.status = 20 #待审定
+    end
+
+    brief.op_notice.add(brief.cheil_id)
     brief.save
 
     redirect_to cheil_solution_path(solution)
@@ -59,16 +86,33 @@ class CheilSolutionsController < ApplicationController
 
   def finish
     solution = CheilSolution.find(params[:id])
-    set_status(solution,4)
-    solution.finish_at = Time.new
+    invalid_op if solution.org_id != @cur_user.org_id
+
+    brief = solution.brief
+    brief.status = 60 #完成
+    brief.status_60 = Time.now
+    brief.op_notice.add(brief.rpm_id)
+    brief.save
+
+    solution.finish_at = Time.now
     solution.save
     redirect_to cheil_solution_path(solution)
   end
 
-  def unfinish
-    solution = CheilSolution.find(params[:id])
-    set_status(solution,3)
-    redirect_to cheil_solution_path(solution)
-  end
+  def payment
+    @solution = CheilSolution.find(params[:id])
+    @brief = @solution.brief
 
+    invalid_op if (@solution.org_id != @cur_user.org_id) and (@brief.rpm_id != @cur_user.org_id)
+
+    @vendor_solutions = @brief.vendor_solutions
+
+    @payments = Payment.where(:solution_id=>@solution.id).all
+    case @cur_user.org
+    when CheilOrg
+      @nav = :cheil
+    when RpmOrg
+      @nav = :rpm
+    end
+  end
 end

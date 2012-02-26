@@ -27,6 +27,10 @@ class PaymentsController < ApplicationController
   # GET /payments/new.json
   def new
     @payment = Payment.new
+    @solution = CheilSolution.find(params[:solution_id])
+    invalid_op if @solution.org_id != @cur_user.org_id
+    @vendor = Org.find(params[:org_id])
+
     @payment.solution_id = params[:solution_id]
     @payment.org_id = params[:org_id]
 
@@ -39,16 +43,28 @@ class PaymentsController < ApplicationController
   # GET /payments/1/edit
   def edit
     @payment = Payment.find(params[:id])
+    @solution = @payment.solution
+    invalid_op if @solution.org_id != @cur_user.org_id
+    @vendor = @payment.org
   end
 
   # POST /payments
   # POST /payments.json
   def create
-    @payment = Payment.new(params[:payment])
+    cheil_solution = CheilSolution.find(params[:payment][:solution_id])
+    invalid_op if cheil_solution.org_id != @cur_user.org_id
 
+    @payment = Payment.new(params[:payment])
     if @payment.save
-      redirect_to cheil_solution_path(@payment.solution_id), 
-        notice: 'Payment was successfully created.' 
+      brief = cheil_solution.brief
+      vendor_solution = brief.vendor_solutions.where(:org_id=>@payment.org_id).first
+      vendor_solution.cal_pay 
+      vendor_solution.save
+
+      cheil_solution.cal_pay
+      cheil_solution.save
+
+      redirect_to payment_cheil_solution_path(cheil_solution) 
     else
       render action: "new" 
     end
@@ -58,9 +74,19 @@ class PaymentsController < ApplicationController
   # PUT /payments/1.json
   def update
     @payment = Payment.find(params[:id])
+    cheil_solution = @payment.solution
+    invalid_op if cheil_solution.org_id != @cur_user.org_id
 
     if @payment.update_attributes(params[:payment])
-      redirect_to solution_path(@payment.solution_id), notice: 'Payment was successfully updated.' 
+      brief = cheil_solution.brief
+      vendor_solution = brief.vendor_solutions.where(:org_id=>@payment.org_id).first
+      vendor_solution.cal_pay 
+      vendor_solution.save
+
+      cheil_solution.cal_pay
+      cheil_solution.save
+
+      redirect_to payment_cheil_solution_path(cheil_solution)
     else
       render action: "edit" 
     end
@@ -69,8 +95,19 @@ class PaymentsController < ApplicationController
   # DELETE /payments/1
   def destroy
     @payment = Payment.find(params[:id])
+    cheil_solution = @payment.solution
+    invalid_op if cheil_solution.org_id != @cur_user.org_id
+
     @payment.destroy
 
-    redirect_to cheil_solution_path(@payment.solution_id) 
+    brief = cheil_solution.brief
+    vendor_solution = brief.vendor_solutions.where(:org_id=>@payment.org_id).first
+    vendor_solution.cal_pay 
+    vendor_solution.save
+
+    cheil_solution.cal_pay
+    cheil_solution.save
+
+    redirect_to payment_cheil_solution_path(@payment.solution_id) 
   end
 end

@@ -1,0 +1,117 @@
+<%content_for :balance do%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>vendor</th>
+        <th>应付</th>
+        <th>已付</th>
+        <th>未付余额</th>
+        <th></th>
+      </tr>
+      <%n=1
+      @vendor_solutions.each do |e|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= e.org.name  %>
+          </td>
+          <td>
+            <%= e.all_c_and_tax_sum  %>
+          </td>
+          <td>
+            <%= e.payment_sum  %>
+          </td>
+          <td>
+            <%= e.balance %>
+          </td>
+          <td class="last">
+            <%if @cur_user.org_id == @solution.org_id%>
+              <%=link_to '付款',new_payment_path(:solution_id=>@solution.id,:org_id=>e.org_id)%>
+            <%end%>
+          </td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+<%end%>
+<%content_for :payment do%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>支付者</th>
+        <th>vendor</th>
+        <th>金额</th>
+        <th>支付日期</th>
+        <th>说明</th>
+        <th></th>
+      </tr>
+      <%n=1
+      @payments.each do |p|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= p.payer.name  %>
+          </td>
+          <td>
+            <%= p.org.name  %>
+          </td>
+          <td>
+            <%= p.amount  %>
+          </td>
+          <td>
+            <%= p.pay_date  %>
+          </td>
+          <td>
+            <%= p.note  %>
+          </td>
+          <td class="last">
+            <%if @cur_user.org_id == @solution.org_id%>
+              <%= link_to '修改',edit_payment_path(p)%>
+              |
+              <%= link_to '删除',payment_path(p),:confirm=>'确定吗?',:method=>:delete%>
+            </td>
+          <%end%>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+<%end%>
+
+<%content_for :cheil do%>
+  <ul class="wat-cf">
+    <li class="first"><%=link_to '返回',briefs_path%></li>
+    <li><%=link_to '需求',brief_path(@brief)%></li>
+    <li>
+    <%=link_to 'Vendor方案',vendor_solutions_path(:brief_id=>@brief.id)%>
+    </li>
+    <li>
+    <%=link_to 'Cheil 方案',cheil_solution_path(@solution)%>
+    </li>
+    <li class="active">
+    <%=link_to '付款',payment_cheil_solution_path(@solution)%>
+    </li>
+  </ul>
+<%end%>
+<%content_for :rpm do%>
+  <ul class="wat-cf">
+    <li class="first"><%=link_to '返回',briefs_path%></li>
+    <li><%=link_to '需求',brief_path(@brief)%></li>
+    <li>
+    <%=link_to '方案',cheil_solution_path(@solution)%>
+    </li>
+    <li class="active">
+    <%=link_to '付款',payment_cheil_solution_path(@solution)%>
+    </li>
+  </ul>
+<%end%>
+<div class="block">
+  <div class="secondary-navigation">
+    <%=yield @nav%>
+  </div>
+  <div class="content">
+    <h2 class="title">付款</h2>
+    <div class="inner">
+      <%=yield :balance unless @vendor_solutions.blank?%>
+      <%=yield :payment unless @payments.blank?%>
+    </div>
+  </div>
+</div>
+

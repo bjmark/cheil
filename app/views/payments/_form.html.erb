@@ -16,6 +16,9 @@
     <%= f.label :payer_id,'支付者',:class=>'label' %>
     <%= select('payment','payer_id',Payer.all.collect{|p| [p.name,p.id]})%>
   </div>
+  <div class="group">
+    <label class="label">接收者 : <%= @vendor.name%></label>
+  </div>
     <%= f.hidden_field :org_id %>
   <div class="group">
     <%= f.label :amount,'金额',:class=>'label' %>
@@ -31,6 +34,6 @@
   </div>
   <div class="actions">
     <%= f.submit '提交' %>
-    <%= link_to '取消',cheil_solution_path(@payment.solution_id) %>
+    <%= link_to '取消',payment_cheil_solution_path(@solution.id) %>
   </div>
 <% end %>

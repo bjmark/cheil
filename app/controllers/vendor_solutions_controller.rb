@@ -87,18 +87,13 @@ class VendorSolutionsController < ApplicationController
       @solution.save
     end
 
-    @money = @solution.money
-    @payments = Payment.where(
-      :solution_id=>@solution.brief.cheil_solution.id,
-      :org_id=>@cur_user.org_id)
-
-      case @cur_user.org
-      when CheilOrg          #current user is a cheil user
-        #render 'vendor_solutions/cheil/show'
-        @nav_link = :cheil
-      when VendorOrg
-        @nav_link = :vendor
-      end
+    case @cur_user.org
+    when CheilOrg          #current user is a cheil user
+      #render 'vendor_solutions/cheil/show'
+      @nav_link = :cheil
+    when VendorOrg
+      @nav_link = :vendor
+    end
   end
 
   def new_many

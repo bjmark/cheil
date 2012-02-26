@@ -13,6 +13,11 @@
         <%= link_to '方案', cheil_solution_path(@brief.cheil_solution) %>
         </li>
       <%end%>
+      <%if @brief.status >= 30%>
+        <li>
+        <%=link_to '付款',payment_cheil_solution_path(@brief.cheil_solution)%>
+        </li>
+      <%end%>
     </ul>
   </div>
   <div class="content">
@@ -32,20 +37,28 @@
 
       <%unless @brief.send_to_cheil?%>
         |
-        <%=link_to '发送给cheil',send_to_cheil_brief_path(@brief),:confirm => '确定吗？',:method => :put%>
+        <%=form_tag send_to_cheil_brief_path(@brief),:method=>:put,:style=>"display:inline;" do%>
+          <select name="cheil_org_id" size="1">
+            <%@cheil_orgs.each do |g|%>
+              <option value="<%=g.id%>" label="<%=g.name%>" <%='selected' if g.id == @default_cheil.id%>>
+              <%=g.name%>
+              </option>
+            <%end%>
+          </select>
+          <%=submit_tag '发送',:confirm =>'确定吗?'%>
+        <%end%>
       <%end%>
       <%if @brief.send_to_cheil?%> 
         <% if @brief.cancel?%>
           |
-          <%=link_to '恢复',cancel_cancel_brief_path(@brief),:confirm => '确定吗？',:method => :put,:style => 'color:red'
-        %>
-      <%else%>
-        |
-        <%=link_to '取消',cancel_brief_path(@brief),:confirm => '确定吗？',:method => :put,:style => 'color:red'%>
+          <%=link_to '恢复',cancel_cancel_brief_path(@brief),:confirm => '确定吗？',:method => :put,:style => 'color:red' %>
+        <%else%>
+          |
+          <%=link_to '取消',cancel_brief_path(@brief),:confirm => '确定吗？',:method => :put,:style => 'color:red'%>
+        <%end%>
       <%end%>
-    <%end%>
+    </div>
   </div>
-</div>
 <%end%>
 
 <%content_for :cheil do %>
@@ -63,6 +76,11 @@
       <li>
       <%=link_to 'Cheil 方案',cheil_solution_path(@brief.cheil_solution)%>
       </li>
+      <%if @brief.status >= 30%>
+        <li>
+        <%=link_to '付款',payment_cheil_solution_path(@brief.cheil_solution)%>
+        </li>
+      <%end%>
     </ul>
   </div>
   <div class="content">

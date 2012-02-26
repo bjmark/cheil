@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120225115703) do
+ActiveRecord::Schema.define(:version => 20120226100602) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -219,6 +219,8 @@ ActiveRecord::Schema.define(:version => 20120225115703) do
     t.integer  "all_c_sum",                          :default => 0
     t.integer  "all_c_tax_sum",                      :default => 0
     t.integer  "all_c_and_tax_sum",                  :default => 0
+    t.integer  "payment_sum",                        :default => 0
+    t.integer  "balance",                            :default => 0
   end
 
   add_index "solutions", ["brief_id"], :name => "index_solutions_on_brief_id"

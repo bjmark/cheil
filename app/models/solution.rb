@@ -6,35 +6,6 @@ class Solution < ActiveRecord::Base
   has_many :comments,:class_name=>'SolutionComment',:foreign_key=>'fk_id',:order=>'id desc'
 
   has_many :payments,:order=>'org_id'
-=begin
-  def check_approve_right(_org_id)
-    raise SecurityError
-  end
-
-  def can_approved_by?(_org_id)
-    false
-  end
-
-  def owned_by?(_org_id)
-    org_id == _org_id
-  end
-
-  def items_from_brief(reload = false)
-    @items_from_brief = nil if reload
-    @items_from_brief and return @items_from_brief 
-
-    ids = items.find_all{|e| e.parent_id > 0}.collect{|e| e.parent_id}
-    @items_from_brief = Item.where(:id=>ids)
-  end
-
-  def designs_from_brief
-    items_from_brief.find_all{|e| e.kind == 'design'}
-  end
-
-  def products_from_brief
-    items_from_brief.find_all{|e| e.kind == 'product'}
-  end
-=end
 
   def designs
     items.find_all{|e| e.kind == 'design'}

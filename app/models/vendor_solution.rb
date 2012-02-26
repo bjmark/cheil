@@ -57,7 +57,19 @@ class VendorSolution < Solution
         self.all_c_and_tax_sum += (e.total_up.to_i + e.tax.to_i) 
       end
     end
+
+    self.balance = self.all_c_and_tax_sum - self.payment_sum
   end
+
+  def cal_pay
+    cheil_solution = brief.cheil_solution
+    payments = Payment.where(:solution_id=>cheil_solution.id,:org_id=>self.org_id).all
+    v = 0
+    payments.each{|e| v += e.amount.to_i}
+    self.payment_sum = v
+    self.balance = self.all_c_and_tax_sum - self.payment_sum
+  end
+
 =begin
   def total
     kinds = %w{design product tran other}

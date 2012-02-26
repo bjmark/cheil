@@ -101,6 +101,10 @@ class BriefsController < ApplicationController
 
     case @cur_user.org
     when RpmOrg
+      if !@brief.send_to_cheil?
+        @cheil_orgs = CheilOrg.all  
+        @default_cheil = @cur_user.org.cheil_org
+      end
       @nav_link = :rpm
     when CheilOrg
       @nav_link = :cheil
@@ -174,7 +178,7 @@ class BriefsController < ApplicationController
     brief = Brief.find(params[:id])
 
     invalid_op unless brief.op_right.check('self',@cur_user.org_id,'delete')
-    
+
     brief.destroy
     redirect_to briefs_url,notice: 'Brief was successfully deleted.' 
   end
@@ -184,8 +188,10 @@ class BriefsController < ApplicationController
     brief = Brief.find(params[:id])
     invalid_op if brief.rpm_id != @cur_user.org_id
 
-    brief.cheil_id = brief.rpm_org.cheil_org.id
-    brief.status = 1 #方案中
+    #brief.cheil_id = brief.rpm_org.cheil_org.id
+    brief.cheil_id = params[:cheil_org_id]
+    brief.status = 10 #方案中
+    brief.status_10 = Time.now
     #brief.send_to_cheil!
 
     brief.op_right.add('self',brief.cheil_id,'read','update')
@@ -202,7 +208,7 @@ class BriefsController < ApplicationController
     cheil_solution.op_right.add('self',brief.cheil_id,'read')
     cheil_solution.op_right.add('comment',[brief.cheil_id,brief.rpm_id],'read','update')
     cheil_solution.save
-    
+
     brief.attaches.each do |e| 
       e.op_right.add('self',brief.cheil_id,'read','update','delete')
       e.op_notice.add(brief.cheil_id)

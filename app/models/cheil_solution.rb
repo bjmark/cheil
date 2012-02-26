@@ -34,6 +34,14 @@ class CheilSolution < Solution
     end
   end
 
+  def cal_pay
+    payments = Payment.where(:solution_id=>self.id).all
+    v = 0
+    payments.each{|e| v += e.amount.to_i}
+    self.payment_sum = v
+    self.balance = self.all_c_and_tax_sum - self.payment_sum
+  end
+
   def check_approve_right(_org_id)
     can_approved_by?(_org_id) or raise SecurityError
   end
@@ -110,6 +118,8 @@ class CheilSolution < Solution
     checked_designs + checked_products + checked_trans + checked_others
   end
 
+
+=begin
   def total
     kinds = [:design,:product,:tran,:other]  #四种类型报价
     sum_all = 0      #总计
@@ -170,7 +180,7 @@ class CheilSolution < Solution
     }
     return total_hash
   end
-
+=end
   def vendor_money
     lst=[]
     brief.vendor_solutions.each do |e|
@@ -187,10 +197,10 @@ class CheilSolution < Solution
         lst << {:org=>e.org,:amount=>amount,:paid=>paid,:balance=>amount-paid}
       end
     end
-    
+
     amount = 0
     paid = 0
-    
+
     payments.each{|r| paid += r.amount if r.org_id == org_id}
 
     %w{design product tran other}.each do |k|
