@@ -8,12 +8,12 @@
       <%= link_to '需求', brief_path(@brief) %>
       </li>
       <li>
-      <%if @brief.send_to_cheil? and @brief.status > 1%>
+      <%if @brief.send_to_cheil? and @brief.status >= 20%>
         <li>
         <%= link_to '方案', cheil_solution_path(@brief.cheil_solution) %>
         </li>
       <%end%>
-      <%if @brief.status >= 30%>
+      <%if @brief.status and @brief.status >= 30%>
         <li>
         <%=link_to '付款',payment_cheil_solution_path(@brief.cheil_solution)%>
         </li>
@@ -76,7 +76,7 @@
       <li>
       <%=link_to 'Cheil 方案',cheil_solution_path(@brief.cheil_solution)%>
       </li>
-      <%if @brief.status >= 30%>
+      <%if @brief.status and @brief.status >= 30%>
         <li>
         <%=link_to '付款',payment_cheil_solution_path(@brief.cheil_solution)%>
         </li>
