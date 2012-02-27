@@ -1,0 +1,25 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title">Vendor 统计</h2>
+    <div class="inner">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>Vendor</th>
+            <th>brief 数量</th>
+            <th>金额合计</th>
+          </tr>
+          <%n=1
+          @vendor_orgs.each do |e|%>
+            <tr class="<%=['odd','even'][(n+=1)%2]%>">
+              <td><%=link_to e.name,vendor_stat_path(e)%></td>
+              <td><%=e.brief_count%></td>
+              <td><%=e.money_sum%></td>
+            </tr>
+          <%end%>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

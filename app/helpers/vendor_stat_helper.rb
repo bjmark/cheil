@@ -1,0 +1,2 @@
+module VendorStatHelper
+end

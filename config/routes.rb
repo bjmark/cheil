@@ -44,6 +44,9 @@ Cheil::Application.routes.draw do
       get :edit_price_many
       put :update_price_many
       
+      get :edit_score_many
+      put :update_score_many
+
       get :new_many
       post :create_many
       
@@ -120,6 +123,9 @@ Cheil::Application.routes.draw do
   resources :admin_users
 
   resources :pages , :only=>[:show]
+
+  resources :vendor_stat,:only=>[:index,:show]
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120226100602) do
+ActiveRecord::Schema.define(:version => 20120227082525) do
 
   create_table "admin_users", :force => true do |t|
     t.string   "name"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20120226100602) do
     t.string   "tax"
     t.string   "total_up"
     t.string   "total_up_tax"
+    t.integer  "score"
   end
 
   add_index "items", ["fk_id"], :name => "index_items_on_fk_id"
@@ -147,6 +148,8 @@ ActiveRecord::Schema.define(:version => 20120226100602) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rpm_org_id"
+    t.integer  "brief_count", :default => 0
+    t.integer  "money_sum",   :default => 0
   end
 
   create_table "payers", :force => true do |t|

@@ -1,0 +1,30 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title"><%=@vendor.name%></h2>
+    <div class="inner">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>brief</th>
+            <th>RPM</th>
+            <th>Cheil</th>
+            <th>方案金额</th>
+            <th>实际金额</th>
+          </tr>
+          <%n=1
+          @vendor_solutions.each do |e|%>
+            <tr class="<%=['odd','even'][(n+=1)%2]%>">
+              <td><%=e.brief.name%></td>
+              <td><%=e.brief.rpm_org.name%></td>
+              <td><%=e.brief.cheil_org.name%></td>
+              <td><%=e.all_and_tax_sum%></td>
+              <td><%=e.all_c_and_tax_sum%></td>
+            </tr>
+          <%end%>
+        </tbody>
+      </table>
+      <%=link_to '返回',vendor_stat_index_path%>
+    </div>
+  </div>
+</div>
+

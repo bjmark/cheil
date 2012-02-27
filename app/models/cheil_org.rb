@@ -14,7 +14,10 @@ class CheilOrg < Org
   end
 
   def nav_links
-    [['需求列表', '/briefs']]
+    [
+      ['需求列表', '/briefs'],
+      ['Vendors统计', '/vendor_stat']
+    ]
   end
 
 end

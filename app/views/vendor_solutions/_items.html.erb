@@ -38,17 +38,25 @@
           %>
         </tbody>
       </table>
-      <%if @solution.org_id == @cur_user.org_id%>
         <p>
-        <%= link_to '新建运输项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'tran') %>
-        |
-        <%= link_to '新建其他项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'other') %>
-        |
-        <%= link_to '修改', edit_many_solution_items_path(:solution_id=>@solution.id) %>
-        |
-        <%= link_to '报价', edit_price_many_solution_items_path(:solution_id=>@solution.id) %>
+        <%if @solution.op_right.check('item',@cur_user.org_id,'create_tran_other')%>
+          <%= link_to '新建运输项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'tran') %>
+          |
+          <%= link_to '新建其他项', new_many_solution_items_path(:solution_id=>@solution.id,:kind=>'other') %>
+          |
+          <%= link_to '修改', edit_many_solution_items_path(:solution_id=>@solution.id)%>
+          <%dep='|'%>
+        <%end%>
+        <%if @solution.op_right.check('item',@cur_user.org_id,'price_design_product')%>
+          <%=dep%>
+          <%= link_to '报价', edit_price_many_solution_items_path(:solution_id=>@solution.id) %>
+          <%dep='|'%>
+        <%end%>
+        <%if @solution.op_right.check('item',@cur_user.org_id,'read_score')%>
+          <%=dep%>
+          <%= link_to '评分', edit_score_many_solution_items_path(:solution_id=>@solution.id) %>
+        <%end%>
         </p>
-      <%end%>
       <%=render 'items_total' if @solution.all_sum > 0%>
       <%=render 'items_checked_total' if @solution.all_c_sum > 0%>
     </div>

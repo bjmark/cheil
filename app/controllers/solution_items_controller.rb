@@ -118,6 +118,12 @@ class SolutionItemsController < ApplicationController
     redirect_to vendor_solution_path(params[:solution_id])
   end
 
+  def edit_score_many
+  end
+
+  def update_score_many
+  end
+
   def set_attr(attr)
     @item.name = attr[:name]
     @item.quantity = attr[:quantity]

@@ -121,7 +121,7 @@ class VendorSolutionsController < ApplicationController
       #the cheil has read and delete and assign_item right for the new vendor_solution
       vs.op_right.add('self',brief.cheil_id,'read','delete')
       vs.op_right.add('attach',brief.cheil_id,'read')
-      vs.op_right.add('item',brief.cheil_id,'read','add_brief_item')
+      vs.op_right.add('item',brief.cheil_id,'read','add_brief_item','read_score','update_score')
       vs.op_right.add('comment',brief.cheil_id,'read','update')
 
       #the vendor itself has read right for the new vendor_solution
