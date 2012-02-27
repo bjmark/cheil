@@ -46,6 +46,11 @@
         <li class="active">
         <%=link_to '方案',vendor_solution_path(@solution)%>
         </li>
+        <%if @brief.status and @brief.status >= 30%>
+          <li>
+          <%=link_to '付款',payment_vendor_solution_path(@solution)%>
+          </li>
+        <%end%>
       </ul>
     </div>
     <%=yield :link%>

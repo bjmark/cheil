@@ -1,0 +1,89 @@
+<%content_for :balance do%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>vendor</th>
+        <th>应付</th>
+        <th>已付</th>
+        <th>未付余额</th>
+      </tr>
+      <tr class="odd">
+        <td>
+          <%= @solution.org.name  %>
+        </td>
+        <td>
+          <%= @solution.all_c_and_tax_sum  %>
+        </td>
+        <td>
+          <%= @solution.payment_sum  %>
+        </td>
+        <td>
+          <%= @solution.balance %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<%end%>
+<%content_for :payment do%>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>支付者</th>
+        <th>vendor</th>
+        <th>金额</th>
+        <th>支付日期</th>
+        <th>说明</th>
+      </tr>
+      <%n=1
+      @payments.each do |p|%>
+        <tr class="<%=['odd','even'][(n+=1)%2]%>">
+          <td>
+            <%= p.payer.name  %>
+          </td>
+          <td>
+            <%= p.org.name  %>
+          </td>
+          <td>
+            <%= p.amount  %>
+          </td>
+          <td>
+            <%= p.pay_date  %>
+          </td>
+          <td>
+            <%= p.note  %>
+          </td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+<%end%>
+<%content_for :vendor do%>
+  <ul class="wat-cf">
+    <li>
+    <%=link_to '返回',briefs_path%>
+    </li>
+    <li>
+    <%=link_to '需求',brief_path(@brief)%>
+    </li>
+    <li>
+    <%=link_to '方案',vendor_solution_path(@solution)%>
+    </li>
+    <li class="active">
+    <%=link_to '付款',payment_vendor_solution_path(@solution)%>
+    </li>
+  </ul>
+<%end%>
+
+<div class="block">
+  <div class="secondary-navigation">
+    <%=yield :vendor%>
+  </div>
+  <div class="content">
+    <h2 class="title">付款</h2>
+    <div class="inner">
+      <%=yield :balance%>
+      <%=yield :payment unless @payments.blank?%>
+    </div>
+  </div>
+</div>
+

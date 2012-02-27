@@ -4,7 +4,7 @@ class VendorSolutionsController < ApplicationController
   def check_right
     cheil = [:index,:show,:edit_rate,:update_rate,:destroy,:send_to_rpm,
       :finish,:unfinish,:new_many,:create_many,:pick_brief_items,:add_brief_item,:del_brief_item]
-    vendor = [:show,:edit_rate,:update_rate]
+    vendor = [:show,:edit_rate,:update_rate,:payment]
 
     ok=case @cur_user.org
        when CheilOrg then cheil.include?(params[:action].to_sym)
@@ -198,5 +198,14 @@ class VendorSolutionsController < ApplicationController
     redirect_to vendor_solution_path(solution)
   end
 
+  def payment
+    @solution = VendorSolution.find(params[:id])
+    @brief = @solution.brief
 
+    invalid_op if (@solution.org_id != @cur_user.org_id) 
+
+    @cheil_solution = @brief.cheil_solution
+
+    @payments = Payment.where(:solution_id=>@cheil_solution.id,:org_id=>@solution.org_id).all
+  end
 end

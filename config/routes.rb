@@ -86,6 +86,7 @@ Cheil::Application.routes.draw do
       put :update_rate
       post :add_brief_item
       delete :del_brief_item
+      get :payment
     end
     collection do
       get :new_many
