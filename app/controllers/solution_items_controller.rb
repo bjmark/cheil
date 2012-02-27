@@ -119,9 +119,47 @@ class SolutionItemsController < ApplicationController
   end
 
   def edit_score_many
+    @solution = VendorSolution.find(params[:solution_id])
+    invalid_op unless @solution.op_right.check('item',@cur_user.org_id,'update_score')
+
+    items = @solution.items
+    designs = []
+    products = []
+    trans = []
+    others = []
+
+    items.each do |e|
+      case e.kind
+      when 'design' then designs << e
+      when 'product' then products << e
+      when 'tran' then trans << e
+      when 'other' then others << e
+      end
+    end
+
+    @items = designs + products + trans + others
+
   end
 
   def update_score_many
+    solution = VendorSolution.find(params[:solution_id])
+    invalid_op unless solution.op_right.check('item',@cur_user.org_id,'update_score')
+
+    items = params[:solution_item]
+
+    ids = []
+    items.keys.each{|e| ids << $1 if e =~ /score_(\d+)/}
+
+    brief = solution.brief
+
+    ids.each do |id|
+      if !(item = solution.items.where(:id=>id).first).blank?
+        item.score = items["score_#{id}"]
+        item.save
+      end
+    end
+
+    redirect_to vendor_solution_path(params[:solution_id])
   end
 
   def set_attr(attr)

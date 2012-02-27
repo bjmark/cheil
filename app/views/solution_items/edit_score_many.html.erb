@@ -1,0 +1,44 @@
+<div class="block">
+  <div class="content">
+    <h2 class="title">报价</h2>
+    <div class="inner">
+      <%=form_tag update_score_many_solution_items_path(:solution_id=>@solution.id),:method=>:put do%>
+        <table class="table">
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>数量</th>
+            <th>说明</th>
+            <th>价格</th>
+            <th>税率</th>
+            <th>类型</th>
+            <th>分数</th>
+          </tr>
+          <%n=0
+          @items.each do |e|%>
+            <tr>
+              <td><%=n+=1%></td>
+              <td><%=e.name%></td>
+              <td><%=e.quantity%></td>
+              <td><%e.note%></td>
+              <td><%=e.price%></td>
+              <td><%=e.tax_rate%></td>
+              <td>
+                <%='设计'if e.kind == 'design'%>
+                <%='制作' if e.kind == 'product'%>
+              </td>
+              <td><%=text_field_tag "solution_item[score_#{e.id}]",e.score,:size=>2%></td>
+            </tr>
+          <%end%>
+        </table>
+        <%=button_tag(:type=>:submit,:id=>'b1',:name=>'save_many') do%>
+          <%='保存'%>
+        <%end%>
+        &nbsp;&nbsp;
+        <%=link_to '取消',vendor_solution_path(@solution)%>
+      <%end%>
+
+    </div>
+  </div>
+</div>
+
